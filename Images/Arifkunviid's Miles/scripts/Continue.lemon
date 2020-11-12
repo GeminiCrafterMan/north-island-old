@@ -1,0 +1,162 @@
+// Sonic
+
+//# address-hook(0x05c52a) end(0x05c59c)
+function void fn05c52a()
+{
+	objA0.mapping_offset = 0x05cc4a
+	objA0.sprite_attributes = 0x8c
+	objA0.sprite_priority = 0x0280
+	objA0.box_size.x = 0x0c
+	objA0.box_size.y = 0x14
+	objA0.position.x.u16 = 0x0118 + getScreenExtend()
+	objA0.position.y.u16 = 0x0120
+
+	objA0.update_address = 0x05c55c
+	fn05c55c()
+}
+
+
+//# address-hook(0x05c55c) end(0x05c582)
+function void fn05c55c()
+{
+    if (isMainCharacter(CHARACTER_SONIC))
+     {
+	A1 = 0xffff0000 + u16[0xfffffaa4]
+	if ((u8[A1 + 0x38] & 0x08) == 0)
+	{
+		objA0.animation.sprite = (global.framecounter.low & 0x10) ? 1 : 0
+		DrawObject()
+	}
+	else
+	{
+		objA0.update_address = 0x05c588
+		fn05c588()
+	}
+    }
+}
+
+
+//# address-hook(0x05c588) end(0x05c59c)
+function void fn05c588()
+{
+	call tableLookupAddress(0x05c5a2, objA0.base_state)
+
+	UpdateSonicSpritePatterns()
+	DrawObject()
+}
+
+
+
+//# address-hook(0x05c5ac) end(0x05c5ce)
+function void fn05c5ac()
+{
+	// Tails running after Knuckles when continuing
+
+	objA0.base_state += 2
+	objA0.mapping_offset = 0x146620
+	objA0.sprite_attributes = 0x0680
+	u8[0xfffff766] = 0
+	objA0.animation.sprite = 0x5a
+	objA0.animation.timer = 0x06
+}
+
+
+//# address-hook(0x05c5d0) end(0x05c620)
+function void fn05c5d0()
+{
+ if (isMainCharacter(CHARACTER_SONIC))
+ {
+	// Sonic turning around
+
+	--objA0.animation.timer
+	if (s8(objA0.animation.timer) >= 0)
+		return
+
+	objA0.animation.timer = 0x06
+	D0 = objA0.animation.frame + 2
+	if (D0.u8 >= 10)
+	{
+		objA0.base_state = 0x04
+		objA0.state.both = 0x01
+		objA0.groundspeed = 0x0600
+		objA0.countdown_value = 0x0f
+	}
+	else
+	{
+		objA0.animation.frame = D0.u8
+		A2 = 0x05c622 + D0.s16
+		objA0.animation.sprite = u8[(A2+=1)-1]
+		if (u8[A2] != 0)
+			objA0.render_flags |= 0x01
+		else
+			objA0.render_flags &= ~0x01
+	}
+   }
+}
+
+
+//# address-hook(0x05c62c) end(0x05c640)
+function void fn05c62c()
+{
+ if (isMainCharacter(CHARACTER_SONIC))
+ {
+	// Sonic starts running
+
+	UpdateSonicAnimation()
+	--objA0.countdown_value
+	if (objA0.countdown_value < 0)
+	{
+		objA0.base_state = 0x06
+	}
+ }
+}
+
+
+//# address-hook(0x05c642) end(0x05c65c)
+function void fn05c642()
+{
+ if (isMainCharacter(CHARACTER_SONIC))
+ {
+	// Sonic running
+
+	UpdateSonicAnimation()
+	objA0.position.x.u16 += 6
+	if (objA0.position.x.u16 >= getScreenWidth() + 160)
+	{
+		objA0.base_state = 0x08
+	}
+}
+}
+
+
+//# address-hook(0x05c65e) end(0x05c65e)
+function void fn05c65e()
+{
+}
+
+
+// Tails Alone Continue  if((global.characters = CHARS_SONIC_AND_TAILS) || (global.characters == CHARS_TAILS_ALONE))
+function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
+{
+    if((objA0.update_address == 0x05c74a) && (global.characters == CHARS_TAILS_ALONE)) 
+    {
+        bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
+        u64 key = ""        
+        key = stringformat("continue_0x%02x", objA0.animation.sprite)
+       	u8 atex = 0x40 + 0x20 * getMainCharacter()
+        if(Renderer.hasCustomSprite(key))
+        {
+            Renderer.drawCustomSprite(key, px, py, atex, objA0.render_flags | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
+            return true
+        }
+    }
+ 
+    return base.Standalone.onWriteToSpriteTable(px, py, renderQueue)
+}
+
+
+
+
+
+// Sonic Alone Fix maybe if((global.characters = CHARS_SONIC_AND_TAILS) || (global.characters == CHARS_TAILS_ALONE))
+

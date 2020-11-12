@@ -1,0 +1,58 @@
+Obj0D_SonicRun:				; XREF: Obj0D_Index original
+		tst.w	($FFFFFE08).w	; is debug mode	on?
+		bne.w	locret_ECEE	; if yes, branch
+;		btst	#1,($FFFFD022).w
+;		bne.s	loc_EC70
+;		move.b	#1,($FFFFF7CC).w ; lock	controls		;STOP CHANGING THIS GOD DAMN YOU
+;		move.w	#$800,($FFFFF602).w ; make Sonic run to	the right
+
+loc_EC70:
+		tst.b	($FFFFD000).w
+		beq.s	loc_EC86
+		move.w	($FFFFD008).w,d0
+		move.w	($FFFFF72A).w,d1
+		addi.w	#$128,d1
+		cmp.w	d1,d0
+		bcs.s	locret_ECEE
+
+loc_EC86:
+		addq.b	#2,$24(a0)
+		
+
+
+Obj0D_SonicRun:				; XREF: Obj0D_Index working
+		tst.w	($FFFFFE08).w		; is debug mode	on?
+		bne.w	locret_ECEE			; if yes, branch
+		tst.b		($FFFFF7CD).w		; has Sonic jumped into a giant ring?
+		bne.s	Obj0D_SonicRun2		; if yes, check for acts
+		btst		#1,($FFFFD022).w		; is Sonic in the air?
+		bne.w	locret_ECEE			; if yes, return
+		st.b		($FFFFF7C8).w		; fully lock the controls
+		clr.w		($FFFFD010).w		; clear Sonic's inertia
+		clr.w		($FFFFD012).w		; clear Sonic's inertia
+		clr.w		($FFFFD014).w		; clear Sonic's inertia
+		move.b	#$25,($FFFFD01C).w	; set animation to $25, the victory animation...
+		move.b	#0,($FFFFD1C0).w	; clear Spin Dash dust object
+
+Obj0D_SonicRun2:
+		tst.b		($FFFFD000).w
+		beq.s	loc_EC86
+;		move.w	($FFFFD008).w,d0
+;		move.w	($FFFFF72A).w,d1
+;		addi.w	#$128,d1
+;		cmp.w	d1,d0
+		bcs.w	locret_ECEE
+
+loc_EC86:
+		addq.b	#2,$24(a0)
+
+
+		yo fuck you im storing this here bitch ass
+	move.b	#1,(Control_Locked).w ; fully lock the controls
+	move.b	#1,(Victory_Pose_Flag).w
+	clr.w	(MainCharacter+x_vel).w
+	clr.w (MainCharacter+y_vel).w
+	clr.w (MainCharacter+inertia).w
+	clr.w	(Sidekick+x_vel).w
+	clr.w (Sidekick+y_vel).w
+	clr.w (Sidekick+inertia).w

@@ -1,0 +1,19 @@
+// Flicky color fix
+function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
+{
+    if((objA0.update_address == 0x01a1f4) && (global.characters == CHARS_TAILS_ALONE)) 
+    {
+        bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
+        u64 key = ""        
+        key = stringformat("flicky_0x%02x", objA0.animation.sprite)
+       	u8 atex = 0x40 + 0x20 * getMainCharacter()
+        if(Renderer.hasCustomSprite(key))
+        {
+            Renderer.drawCustomSprite(key, px, py, atex, objA0.render_flags | (prioFlag ? SPRITE_FLAG_PRIO : 0), renderQueue)
+            return true
+        }
+    }
+ 
+    return base.Standalone.onWriteToSpriteTable(px, py, renderQueue)
+}
+
