@@ -28839,8 +28839,39 @@ Obj01_Init_Continued:
 ; ---------------------------------------------------------------------------
 ; loc_1A030: Obj_01_Sub_2:
 Obj01_Control:
-	tst.w	(Two_player_mode).w
-	bne.s	+
+
+		tst.b	double_jump_flag(a0)
+		beq.s	.nodec
+		subq.b	#1,double_jump_flag(a0)
+		bne.s	.chkLR
+		move.b	#AniIDSonAni_Roll,anim(a0) ; use "jumping" animation
+		
+.chkLR:
+		move.b	(Ctrl_1_Logical).w,d0	; get jpad
+		and.b	double_jump_flag+1(a0),d0	; compare jpad to stored L,R button states
+		bne.s	.skip		; if still held, branch
+		move.w	#0,double_jump_flag(a0)	; clear wall jump flag and button states
+		move.b	#AniIDSonAni_Roll,anim(a0) ; use "jumping" animation
+	
+.skip:
+		;Mercury Wall Jump Smoke Puff
+		;USES Smoke Puff
+	;	move.b	(v_framebyte).w,d0
+	;	andi.b	#7,d0
+	;	cmpi.b	#7,d0
+	;	bne.s	.nodec
+	;create puff
+	;	bsr.w	FindFreeObj
+	;	bne.s	.nodec
+	;	move.b	#id_SmokePuff,0(a1) ; load missile object
+	;	move.w	obX(a0),obX(a1)
+	;	move.w	obY(a0),obY(a1)
+	;	addi.w	#$1C,obY(a1)
+	;	move.b	#1,obSubtype(a1)
+		;end Wall Jump Smoke Puff
+		
+	.nodec:
+
 	tst.w	(Debug_mode_flag).w	; is debug cheat enabled?
 	beq.s	+			; if not, branch
 	btst	#button_B,(Ctrl_1_Press).w	; is button B pressed?
@@ -29108,10 +29139,19 @@ Obj01_MdAir:
 	bsr.w	Sonic_ChgJumpDir
 	bsr.w	Sonic_LevelBound
 	jsr	(ObjectMoveAndFall).l
+
+		tst.b	double_jump_flag(a0)
+		beq.s	.nowalljump
+		subi.w	#$30,y_vel(a0)
+		bra.s	.done
+		
+	.nowalljump:
 	btst	#6,status(a0)	; is Sonic underwater?
-	beq.s	+		; if not, branch
+	beq.s	.done		; if not, branch	; I'm STUPID
 	subi.w	#$28,y_vel(a0)	; reduce gravity by $28 ($38-$28=$10)
-+
+
+	.done:
+
 	bsr.w	Sonic_JumpAngle
 	bsr.w	Sonic_DoLevelCollision
 	rts
@@ -29145,10 +29185,19 @@ Obj01_MdJump:
 	bsr.w	Sonic_ChgJumpDir
 	bsr.w	Sonic_LevelBound
 	jsr	(ObjectMoveAndFall).l
+
+		tst.b	double_jump_flag(a0)
+		beq.s	.nowalljump
+		subi.w	#$30,y_vel(a0)
+		bra.s	.done
+		
+	.nowalljump:
 	btst	#6,status(a0)	; is Sonic underwater?
-	beq.s	+		; if not, branch
+	beq.s	.done		; if not, branch
 	subi.w	#$28,y_vel(a0)	; reduce gravity by $28 ($38-$28=$10)
-+
+
+	.done:
+
 	bsr.w	Sonic_JumpAngle
 	bsr.w	Sonic_DoLevelCollision
 	rts
@@ -30016,6 +30065,42 @@ return_Thok:
 ; ===========================================================================
 ; loc_1AAF0:
 Sonic_JumpHeight:
+
+		tst.b	double_jump_flag(a0)	; on wall?
+		beq.s	.skip
+		move.b	(Ctrl_1_Press_Logical).w,d0
+	andi.b	#button_B_mask|button_C_mask|button_A_mask,d0 ; is a jump button pressed?
+		beq.s	.skip	; if yes, branch
+		move.w	#0,double_jump_flag(a0)	; clear Wall Jump data
+		move.b	#1,jumping(a0)	;Mercury Constants
+		move.b	#AniIDSonAni_Roll,anim(a0) ; use "jumping" animation
+		move.w	#-$600,d0
+		btst	#button_up,(Ctrl_1_Held_Logical).w
+		bne.s	.uponly
+		move.w	#-$580,d0
+		move.w	#-$400,x_vel(a0)
+		btst	#0,status(a0)	;Mercury Constants
+		beq.s	.uponly
+		neg.w	x_vel(a0)
+		
+	.uponly:
+		btst	#6,status(a0)	;Mercury Constants
+		beq.s	.nowtr
+		addi.w	#$280,d0
+		
+	.nowtr:
+		move.w	d0,y_vel(a0)
+	tst.b	(CD_Sounds_flag).w
+	beq.s	.normalsnd
+	move.w	#SndID_CDJump,d0
+	bra.s	.playsnd
+.normalsnd:
+	move.w	#SndID_Jump,d0
+.playsnd:
+	jsr	(PlaySound).l	; play jumping sound
+		
+	.skip:;end Wall Jump
+
 	tst.b	jumping(a0)	; is Sonic jumping?
 	beq.s	Sonic_UpVelCap	; if not, branch
 
@@ -30062,7 +30147,7 @@ Sonic_CheckGoSuper:
 	tst.b	(Update_HUD_timer).w	; has Sonic reached the end of the act?
 	beq.w	return_1ABA4		; if yes, branch
 	tst.b	(Super_Sonic_flag).w	; is Sonic already Super?
-	bne.w	Sonic_RevertToNormal		; if yes, branch
+	bne.w	return_1ABA4		; if yes, branch
 	cmpi.b	#7,(Emerald_count).w	; does Sonic have exactly 7 emeralds?
 	bne.w	return_1ABA4		; if not, branch
 	cmpi.w	#50,(Ring_count).w	; does Sonic have at least 50 rings?
@@ -30540,6 +30625,7 @@ Sonic_DoLevelCollision:
 	move.l	#Secondary_Collision,(Collision_addr).w
 +
 	move.b	lrb_solid_bit(a0),d5
+; where the s1 routine starts...
 	move.w	x_vel(a0),d1
 	move.w	y_vel(a0),d2
 	jsr	(CalcAngle).l
@@ -30556,12 +30642,20 @@ Sonic_DoLevelCollision:
 	bpl.s	+
 	sub.w	d1,x_pos(a0)
 	move.w	#0,x_vel(a0) ; stop Sonic since he hit a wall
+
+		move.b	#button_left_mask,d1
+		bsr.w	WallJump
+
 +
 	bsr.w	CheckRightWallDist
 	tst.w	d1
 	bpl.s	+
 	add.w	d1,x_pos(a0)
 	move.w	#0,x_vel(a0) ; stop Sonic since he hit a wall
+
+		move.b	#button_right_mask,d1
+		bsr.w	WallJump
+
 +
 	bsr.w	Sonic_CheckFloor
 	tst.w	d1
@@ -30656,12 +30750,20 @@ Sonic_HitCeilingAndWalls:
 	bpl.s	+
 	sub.w	d1,x_pos(a0)
 	move.w	#0,x_vel(a0)	; stop Sonic since he hit a wall
+
+		move.b	#button_left_mask,d1
+		bsr.w	WallJump
+
 +
 	bsr.w	CheckRightWallDist
 	tst.w	d1
 	bpl.s	+
 	add.w	d1,x_pos(a0)
 	move.w	#0,x_vel(a0)	; stop Sonic since he hit a wall
+
+		move.b	#button_right_mask,d1
+		bsr.w	WallJump
+
 +
 	bsr.w	Sonic_CheckCeiling
 	tst.w	d1
@@ -30728,7 +30830,26 @@ return_1B09E:
 	rts
 ; End of function Sonic_DoLevelCollision
 
-
+WallJump:
+		tst.b	jumping(a0)	;Mercury Constants
+		beq.s	.return
+		tst.b	y_vel(a0)
+		bmi.s	.return
+		move.b	(Ctrl_1_Held_Logical).w,d0	; get jpad
+		andi.b	#(button_left_mask|button_right_mask),d0	; keep just L and R state
+		beq.s	.return			; fail if neither are pressed
+		cmpi.b	#(button_left_mask|button_right_mask),d0	; fail if both are pressed
+		beq.s	.return
+		and.b	d1,d0			; keep only L or R depending on d1
+		beq.s	.return			; fail if not pressed
+		move.b	d0,double_jump_flag+1(a0)	; remember them
+		move.w	#0,y_vel(a0)
+		move.b	#$18,double_jump_flag(a0)	;Mercury Constants
+		clr.b	jumping(a0)
+		move.b	#AniIDSonAni_JumpDash,anim(a0)
+		
+	.return:
+		rts
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to reset Sonic's mode when he lands on the floor
@@ -33232,8 +33353,8 @@ Tails_JumpHeight:
 loc_150F0:      
         cmp.w    y_vel(a0),d1
         ble.s    Tails_Test_For_Flight
-	move.b	(Ctrl_2_Logical).w,d0
-	andi.b	#button_B_mask|button_C_mask|button_A_mask,d0 ; is A, B or C pressed?
+	move.b	(Ctrl_2_Held_Logical).w,d0
+	andi.b	#button_B_mask|button_C_mask|button_A_mask,d0
         bne.s    locret_15104
         move.w    d1,y_vel(a0)
 
@@ -33255,8 +33376,8 @@ locret_1511A:
 Tails_Test_For_Flight:
         tst.b    ($FFFFFEB0).w
         bne.w    locret_151A2
-        move.b    (Ctrl_2_Press_Logical).w,d0
-        andi.b    #$70,d0
+	move.b	(Ctrl_2_Press_Logical).w,d0
+	andi.b	#button_B_mask|button_C_mask|button_A_mask,d0
         beq.w    locret_151A2
         cmpi.w    #2,(Player_mode).w
         bne.s    loc_15156
@@ -35555,7 +35676,7 @@ Obj08_Init:
 	move.w	#Sidekick,parent(a0)
 	move.w	#tiles_to_bytes(ArtTile_ArtNem_TailsDust),objoff_3C(a0)
 +
-	bsr.w	Adjust2PArtPointer
+	jsr		Adjust2PArtPointer
 
 ; loc_1DD90:
 Obj08_Main:
