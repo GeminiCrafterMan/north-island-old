@@ -2248,6 +2248,9 @@ ArtTile_ArtNem_ChopChop               = $053B
 ArtTile_ArtUnc_Waterfall1_2           = $0557
 ArtTile_ArtNem_BigBubbles             = $055B
 
+; WZ
+; nothing so far
+
 ; ---------------------------------------------------------------------------
 ; Bosses
 ; Common tiles for some bosses (any for which no eggpod tiles are defined,
@@ -2382,4 +2385,3 @@ ArtTile_ArtNem_Unknown                = $03FA
 ArtTile_ArtNem_BigRing                = $0400
 ArtTile_ArtNem_FloatPlatform          = $0418
 ArtTile_ArtNem_BigRing_Flash          = $0462
-

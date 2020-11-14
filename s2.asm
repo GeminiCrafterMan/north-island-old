@@ -16664,6 +16664,11 @@ Obj18_Init:
 	move.l	#Obj18_MapUnc_GHZ,mappings(a0)
 	move.w	#make_art_tile(ArtTile_ArtKos_LevelArt,2,0),art_tile(a0)
 +
+	cmpi.b	#wood_zone,(Current_Zone).w
+	bne.s	+
+	move.l	#Obj18_MapUnc_WZ,mappings(a0)
+	move.w	#make_art_tile(ArtTile_ArtKos_LevelArt,2,0),art_tile(a0)
++
 	bsr.w	Adjust2PArtPointer
 	move.b	#4,render_flags(a0)
 	move.b	#4,priority(a0)
@@ -16997,6 +17002,7 @@ Obj18_MapUnc_107F6:	BINCLUDE "mappings/sprite/obj18_a.bin"
 ; -------------------------------------------------------------------------------
 Obj18_MapUnc_1084E:	BINCLUDE "mappings/sprite/obj18_b.bin"
 Obj18_MapUnc_GHZ:	BINCLUDE "mappings/sprite/obj18_c.bin"
+Obj18_MapUnc_WZ:	BINCLUDE "mappings/sprite/obj18_d.bin"
 ; ===========================================================================
 
     if gameRevision<2
@@ -45174,15 +45180,17 @@ loc_261EC:
 	andi.b	#1,d0
 	move.b	d0,mapping_frame(a1)
 	move.l	#Obj2C_MapUnc_2631E,mappings(a1)
+	cmpi.b	#wood_zone,(Current_Zone).w
+	beq.s	.wood
 	move.w	#make_art_tile(ArtTile_ArtNem_Leaves,3,1),art_tile(a1)
+	bra.s	.cont
+.wood:
+	move.w	#make_art_tile(ArtTile_ArtNem_MtzSpike,2,1),art_tile(a1)
+.cont:
 	move.b	#$84,render_flags(a1)
 	move.b	#8,width_pixels(a1)
 	move.b	#1,priority(a1)
 	move.b	#4,objoff_38(a1)
-	; (Bug) This line makes no sense: d1 is never set to anything,
-	; the object being written to is the parent, not the child,
-	; and angle isn't used by the parent at all.
-	move.b	d1,angle(a0)		; ???
 
 loc_26278:
 	dbf	d6,loc_261EC
@@ -78930,23 +78938,23 @@ cur_zone_str := "\{cur_zone_id}"
 ; BEGIN SArt_Ptrs Art_Ptrs_Array[17]
 ; dword_42594: MainLoadBlocks: saArtPtrs:
 LevelArtPointers:
-	levartptrs PLCID_Ehz1,     PLCID_Ehz2,      PalID_EHZ,  ArtKos_EHZ, BM16_EHZ, BM128_EHZ ;   0 ; EHZ  ; EMERALD HILL ZONE
+	levartptrs PLCID_Ehz1,     PLCID_Ehz2,      PalID_EHZ,  ArtKos_EHZ, BM16_EHZ, BM128_EHZ ;   0 ; EHZ	; EMERALD HILL ZONE
 	levartptrs PLCID_Ghz1,	   PLCID_Ghz2,		PalID_GHZ,	ArtKos_GHZ, BM16_GHZ, BM128_GHZ ;   1 ; GHZ ; GREEN HILL ZONE
-	levartptrs PLCID_Wz1,	   PLCID_Wz2,		PalID_WZ,   ArtKos_WZ,	BM16_WZ,  BM128_WZ ;   2 ; LEV2 ; LEVEL 2 (UNUSED)
-	levartptrs PLCID_Ehz1,	   PLCID_Ehz2,		PalID_GHZ,	ArtKos_EHZ,	BM16_EHZ, BM128_EHZ ;   3 ; LEV3 ; LEVEL 3 (UNUSED)
-	levartptrs PLCID_Mtz1,     PLCID_Mtz2,      PalID_MTZ,  ArtKos_MTZ, BM16_MTZ, BM128_MTZ ;   4 ; MTZ  ; METROPOLIS ZONE ACTS 1 & 2
-	levartptrs PLCID_Mtz1,     PLCID_Mtz2,      PalID_MTZ,  ArtKos_MTZ, BM16_MTZ, BM128_MTZ ;   5 ; MTZ3 ; METROPOLIS ZONE ACT 3
-	levartptrs PLCID_Wfz1,     PLCID_Wfz2,      PalID_WFZ,  ArtKos_SCZ, BM16_WFZ, BM128_WFZ ;   6 ; WFZ  ; WING FORTRESS ZONE
-	levartptrs PLCID_Htz1,     PLCID_Htz2,      PalID_HTZ,  ArtKos_HTZ2,BM16_HTZ2,BM128_HTZ ;   7 ; HTZ  ; HILL TOP ZONE
-	levartptrs PLCID_Hpz1,     PLCID_Hpz2,      PalID_HPZ,  ArtKos_HPZ, BM16_HPZ, BM128_HPZ ;   8 ; HPZ  ; HIDDEN PALACE ZONE (UNUSED)
-	levartptrs PLCID_Ehz1,	   PLCID_Ehz2,		PalID_ARZ,	ArtKos_EHZ, BM16_EHZ, BM128_EHZ ;   9 ; LEV9 ; LEVEL 9 (UNUSED)
-	levartptrs PLCID_Ooz1,     PLCID_Ooz2,      PalID_OOZ,  ArtKos_OOZ, BM16_OOZ, BM128_OOZ ;  $A ; OOZ  ; OIL OCEAN ZONE
-	levartptrs PLCID_Mcz1,     PLCID_Mcz2,      PalID_MCZ,  ArtKos_MCZ, BM16_MCZ, BM128_MCZ ;  $B ; MCZ  ; MYSTIC CAVE ZONE
-	levartptrs PLCID_Cnz1,     PLCID_Cnz2,      PalID_CNZ,  ArtKos_CNZ, BM16_CNZ, BM128_CNZ ;  $C ; CNZ  ; CASINO NIGHT ZONE
-	levartptrs PLCID_Cpz1,     PLCID_Cpz2,      PalID_CPZ,  ArtKos_CPZ, BM16_CPZ, BM128_CPZ ;  $D ; CPZ  ; CHEMICAL PLANT ZONE
-	levartptrs PLCID_Dez1,     PLCID_Dez2,      PalID_DEZ,  ArtKos_DEZ, BM16_DEZ, BM128_DEZ ;  $E ; DEZ  ; DEATH EGG ZONE
-	levartptrs PLCID_Arz1,     PLCID_Arz2,      PalID_ARZ,  ArtKos_ARZ, BM16_ARZ, BM128_ARZ ;  $F ; ARZ  ; AQUATIC RUIN ZONE
-	levartptrs PLCID_Scz1,     PLCID_Scz2,      PalID_SCZ,  ArtKos_SCZ, BM16_WFZ, BM128_WFZ ; $10 ; SCZ  ; SKY CHASE ZONE
+	levartptrs PLCID_Wz1,	   PLCID_Wz2,		PalID_WZ,   ArtKos_WZ,	BM16_WZ,  BM128_WZ	;   2 ; WZ	; WOOD ZONE
+	levartptrs PLCID_Ehz1,	   PLCID_Ehz2,		PalID_GHZ,	ArtKos_EHZ,	BM16_EHZ, BM128_EHZ ;   3 ; LEV3; LEVEL 3 (UNUSED)
+	levartptrs PLCID_Mtz1,     PLCID_Mtz2,      PalID_MTZ,  ArtKos_MTZ, BM16_MTZ, BM128_MTZ ;   4 ; MTZ	; METROPOLIS ZONE ACTS 1 & 2
+	levartptrs PLCID_Mtz1,     PLCID_Mtz2,      PalID_MTZ,  ArtKos_MTZ, BM16_MTZ, BM128_MTZ ;   5 ; MTZ3; METROPOLIS ZONE ACT 3
+	levartptrs PLCID_Wfz1,     PLCID_Wfz2,      PalID_WFZ,  ArtKos_SCZ, BM16_WFZ, BM128_WFZ ;   6 ; WFZ	; WING FORTRESS ZONE
+	levartptrs PLCID_Htz1,     PLCID_Htz2,      PalID_HTZ,  ArtKos_HTZ2,BM16_HTZ2,BM128_HTZ ;   7 ; HTZ	; HILL TOP ZONE
+	levartptrs PLCID_Hpz1,     PLCID_Hpz2,      PalID_HPZ,  ArtKos_HPZ, BM16_HPZ, BM128_HPZ ;   8 ; HPZ	; HIDDEN PALACE ZONE (UNUSED)
+	levartptrs PLCID_Ehz1,	   PLCID_Ehz2,		PalID_ARZ,	ArtKos_EHZ, BM16_EHZ, BM128_EHZ ;   9 ; LEV9; LEVEL 9 (UNUSED)
+	levartptrs PLCID_Ooz1,     PLCID_Ooz2,      PalID_OOZ,  ArtKos_OOZ, BM16_OOZ, BM128_OOZ ;  $A ; OOZ	; OIL OCEAN ZONE
+	levartptrs PLCID_Mcz1,     PLCID_Mcz2,      PalID_MCZ,  ArtKos_MCZ, BM16_MCZ, BM128_MCZ ;  $B ; MCZ	; MYSTIC CAVE ZONE
+	levartptrs PLCID_Cnz1,     PLCID_Cnz2,      PalID_CNZ,  ArtKos_CNZ, BM16_CNZ, BM128_CNZ ;  $C ; CNZ	; CASINO NIGHT ZONE
+	levartptrs PLCID_Cpz1,     PLCID_Cpz2,      PalID_CPZ,  ArtKos_CPZ, BM16_CPZ, BM128_CPZ ;  $D ; CPZ	; CHEMICAL PLANT ZONE
+	levartptrs PLCID_Dez1,     PLCID_Dez2,      PalID_DEZ,  ArtKos_DEZ, BM16_DEZ, BM128_DEZ ;  $E ; DEZ	; DEATH EGG ZONE
+	levartptrs PLCID_Arz1,     PLCID_Arz2,      PalID_ARZ,  ArtKos_ARZ, BM16_ARZ, BM128_ARZ ;  $F ; ARZ	; AQUATIC RUIN ZONE
+	levartptrs PLCID_Scz1,     PLCID_Scz2,      PalID_SCZ,  ArtKos_SCZ, BM16_WFZ, BM128_WFZ ; $10 ; SCZ	; SKY CHASE ZONE
 
     if (cur_zone_id<>no_of_zones)&&(MOMPASS=1)
 	message "Warning: Table LevelArtPointers has \{cur_zone_id/1.0} entries, but it should have \{no_of_zones/1.0} entries"
@@ -79218,9 +79226,6 @@ PlrList_Wfz1: plrlistheader
 	plreq ArtTile_ArtNem_BreakPanels, ArtNem_BreakPanels
 	plreq ArtTile_ArtNem_WfzScratch, ArtNem_WfzScratch
 	plreq ArtTile_ArtNem_WfzTiltPlatforms, ArtNem_WfzTiltPlatforms
-	; These two are already in the list, so this is redundant
-	plreq ArtTile_ArtNem_Tornado, ArtNem_Tornado
-	plreq ArtTile_ArtNem_Clouds, ArtNem_Clouds
 PlrList_Wfz1_End
 ;---------------------------------------------------------------------------------------
 ; PATTERN LOAD REQUEST LIST
@@ -79810,7 +79815,8 @@ PlrList_Ghz2_End
 ; Emerald Hill Zone primary
 ;---------------------------------------------------------------------------------------
 PlrList_Wz1: plrlistheader
-	plreq ArtTile_ArtNem_WaterSurface, ArtNem_WoodMan
+	plreq ArtTile_ArtNem_EHZ_Bridge, ArtNem_WZ_Bridge
+	plreq ArtTile_ArtNem_Coconuts, ArtNem_WoodMan
 	plreq ArtTile_ArtNem_Buzzer, ArtNem_Buzzer
 	plreq ArtTile_ArtNem_Snailer, ArtNem_Snailer
 PlrList_Wz1_End
@@ -79823,6 +79829,7 @@ PlrList_Wz2: plrlistheader
 	plreq ArtTile_ArtNem_DignlSprng, ArtNem_DignlSprng
 	plreq ArtTile_ArtNem_VrtclSprng, ArtNem_VrtclSprng
 	plreq ArtTile_ArtNem_HrzntlSprng, ArtNem_HrzntlSprng
+	plreq ArtTile_ArtNem_MtzSpike, ArtNem_LeavesWZ
 PlrList_Wz2_End
 
 ArtUnc_P1Tails:	BINCLUDE	"art/uncompressed/P1 Tails.bin"
@@ -80713,9 +80720,11 @@ ArtNem_CPZTubeSpring:	BINCLUDE	"art/nemesis/CPZ spintube exit cover.bin"
 ArtNem_WaterSurface2:	BINCLUDE	"art/nemesis/Top of water in ARZ.bin"
 ;--------------------------------------------------------------------------------------
 ; Nemesis compressed art (7 blocks)
-; Leaves from ARZ	; ArtNem_82EE8:
+; Leaves from ARZ (And WZ!)	; ArtNem_82EE8:
 	even
 ArtNem_Leaves:	BINCLUDE	"art/nemesis/Leaves in ARZ.bin"
+	even
+ArtNem_LeavesWZ:	BINCLUDE	"art/nemesis/Leaves in WZ.bin"
 ;--------------------------------------------------------------------------------------
 ; Nemesis compressed art (17 blocks)
 ; Arrow shooter and arrow from ARZ	; ArtNem_82F74:
@@ -81614,8 +81623,8 @@ Off_Rings: zoneOrderedOffsetTable 2,2
 	zoneOffsetTableEntry.w  Rings_EHZ_2	; 1
 	zoneOffsetTableEntry.w  Rings_GHZ_1	; 2  $01
 	zoneOffsetTableEntry.w  Rings_GHZ_2	; 3
-	zoneOffsetTableEntry.w  Rings_Lev2_1	; 4  $02
-	zoneOffsetTableEntry.w  Rings_Lev2_2	; 5
+	zoneOffsetTableEntry.w  Rings_WZ_1	; 4  $02
+	zoneOffsetTableEntry.w  Rings_WZ_1	; 5
 	zoneOffsetTableEntry.w  Rings_EHZ_1	; 6  $03
 	zoneOffsetTableEntry.w  Rings_EHZ_1	; 7
 	zoneOffsetTableEntry.w  Rings_MTZ_1	; 8  $04
@@ -81650,8 +81659,8 @@ Rings_EHZ_1:	BINCLUDE	"level/rings/EHZ_1.bin"
 Rings_EHZ_2:	BINCLUDE	"level/rings/EHZ_2.bin"
 Rings_GHZ_1:	BINCLUDE	"level/rings/GHZ_1.bin"
 Rings_GHZ_2:	BINCLUDE	"level/rings/GHZ_2.bin"
-Rings_Lev2_1:	BINCLUDE	"level/rings/02_1.bin"
-Rings_Lev2_2:	BINCLUDE	"level/rings/02_2.bin"
+Rings_WZ_1:		BINCLUDE	"level/rings/WZ_1.bin"
+Rings_WZ_2:		BINCLUDE	"level/rings/02_2.bin"
 Rings_MTZ_1:	BINCLUDE	"level/rings/MTZ_1.bin"
 Rings_MTZ_2:	BINCLUDE	"level/rings/MTZ_2.bin"
 Rings_MTZ_3:	BINCLUDE	"level/rings/MTZ_3.bin"
@@ -81808,9 +81817,11 @@ ArtNem_HtzFireball2:	BINCLUDE	"art/nemesis/Fireball 2.bin"
 ; Bridge in EHZ
 	even
 ArtNem_EHZ_Bridge:	BINCLUDE	"art/nemesis/EHZ bridge.bin"
+	even
+ArtNem_WZ_Bridge:	BINCLUDE	"art/nemesis/WZ bridge.bin"
 ; --------------------------------------------------------------------
 ; Nemesis compressed art
-; buncha HPZ shit
+; buncha HPZ stuff
 Hpz_Waterfall:	BINCLUDE	"art/nemesis/WatrFall.bin"
 	even
 HPZ_Emerald:	BINCLUDE	"art/nemesis/Emerald.bin"

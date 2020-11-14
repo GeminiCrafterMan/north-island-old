@@ -959,27 +959,6 @@
             }
         },
         {
-            "name": "",
-            "palettes": [],
-            "art": {
-                "path": "art\\nemesis\\Speed booster from CPZ.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "mappings\\sprite\\obj1B.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
             "name": "Freeze Man",
             "palettes": [
                 {
@@ -1065,6 +1044,78 @@
             "palettes": [],
             "art": {
                 "path": "art\\nemesis\\Spikes in Icicle Falls.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "WZ Platforms",
+            "palettes": [
+                {
+                    "path": "art\\palettes\\SonicAndTails.bin",
+                    "length": 1
+                },
+                {
+                    "path": "art\\palettes\\Wood Zone.bin",
+                    "length": 3
+                }
+            ],
+            "art": {
+                "path": "art\\kosinski\\WZ.bin",
+                "compression": "Kosinski"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\obj18_d.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Leaves (WZ)",
+            "palettes": [],
+            "art": {
+                "path": "art\\nemesis\\Leaves in WZ.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\obj2C.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Bridge (WZ)",
+            "palettes": [],
+            "art": {
+                "path": "art\\nemesis\\WZ bridge.bin",
                 "compression": "Nemesis"
             },
             "mappings": {

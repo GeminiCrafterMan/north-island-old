@@ -18,13 +18,13 @@ Obj59_Init:
 	addq.b	#2,routine(a0)
 ; Zone checks
 	cmpi.b	#aquatic_ruin_zone,(Current_Zone).w ; ARZ
-	bne.s	.notarz
+	bne.s	.wz
 	move.l	#Map_FreezeMan,mappings(a0)
 	move.w	#make_art_tile(ArtTile_ArtNem_LeverSpring,0,0),art_tile(a0)
 	bra.s	.cont
-.notarz:
+.wz:
 	move.l	#Map_WoodMan,mappings(a0)
-	move.w	#make_art_tile(ArtTile_ArtNem_WaterSurface,0,0),art_tile(a0)
+	move.w	#make_art_tile(ArtTile_ArtNem_Coconuts,0,0),art_tile(a0)
 .cont:
 	jsr		Adjust2PArtPointer
 	move.b	#4,render_flags(a0)
