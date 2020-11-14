@@ -1,0 +1,181 @@
+{
+
+        "ActtoUNOWattaAIZ": 
+        {
+                 "File": "AIZWater.bin",
+                 "RomInject": "0xA8C9C"
+        },
+
+
+         "ActtoTwoWattaAIZ": 
+        {
+                 "File": "AIZAct2Water.bin",
+                 "RomInject": "0xA8D1C"
+        },
+
+
+         "HCZWaterOne": 
+        {
+                 "File": "HCZWater.bin",
+                 "RomInject": "0xA8E5C"
+        },
+
+
+         "HCZWaterTwo": 
+        {
+                 "File": "HCZWater2.bin",
+                 "RomInject": "0xA8EDC"
+        },
+
+
+         "CNZAgua": 
+        {
+                 "File": "CarnivalWater.bin",
+                 "RomInject": "0xA901C"
+        },
+
+
+         "ICZGuatter": 
+        {
+                 "File": "ICZAgua.bin",
+                 "RomInject": "0xA921C"
+        },
+
+
+         "LBZWalter": 
+        {
+                 "File": "LaunchWater.bin",
+                 "RomInject": "0xA935C"
+        },
+
+	"Continue":
+	{
+		"File": "Player Sprites.bin",
+		"RomInject": "0x5CD66"
+	},
+
+
+	"End S tres":
+	{
+		"File": "S3 Ending Graphics.bin",
+		"RomInject": "0x241960"
+	},
+
+
+	"tails comPetition":
+	{
+		"File": "Tails 2P.bin",
+		"RomInject": "0x33A840"
+	},
+
+
+	"Tails Tails comPetition":
+	{
+		"File": "Tailstails.bin",
+		"RomInject": "0x33D5E0"
+	},
+
+        "Intro Plane":
+	{
+		"File": "Intro Plane.bin",
+		"RomInject": "0x382624"
+	},
+
+        "Plane Ending":
+	{
+		"File": "Sonic Plane Ending.bin",
+		"RomInject": "0x162914"
+	},
+
+        "Sonic Plane":
+	{
+		"File": "Sonic Plane.bin",
+		"RomInject": "0x163418"
+	},
+
+        "Com Select":
+	{
+		"File": "Com Player Sprites.bin",
+		"RomInject": "0x3A1B30"
+	},
+
+
+        "Tails Pose BS":
+	{
+		"File": "Tails Pose.bin",
+		"RomInject": "0x189F62"
+	},
+
+
+	"Tails":
+	{
+		"File": "Tails.bin",
+		"RomInject": "0x3200E0"
+	},
+
+	"LAScolasdetails":
+	{
+		"File": "TailsTAILStails.bin",
+		"RomInject": "0x336620"
+	},
+
+
+
+
+	"Icons Continue":
+	{
+		"File": "Icons Continue.bin",
+		"RomInject": "0x5D3C6"
+	},
+
+	"SSResults Tails":
+	{
+		"File": "SSResults Tails Knuckles Icons.bin",
+		"RomInject": "0x15C130"
+	},
+
+
+         "Sonic And Tails Palette ": 
+        {
+                 "File": "SonicAndTails.bin",
+                 "RomInject": "0xA8A3C"
+        },
+
+         "Tails Palette Second": 
+        {
+                 "File": "SonicAndTails.bin",
+                 "RomInject": "0x20A55E"
+        },
+
+         "TContinue Third Colors": 
+        {
+                 "File": "LastTry.bin",
+                 "RomInject": "0x5CBCA"
+        },
+
+         "BSTails Colors Results": 
+        {
+                 "File": "BSTailsColors.bin",
+                 "RomInject": "0x4DE08"
+        },
+
+	"Tails Ending Pose":
+	{
+		"File": "Tails Ending Pose.bin",
+		"RomInject": "0x38C19A"
+	},
+
+	"Tails End Pose":
+	{
+		"File": "Tails End Pose.bin",
+		"RomInject": "0x60B4A"
+	},
+
+        "Anims": 
+        {
+                 "File": "Test.bin",
+                 "RomInject": "0x15aB0"
+        }
+
+}
+

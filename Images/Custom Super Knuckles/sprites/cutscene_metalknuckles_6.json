@@ -1,6 +1,0 @@
-{
-	"cutscene_metalknuckles_6_0x01":  { "File": "cutscene_knuckles_6.bmp", "Rect": "0,0,40,40", "Center": "20,20" },
-	"cutscene_metalknuckles_6_0x02":  { "File": "cutscene_knuckles_6.bmp", "Rect": "40,0,40,40", "Center": "20,20" },
-	"cutscene_metalknuckles_6_0x03":  { "File": "cutscene_knuckles_6.bmp", "Rect": "80,0,40,40", "Center": "20,20" },
-	"cutscene_metalknuckles_6_0x04":  { "File": "cutscene_knuckles_6.bmp", "Rect": "120,0,40,40", "Center": "19,20" }
-}

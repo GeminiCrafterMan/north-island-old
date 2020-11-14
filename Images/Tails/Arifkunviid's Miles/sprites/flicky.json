@@ -1,0 +1,5 @@
+{
+	"flicky_0x00":  { "File": "flicky.bmp", "Rect": "18,9,16,16", "Center": "8,8" },
+	"flicky_0x01":  { "File": "flicky.bmp", "Rect": "49,9,16,15", "Center": "8,8" },
+	"flicky_0x02":  { "File": "flicky.bmp", "Rect": "76,6,15,21", "Center": "8,12" }
+}

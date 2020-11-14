@@ -1,0 +1,10 @@
+{
+	"character_hyperknuckles_standing_0x00":  { "File": "character_hyperknuckles_standing.bmp", "Rect": "0,8,36,40", "Center": "23,20" },
+	"character_hyperknuckles_standing_0x01":  { "File": "character_hyperknuckles_standing.bmp", "Rect": "47,8,35,40", "Center": "22,20" },
+	"character_hyperknuckles_standing_0x02":  { "File": "character_hyperknuckles_standing.bmp", "Rect": "95,8,37,40", "Center": "22,20" },
+	"character_hyperknuckles_standing_0x03":  { "File": "character_hyperknuckles_standing.bmp", "Rect": "47,8,35,40", "Center": "22,20" },
+	"character_hyperknuckles_standing_0x04":  { "File": "character_hyperknuckles_standing.bmp", "Rect": "0,8,36,40", "Center": "23,20" },
+	"character_hyperknuckles_standing_0x05":  { "File": "character_hyperknuckles_standing.bmp", "Rect": "47,8,35,40", "Center": "22,20" },
+	"character_hyperknuckles_standing_0x06":  { "File": "character_hyperknuckles_standing.bmp", "Rect": "95,8,37,40", "Center": "22,20" },
+	"character_hyperknuckles_standing_0x07":  { "File": "character_hyperknuckles_standing.bmp", "Rect": "47,8,35,40", "Center": "22,20" }
+}

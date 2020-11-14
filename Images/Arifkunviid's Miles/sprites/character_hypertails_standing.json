@@ -1,6 +1,0 @@
-{
-	"character_hypertails_standing_0x00":  { "File": "character_hypertails_standing.bmp", "Rect": "8,7,24,33", "Center": "14,17" },
-	"character_hypertails_standing_0x01":  { "File": "character_hypertails_standing.bmp", "Rect": "48,7,24,33", "Center": "14,17" },
-	"character_hypertails_standing_0x02":  { "File": "character_hypertails_standing.bmp", "Rect": "88,6,24,34", "Center": "14,18" },
-	"character_hypertails_standing_0x03":  { "File": "character_hypertails_standing.bmp", "Rect": "48,7,24,33", "Center": "14,17" }
-}
