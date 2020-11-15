@@ -1,7 +1,7 @@
 SongNames:	offsetTable
 	offsetTableEntry.w	MusNam_Null
 	offsetTableEntry.w	MusNam_GHZ
-	offsetTableEntry.w	MusNam_SHP
+	offsetTableEntry.w	MusNam_EGHZ
 	offsetTableEntry.w	MusNam_SR
 	offsetTableEntry.w	MusNam_DL
 	offsetTableEntry.w	MusNam_NT
@@ -9,6 +9,7 @@ SongNames:	offsetTable
 	offsetTableEntry.w	MusNam_CM
 	offsetTableEntry.w	MusNam_MR
 	offsetTableEntry.w	MusNam_Baka
+	offsetTableEntry.w	MusNam_RM
 	offsetTableEntry.w	MusNam_WWGameSel
 	offsetTableEntry.w	MusNam_WM
 	offsetTableEntry.w	MusNam_S3DBInvincible
@@ -42,7 +43,7 @@ SongNames:	offsetTable
 
 MusNam_Null:	dc.b 0,' '
 MusNam_GHZ:	songtext	"GREEN HILL"
-MusNam_SHP:	songtext	"SUNSET HILL PH"
+MusNam_EGHZ:	songtext	"GHZ WITH EHZ"
 MusNam_SR:	songtext	"SHOOTING RISTAR"
 MusNam_DL:	songtext	"DANCING LEAVES"
 MusNam_NT:	songtext	"NEO TOKYO"
@@ -50,6 +51,7 @@ MusNam_UM:	songtext	"UNDER MAGMA"
 MusNam_CM:	songtext	"COLD MAN"
 MusNam_MR:	songtext	"MISTY RAIN"
 MusNam_Baka:	songtext	"BELOVED TOMBOY"
+MusNam_RM:	songtext	"ROBOT MUSEUM"
 MusNam_WWGameSel:	songtext	"GAME SELECT"
 MusNam_WM:	songtext	"WOOD MAN"
 MusNam_S3DBInvincible:	songtext	"S3D INVINCIBLE"

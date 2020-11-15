@@ -463,7 +463,7 @@ Mus81_GHZ_Loop01:
 	smpsJump            Mus81_GHZ_Loop01
 
 Mus81_GHZ_Voices:
-;	Voice $00
+;	Voice $00	; Bass
 ;	$08
 ;	$0A, $70, $30, $00, 	$1F, $1F, $5F, $5F, 	$12, $0E, $0A, $0A
 ;	$00, $04, $04, $03, 	$2F, $2F, $2F, $2F, 	$24, $2D, $13, $80
@@ -481,7 +481,7 @@ Mus81_GHZ_Voices:
 	smpsVcReleaseRate   $0F, $0F, $0F, $0F
 	smpsVcTotalLevel    $00, $13, $2D, $24
 
-;	Voice $01
+;	Voice $01	; Some of the backing... beep beep, boop boop, buup buup...
 ;	$20
 ;	$36, $35, $30, $31, 	$DF, $DF, $9F, $9F, 	$07, $06, $09, $06
 ;	$07, $06, $06, $08, 	$20, $10, $10, $F8, 	$19, $37, $13, $80
@@ -499,7 +499,7 @@ Mus81_GHZ_Voices:
 	smpsVcReleaseRate   $08, $00, $00, $00
 	smpsVcTotalLevel    $00, $13, $37, $19
 
-;	Voice $02
+;	Voice $02	; duluduluduludululelelele~
 ;	$36
 ;	$0F, $01, $01, $01, 	$1F, $1F, $1F, $1F, 	$12, $11, $0E, $00
 ;	$00, $0A, $07, $09, 	$FF, $0F, $1F, $0F, 	$18, $80, $80, $80
@@ -517,7 +517,7 @@ Mus81_GHZ_Voices:
 	smpsVcReleaseRate   $0F, $0F, $0F, $0F
 	smpsVcTotalLevel    $00, $00, $00, $18
 
-;	Voice $03
+;	Voice $03	; ???
 ;	$3D
 ;	$01, $02, $02, $02, 	$14, $0E, $8C, $0E, 	$08, $05, $02, $05
 ;	$00, $0D, $0D, $0D, 	$1F, $1F, $1F, $1F, 	$1A, $80, $80, $80
@@ -535,7 +535,7 @@ Mus81_GHZ_Voices:
 	smpsVcReleaseRate   $0F, $0F, $0F, $0F
 	smpsVcTotalLevel    $00, $00, $00, $1A
 
-;	Voice $04
+;	Voice $04	; ???
 ;	$2C
 ;	$72, $78, $34, $34, 	$1F, $12, $1F, $12, 	$00, $0A, $00, $0A
 ;	$00, $00, $00, $00, 	$0F, $1F, $0F, $1F, 	$16, $80, $17, $80
@@ -553,7 +553,7 @@ Mus81_GHZ_Voices:
 	smpsVcReleaseRate   $0F, $0F, $0F, $0F
 	smpsVcTotalLevel    $00, $17, $00, $16
 
-;	Voice $05
+;	Voice $05	; ???
 ;	$2C
 ;	$74, $74, $34, $34, 	$1F, $12, $1F, $1F, 	$00, $00, $00, $00
 ;	$00, $01, $00, $01, 	$0F, $3F, $0F, $3F, 	$16, $80, $17, $80
@@ -571,7 +571,7 @@ Mus81_GHZ_Voices:
 	smpsVcReleaseRate   $0F, $0F, $0F, $0F
 	smpsVcTotalLevel    $00, $17, $00, $16
 
-;	Voice $06
+;	Voice $06	; ???
 ;	$04
 ;	$72, $42, $32, $32, 	$12, $12, $12, $12, 	$00, $08, $00, $08
 ;	$00, $08, $00, $08, 	$0F, $1F, $0F, $1F, 	$23, $80, $23, $80
@@ -589,7 +589,7 @@ Mus81_GHZ_Voices:
 	smpsVcReleaseRate   $0F, $0F, $0F, $0F
 	smpsVcTotalLevel    $00, $23, $00, $23
 
-;	Voice $07
+;	Voice $07	; ???
 ;	$3D
 ;	$01, $02, $02, $02, 	$10, $50, $50, $50, 	$07, $08, $08, $08
 ;	$01, $00, $00, $00, 	$20, $17, $17, $17, 	$1C, $80, $80, $80
@@ -607,7 +607,7 @@ Mus81_GHZ_Voices:
 	smpsVcReleaseRate   $07, $07, $07, $00
 	smpsVcTotalLevel    $00, $00, $00, $1C
 
-;	Voice $08
+;	Voice $08	; backing brass
 ;	$2C
 ;	$74, $74, $34, $34, 	$1F, $12, $1F, $1F, 	$00, $07, $00, $07
 ;	$00, $07, $00, $07, 	$00, $38, $00, $38, 	$16, $80, $17, $80
@@ -624,4 +624,3 @@ Mus81_GHZ_Voices:
 	smpsVcDecayLevel    $03, $00, $03, $00
 	smpsVcReleaseRate   $08, $00, $08, $00
 	smpsVcTotalLevel    $00, $17, $00, $16
-

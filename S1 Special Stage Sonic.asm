@@ -9,8 +9,9 @@ SS_ShowLayout:				; XREF: SpecialStage
 		bsr.w	SS_AniWallsRings
 		bsr.w	SS_AniItems
 		move.w	d5,-(sp)
-		lea	($FFFF8000).w,a1
-		move.b	(S1SS_F780Rep).w,d0
+		lea	(Chunk_Table).l,a1
+		move.b	(SSAngle).w,d0
+		andi.b	#$FC,d0
 		jsr	(CalcSine).l
 		move.w	d0,d4
 		move.w	d1,d5
@@ -61,7 +62,7 @@ s1loc_1B1C0:
 		dbf	d7,s1loc_1B19E
 
 		move.w	(sp)+,d5
-		lea	(Chunk_Table).l,a0
+		lea	($FF0000).l,a0
 		moveq	#0,d0
 		move.w	(Camera_Y_pos).w,d0
 		divu.w	#$18,d0
@@ -71,7 +72,7 @@ s1loc_1B1C0:
 		move.w	(Camera_X_pos).w,d0
 		divu.w	#$18,d0
 		adda.w	d0,a0
-		lea	($FFFF8000).w,a4
+		lea	(Chunk_Table).l,a4
 		move.w	#$F,d7
 
 s1loc_1B20C:
@@ -95,7 +96,7 @@ s1loc_1B210:
 		bcs.s	s1loc_1B268
 		cmpi.w	#$170,d2
 		bcc.s	s1loc_1B268
-		lea	(Chunk_Table+$4000).l,a5
+		lea	($FF4000).l,a5
 		lsl.w	#3,d0
 		lea	(a5,d0.w),a5
 		movea.l	(a5)+,a1
@@ -116,7 +117,7 @@ s1loc_1B268:
 		lea	$70(a0),a0
 		dbf	d7,s1loc_1B20C
 
-		move.b	d5,($FFFFF62C).w
+		move.b	d5,(Sprite_count).w
 		cmpi.b	#$50,d5
 		beq.s	s1loc_1B288
 		move.l	#0,(a2)
@@ -136,9 +137,9 @@ s1loc_1B288:
 
 
 SS_AniWallsRings:			; XREF: SS_ShowLayout
-		lea	(Chunk_Table+$400C).l,a1
+		lea	($FF400C).l,a1
 		moveq	#0,d0
-		move.b	(S1SS_F780Rep).w,d0
+		move.b	(SSAngle).w,d0
 		lsr.b	#2,d0
 		andi.w	#$F,d0
 		moveq	#$23,d1
@@ -148,7 +149,7 @@ s1loc_1B2A4:
 		addq.w	#8,a1
 		dbf	d1,s1loc_1B2A4
 
-		lea	(Chunk_Table+$4005).l,a1
+		lea	($FF4005).l,a1
 		subq.b	#1,(Rings_anim_counter).w
 		bpl.s	s1loc_1B2C8
 		move.b	#7,(Rings_anim_counter).w
@@ -194,7 +195,7 @@ s1loc_1B326:
 		andi.b	#7,(Logspike_anim_frame).w
 
 s1loc_1B350:
-		lea	(Chunk_Table+$4016).l,a1
+		lea	($FF4016).l,a1
 		lea	(SS_WaRiVramSet).l,a0
 		moveq	#0,d0
 		move.b	(Logspike_anim_frame).w,d0
@@ -260,7 +261,7 @@ SS_WaRiVramSet:	dc.w $142, $6142, $142,	$142, $142, $142, $142,	$6142
 
 
 SS_RemoveCollectedItem:			; XREF: Obj09_ChkItems
-		lea	(Chunk_Table+$4400).l,a2
+		lea	($FF4400).l,a2
 		move.w	#$1F,d0
 
 s1loc_1B4C4:
@@ -281,7 +282,7 @@ locret_1B4CE:
 
 
 SS_AniItems:				; XREF: SS_ShowLayout
-		lea	(Chunk_Table+$4400).l,a0
+		lea	($FF4400).l,a0
 		move.w	#$1F,d7
 
 s1loc_1B4DA:
@@ -499,18 +500,18 @@ SS_LoadData:
 		move.w	(a1)+,(Object_RAM+x_pos).w
 		move.w	(a1)+,(Object_RAM+y_pos).w
 		movea.l	SS_LayoutIndex(pc,d0.w),a0
-		lea	(Chunk_Table+$4000).l,a1
+		lea	($FF4000).l,a1
 		move.w	#0,d0
 		jsr	(EniDec).l
-		lea	(Chunk_Table).l,a1
+		lea	($FF0000).l,a1
 		move.w	#$FFF,d0
 
 SS_ClrRAM3:
 		clr.l	(a1)+
 		dbf	d0,SS_ClrRAM3
 
-		lea	(Chunk_Table+$1020).l,a1
-		lea	(Chunk_Table+$4000).l,a0
+		lea	($FF1020).l,a1
+		lea	($FF4000).l,a0
 		moveq	#$3F,d1
 
 s1loc_1B6F6:
@@ -523,7 +524,7 @@ s1loc_1B6F8:
 		lea	$40(a1),a1
 		dbf	d1,s1loc_1B6F6
 
-		lea	(Chunk_Table+$4008).l,a1
+		lea	($FF4008).l,a1
 		lea	(SS_MapIndex).l,a0
 		moveq	#$4D,d1
 
@@ -534,7 +535,7 @@ s1loc_1B714:
 		move.w	(a0)+,(a1)+
 		dbf	d1,s1loc_1B714
 
-		lea	(Chunk_Table+$4400).l,a1
+		lea	($FF4400).l,a1
 		move.w	#$3F,d1
 
 s1loc_1B730:
@@ -852,9 +853,9 @@ Obj09_Display:				; XREF: Obj09_OnWall
 		bsr.w	Obj09_ChkItems2
 		jsr	(ObjectMove).l
 		bsr.w	SS_FixCamera
-		move.w	(S1SS_F780Rep).w,d0
-		add.w	(S1SS_F780Rep+2).w,d0
-		move.w	d0,(S1SS_F780Rep).w
+		move.w	(SSAngle).w,d0
+		add.w	(SSRotate).w,d0
+		move.w	d0,(SSAngle).w
 	cmpi.w	#3,(Player_option).w
 	blt.s	+
 		jmp	(Knuckles_Animate).l
@@ -903,7 +904,7 @@ s1loc_1BAA4:
 		move.w	d0,inertia(a0)
 
 s1loc_1BAA8:
-		move.b	(S1SS_F780Rep).w,d0
+		move.b	(SSAngle).w,d0
 		addi.b	#$20,d0
 		andi.b	#$C0,d0
 		neg.b	d0
@@ -998,7 +999,7 @@ Obj09_Jump:				; XREF: Obj09_OnWall
 		move.b	(Ctrl_1_Press_Logical).w,d0
 		andi.b	#$70,d0		; is A,	B or C pressed?
 		beq.s	Obj09_NoJump	; if not, branch
-		move.b	(S1SS_F780Rep).w,d0
+		move.b	(SSAngle).w,d0
 		andi.b	#$FC,d0
 		neg.b	d0
 		subi.b	#$40,d0
@@ -1068,23 +1069,23 @@ locret_1BBDE:
 ; ===========================================================================
 
 Obj09_ExitStage:			; XREF: Obj09_Index
-		addi.w	#$40,(S1SS_F780Rep+2).w
-		cmpi.w	#$1800,(S1SS_F780Rep+2).w
+		addi.w	#$40,(SSRotate).w
+		cmpi.w	#$1800,(SSRotate).w
 		bne.s	s1loc_1BBF4
 		move.b	#$C,(Game_Mode).w
 
 s1loc_1BBF4:
-		cmpi.w	#$3000,(S1SS_F780Rep+2).w
+		cmpi.w	#$3000,(SSRotate).w
 		blt.s	s1loc_1BC12
-		move.w	#0,(S1SS_F780Rep+2).w
-		move.w	#$4000,(S1SS_F780Rep).w
+		move.w	#0,(SSRotate).w
+		move.w	#$4000,(SSAngle).w
 		addq.b	#2,routine(a0)
 		move.w	#$3C,$38(a0)
 
 s1loc_1BC12:
-		move.w	(S1SS_F780Rep).w,d0
-		add.w	(S1SS_F780Rep+2).w,d0
-		move.w	d0,(S1SS_F780Rep).w
+		move.w	(SSAngle).w,d0
+		add.w	(SSRotate).w,d0
+		move.w	d0,(SSAngle).w
 	cmpi.w	#3,(Player_option).w
 	blt.s	+
 		jsr	(Knuckles_Animate).l
@@ -1134,7 +1135,7 @@ s1loc_1BC40:
 Obj09_Fall:				; XREF: Obj09_OnWall; Obj09_InAir
 		move.l	y_pos(a0),d2
 		move.l	x_pos(a0),d3
-		move.b	(S1SS_F780Rep).w,d0
+		move.b	(SSAngle).w,d0
 		andi.b	#$FC,d0
 		jsr	(CalcSine).l
 		move.w	x_vel(a0),d4
@@ -1194,7 +1195,7 @@ s1loc_1BCD4:
 
 
 sub_1BCE8:				; XREF: Obj09_Move; Obj09_Fall
-		lea	(Chunk_Table).l,a1
+		lea	($FF0000).l,a1
 		moveq	#0,d4
 		swap	d2
 		move.w	d2,d4
@@ -1253,7 +1254,7 @@ s1loc_1BD46:
 
 
 Obj09_ChkItems:				; XREF: Obj09_Display
-		lea	(Chunk_Table).l,a1
+		lea	($FF0000).l,a1
 		moveq	#0,d4
 		move.w	y_pos(a0),d4
 		addi.w	#$50,d4
@@ -1360,7 +1361,7 @@ Obj09_NoGhost:
 Obj09_MakeGhostSolid:
 		cmpi.b	#2,$3A(a0)	; is the ghost marked as "solid"?
 		bne.s	Obj09_GhostNotSolid ; if not, branch
-		lea	(Chunk_Table+$1020).l,a1
+		lea	($FF1020).l,a1
 		moveq	#$3F,d1
 
 Obj09_GhostLoop2:
@@ -1454,9 +1455,9 @@ Obj09_UPblock:
 		tst.b	$36(a0)
 		bne.w	Obj09_NoGlass
 		move.b	#$1E,$36(a0)
-		btst	#6,($FFFFF783).w
+		btst	#6,(SSRotations).w
 		beq.s	Obj09_UPsnd
-		asl	(S1SS_F780Rep+2).w	; increase stage rotation speed
+		asl	(SSRotate).w	; increase stage rotation speed
 		movea.l	$32(a0),a1
 		subq.l	#1,a1
 		move.b	#$2A,(a1)	; change item to a "DOWN" block
@@ -1472,9 +1473,9 @@ Obj09_DOWNblock:
 		tst.b	$36(a0)
 		bne.w	Obj09_NoGlass
 		move.b	#$1E,$36(a0)
-		btst	#6,($FFFFF783).w
+		btst	#6,(SSRotations).w
 		bne.s	Obj09_DOWNsnd
-		asr	(S1SS_F780Rep+2).w	; reduce stage rotation	speed
+		asr	(SSRotate).w	; reduce stage rotation	speed
 		movea.l	$32(a0),a1
 		subq.l	#1,a1
 		move.b	#$29,(a1)	; change item to an "UP" block
@@ -1498,7 +1499,7 @@ Obj09_Rblock:
 		move.l	d0,4(a2)
 
 Obj09_RevStage:
-		neg.w	(S1SS_F780Rep+2).w	; reverse stage	rotation
+		neg.w	(SSRotate).w	; reverse stage	rotation
 		move.w	#SndID_Bwoop,d0
 		jmp	(PlaySound).l ;	play sound
 ; ===========================================================================

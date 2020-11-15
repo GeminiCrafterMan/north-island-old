@@ -3337,13 +3337,11 @@ PalPtr_BGND:	palptr Pal_BGND,  0
 PalPtr_EHZ:	palptr Pal_EHZ,   1
 PalPtr_GHZ:	palptr Pal_GHZ,   1
 PalPtr_WZ:	palptr Pal_WZ,    1
-PalPtr_EHZ3:	palptr Pal_EHZ,   1
 PalPtr_MTZ:	palptr Pal_MTZ,   1
 PalPtr_MTZ2:	palptr Pal_MTZ,   1
 PalPtr_WFZ:	palptr Pal_WFZ,   1
 PalPtr_HTZ:	palptr Pal_HTZ,   1
 PalPtr_HPZ:	palptr Pal_HPZ,   1
-PalPtr_EHZ4:	palptr Pal_EHZ,   1
 PalPtr_OOZ:	palptr Pal_OOZ,   1
 PalPtr_MCZ:	palptr Pal_MCZ,   1
 PalPtr_CNZ:	palptr Pal_CNZ,   1
@@ -3379,6 +3377,7 @@ PalPtr_CPZ_T_U: palptr Pal_CPZ_T_U, 0
 PalPtr_ARZ_T_U: palptr Pal_ARZ_T_U, 0
 PalPtr_HPZ_T_U: palptr Pal_HPZ_T_U, 0
 PalPtr_S1SS:	palptr Pal_S1SS,0
+PalPtr_Test:	palptr Pal_Test,1
 
 ; ----------------------------------------------------------------------------
 ; This macro defines Pal_ABC and Pal_ABC_End, so palptr can compute the size of
@@ -3439,6 +3438,7 @@ Pal_ARZ_T_U: palette Tails underwater.bin,ARZ underwater.bin ; Aquatic Ruin Zone
 Pal_HPZ_T_U: palette Tails underwater.bin,HPZ underwater.bin ; Hidden Palace Zone underwater palette
 Pal_GHZ:	palette	GHZ.bin
 Pal_S1SS:	palette s1ss/special.bin
+Pal_Test:	palette Test.bin
 ; ===========================================================================
 
     if gameRevision<2
@@ -4120,9 +4120,9 @@ JmpTo_SwScrl_Title
 ; byte_3EA0:
 MusicList: zoneOrderedTable 1,2
 	zoneTableEntry.b MusID_SR,	MusID_DL	; 0 ; Lavender Valley
-	zoneTableEntry.b MusID_GHZ, MusID_SHP	; 1 ; Green Hill
+	zoneTableEntry.b MusID_GHZ, MusID_EGHZ	; 1 ; Green Hill
 	zoneTableEntry.b MusID_WM,	MusID_WM	; 2 ; Wood
-	zoneTableEntry.b MusID_OOZ, MusID_EHZ	; 3 ; Unused
+	zoneTableEntry.b MusID_RM,	MusID_RM	; 3 ; Test
 	zoneTableEntry.b MusID_MTZ, MusID_MTZ	; 4 ; MTZ1,2
 	zoneTableEntry.b MusID_MTZ, MusID_EHZ	; 5 ; MTZ3
 	zoneTableEntry.b MusID_WFZ, MusID_EHZ	; 6 ; WFZ
@@ -5249,20 +5249,20 @@ Off_ColP: zoneOrderedTable 4,1
 	zoneTableEntry.l ColP_EHZHTZ
 	zoneTableEntry.l ColP_GHZ	; 1
 	zoneTableEntry.l ColP_WZ	; 2
-	zoneTableEntry.l ColP_EHZHTZ	; 3
+	zoneTableEntry.l ColP_Test	; 3
 	zoneTableEntry.l ColP_MTZ	; 4
 	zoneTableEntry.l ColP_MTZ	; 5
-	zoneTableEntry.l ColP_WFZSCZ	; 6
+	zoneTableEntry.l ColP_WFZSCZ; 6
 	zoneTableEntry.l ColP_HTZ	; 7
 	zoneTableEntry.l ColP_HPZ	; 8
-	zoneTableEntry.l ColP_EHZHTZ	; 9
+	zoneTableEntry.l ColP_EHZHTZ; 9
 	zoneTableEntry.l ColP_OOZ	; 10
 	zoneTableEntry.l ColP_MCZ	; 11
 	zoneTableEntry.l ColP_CNZ	; 12
 	zoneTableEntry.l ColP_CPZ	; 13
 	zoneTableEntry.l ColP_DEZ	; 14
 	zoneTableEntry.l ColP_ARZ	; 15
-	zoneTableEntry.l ColP_WFZSCZ	; 16
+	zoneTableEntry.l ColP_WFZSCZ; 16
     zoneTableEnd
 
 ; ---------------------------------------------------------------------------
@@ -5276,20 +5276,20 @@ Off_ColS: zoneOrderedTable 4,1
 	zoneTableEntry.l ColS_EHZHTZ
 	zoneTableEntry.l ColS_GHZ	; 1
 	zoneTableEntry.l ColS_WZ	; 2
-	zoneTableEntry.l ColS_EHZHTZ	; 3
+	zoneTableEntry.l ColS_Test	; 3
 	zoneTableEntry.l ColP_MTZ	; 4
 	zoneTableEntry.l ColP_MTZ	; 5
-	zoneTableEntry.l ColS_WFZSCZ	; 6
+	zoneTableEntry.l ColS_WFZSCZ; 6
 	zoneTableEntry.l ColS_HTZ	; 7
 	zoneTableEntry.l ColS_HPZ	; 8
-	zoneTableEntry.l ColS_EHZHTZ	; 9
+	zoneTableEntry.l ColS_EHZHTZ; 9
 	zoneTableEntry.l ColP_OOZ	; 10
 	zoneTableEntry.l ColP_MCZ	; 11
 	zoneTableEntry.l ColS_CNZ	; 12
 	zoneTableEntry.l ColS_CPZ	; 13
 	zoneTableEntry.l ColS_DEZ	; 14
 	zoneTableEntry.l ColS_ARZ	; 15
-	zoneTableEntry.l ColS_WFZSCZ	; 16
+	zoneTableEntry.l ColS_WFZSCZ; 16
     zoneTableEnd
 
 
@@ -6954,8 +6954,8 @@ LevelSelect_Order2:
 	dc.w	green_hill_zone_act_2	; 3
 	dc.w	wood_zone_act_1		; 4
 	dc.w	wood_zone_act_2		; 5
-	dc.w	zone_3_act_1		; 6
-	dc.w	zone_3_act_2		; 7
+	dc.w	test_zone_act_1		; 6
+	dc.w	test_zone_act_2		; 7
 	dc.w	zone_9_act_1		; 8
 	dc.w	zone_9_act_2		; 9
 	dc.w	mystic_cave_zone_act_1		; 10
@@ -9793,7 +9793,7 @@ SwScrl_Index: zoneOrderedOffsetTable 2,1	; JmpTbl_SwScrlMgr
 	zoneOffsetTableEntry.w SwScrl_EHZ	; $00
 	zoneOffsetTableEntry.w SwScrl_GHZ	; $01
 	zoneOffsetTableEntry.w SwScrl_Lev2	; $02
-	zoneOffsetTableEntry.w SwScrl_EHZ;$03
+	zoneOffsetTableEntry.w SwScrl_Minimal;$03
 	zoneOffsetTableEntry.w SwScrl_MTZ	; $04
 	zoneOffsetTableEntry.w SwScrl_MTZ	; $05
 	zoneOffsetTableEntry.w SwScrl_WFZ	; $06
@@ -21792,7 +21792,7 @@ Obj34_MapUnc_147BA:	offsetTable
 	offsetTableEntry.w TC_EHZ
 	offsetTableEntry.w TC_GHZ
 	offsetTableEntry.w TC_WZ
-	offsetTableEntry.w TC_EHZ
+	offsetTableEntry.w TC_Test
 	offsetTableEntry.w TC_MTZ
 	offsetTableEntry.w TC_MTZ
 	offsetTableEntry.w TC_WFZ
@@ -21844,6 +21844,11 @@ TC_WZ:		dc.w $4				; WOOD
 		dc.w $0005, $8588, $82C4, $0050	; O
 		dc.w $0005, $8588, $82C4, $0060	; O
 		dc.w $0005, $85E4, $82F2, $0070	; D
+TC_Test:	dc.w $4				; TEST
+		dc.w $0005, $85DE, $82EF, $0040	; T
+		dc.w $0005, $8580, $82C0, $0050	; E
+		dc.w $0005, $85E2, $82F1, $0060	; S
+		dc.w $0005, $85DE, $82EF, $0070	; T
 TC_MTZ:	dc.w $A
 	dc.w 9,	$85DE, $82EF, $FFE0
 	dc.w 5,	$8580, $82C0, $FFF8
@@ -22436,7 +22441,7 @@ Off_TitleCardLetters:
 	dc.b TitleCardLetters_EHZ - TitleCardLetters	; 0 ; Lavender Valley
 	dc.b TitleCardLetters_GHZ - TitleCardLetters	; 1 ; Green Hill
 	dc.b TitleCardLetters_WZ  - TitleCardLetters	; 2 ; Wood (temp. name)
-	dc.b TitleCardLetters_EHZ - TitleCardLetters	; 3 ; Zone 3
+	dc.b TitleCardLetters_Test - TitleCardLetters	; 3 ; Zone 3
 	dc.b TitleCardLetters_MTZ - TitleCardLetters	; 4 ; Metropolis 1 & 2
 	dc.b TitleCardLetters_MTZ - TitleCardLetters	; 5 ; Metropolis 3
 	dc.b TitleCardLetters_WFZ - TitleCardLetters	; 6 ; Wing Fortress
@@ -22473,6 +22478,8 @@ TitleCardLetters_GHZ:
 	titleLetters	"GREEN HILL"
 TitleCardLetters_WZ:
 	titleLetters	"WOOD"
+TitleCardLetters_Test:
+	titleLetters	"TEST"
 TitleCardLetters_MTZ:
 	titleLetters	"METROPOLIS"
 TitleCardLetters_HTZ:
@@ -26569,31 +26576,15 @@ ObjectLayoutBoundary macro
 	dc.w	$FFFF, $0000, $0000
     endm
 
-	; [Bug] Sonic Team forgot to put a boundary marker here,
-	; meaning the game could potentially read past the start
-	; of the file and load random objects.
-	;ObjectLayoutBoundary
-
+	ObjectLayoutBoundary
 ; byte_1802A;
-    if gameRevision=0
-Objects_CNZ1_2P:	BINCLUDE	"level/objects/CNZ_1_2P (REV00).bin"
-    else
     ; a Crawl badnik was moved slightly further away from a ledge
     ; 2 flippers were moved closer to a wall
 Objects_CNZ1_2P:	BINCLUDE	"level/objects/CNZ_1_2P.bin"
-    endif
-
 	ObjectLayoutBoundary
-
-; byte_18492:
-    if gameRevision=0
-Objects_CNZ2_2P:	BINCLUDE	"level/objects/CNZ_2_2P (REV00).bin"
-    else
     ; 4 Crawl badniks were slightly moved, placing them closer/farther away from ledges
     ; 2 flippers were moved away from a wall to keep players from getting stuck behind them
 Objects_CNZ2_2P:	BINCLUDE	"level/objects/CNZ_2_2P.bin"
-    endif
-
 	ObjectLayoutBoundary
 
 ; ===========================================================================
@@ -27836,7 +27827,7 @@ return_19776:
 ; there are a few slightly different SolidObject functions
 ; specialized for certain objects, in this case, obj74 and obj30
 ; These check for solidity even if the object is off-screen
-; loc_19778: SolidObject74_30:
+; loc_19778: SolidObject74_30: SolidObject71:
 SolidObject_Always:
 	lea	(MainCharacter).w,a1 ; a1=character
 	moveq	#p1_standing_bit,d6
@@ -28177,18 +28168,27 @@ SolidObject_ChkBounds:
 
 loc_19A6A:
 	cmpi.w	#4,d1
-	bls.s	loc_19AB6
+;	bls.s	loc_19AB6
+
+	bls.s	Solid_SideAir2
+	moveq	#0,d1
+
 	tst.w	d0
 	beq.s	loc_19A90
 	bmi.s	loc_19A7E
 	tst.w	x_vel(a1)
 	bmi.s	loc_19A90
+
+		move.b	#button_right_mask,d1
+
 	bra.s	loc_19A84
 ; ===========================================================================
 
 loc_19A7E:
 	tst.w	x_vel(a1)
 	bpl.s	loc_19A90
+
+	move.b	#button_left_mask,d1
 
 loc_19A84:
 	move.w	#0,inertia(a1)
@@ -28209,7 +28209,15 @@ loc_19A90:
 	rts
 ; ===========================================================================
 
-loc_19AB6:
+loc_19AB6:	; Solid_SideAir:
+
+		move.l	a0,-(sp)
+		movea.l	a1,a0
+		bsr.w	WallJump
+		movea.l	(sp)+,a0
+
+Solid_SideAir2:
+
 	bsr.s	loc_19ADC
 	move.w	d6,d4
 	addi.b	#($10-p1_standing_bit+p1_touch_side_bit),d4
@@ -28856,18 +28864,18 @@ Obj01_Control:
 .skip:
 		;Mercury Wall Jump Smoke Puff
 		;USES Smoke Puff
-	;	move.b	(v_framebyte).w,d0
+	;	move.b	(Timer_frames+1).w,d0
 	;	andi.b	#7,d0
 	;	cmpi.b	#7,d0
 	;	bne.s	.nodec
 	;create puff
-	;	bsr.w	FindFreeObj
+	;	bsr.w	SingleObjLoad
 	;	bne.s	.nodec
 	;	move.b	#id_SmokePuff,0(a1) ; load missile object
-	;	move.w	obX(a0),obX(a1)
-	;	move.w	obY(a0),obY(a1)
-	;	addi.w	#$1C,obY(a1)
-	;	move.b	#1,obSubtype(a1)
+	;	move.w	x_pos(a0),x_pos(a1)
+	;	move.w	y_pos(a0),y_pos(a1)
+	;	addi.w	#$1C,y_pos(a1)
+	;	move.b	#1,subtype(a1)
 		;end Wall Jump Smoke Puff
 		
 	.nodec:
@@ -30025,6 +30033,8 @@ Sonic_RollJump:
 ; End of function Sonic_Jump
 
 Sonic_Thok:
+	cmpi.b	#AniIDSonAni_WallJump,anim(a0)
+	beq.s	return_Thok
 	cmpi.b	#0,(AirMove_Performed).w
 	bne.s	return_Thok
     move.b    (Ctrl_1_Press_Logical).w,d0
@@ -30032,7 +30042,6 @@ Sonic_Thok:
     beq.w    return_Thok    ; if not, return
 	move.w	#SndID_SpindashRelease,d0	; spindash zoom sound
 	jsr	(PlaySound).l
-;	move.b	#AniIDSonAni_JumpDash,anim(a0)	; makes this move infinitely less useful.
 	move.b	#1,(AirMove_Performed).w
 	move.w	#0,y_vel(a0)
 	tst.b	(Super_Sonic_flag).w	; is Sonic already Super?
@@ -30831,6 +30840,8 @@ return_1B09E:
 ; End of function Sonic_DoLevelCollision
 
 WallJump:
+		cmpi.b	#ObjID_Sonic,id(a0)
+		bgt.s	.return
 		tst.b	jumping(a0)	;Mercury Constants
 		beq.s	.return
 		tst.b	y_vel(a0)
@@ -30846,8 +30857,9 @@ WallJump:
 		move.w	#0,y_vel(a0)
 		move.b	#$18,double_jump_flag(a0)	;Mercury Constants
 		clr.b	jumping(a0)
-		move.b	#AniIDSonAni_JumpDash,anim(a0)
-		
+		move.b	#AniIDSonAni_WallJump,anim(a0)
+		move.w	#SndID_KnuxGrab,d0
+		jsr	(PlaySound).l
 	.return:
 		rts
 
@@ -31380,7 +31392,7 @@ SonAni_Continue_ptr:		offsetTableEntry.w SonAni_Continue		; 32 ; $20
 SonAni_React_ptr:		offsetTableEntry.w SonAni_React	; 33 ; $21
 SonAni_PeelChrg_ptr:	offsetTableEntry.w SonAni_PeelChrg	; 34 ; $22
 SonAni_HaulAss_ptr:		offsetTableEntry.w SonAni_HaulAss	; 35 ; $23
-SonAni_JumpDash_ptr:	offsetTableEntry.w SonAni_JumpDash	; 36 ; $24
+SonAni_WallJump_ptr:	offsetTableEntry.w SonAni_WallJump	; 36 ; $24
 
 SonAni_Walk:	dc.b $FF,   7,   8,   1,   2,   3,   4,   5,   6, $FF
 	rev02even
@@ -31461,7 +31473,7 @@ SonAni_PeelChrg:dc.b 	0,  $7, $7, $7, $7, $7, $7, $7, $7
 	rev02even
 SonAni_HaulAss:	dc.b $FF, $DA, $DB, $DC, $DD, $FF, $FF,	$FF
 	rev02even
-SonAni_JumpDash:	dc.b	$77,$EA,$FF
+SonAni_WallJump:	dc.b	$77,$EA,$FF
 	even
 
 ; ---------------------------------------------------------------------------
@@ -31505,7 +31517,7 @@ SuperSonicAniData: offsetTable
 	offsetTableEntry.w SonAni_Blank		; 33 ; $21
 	offsetTableEntry.w SonAni_PeelChrg		; 34 ; $22
 	offsetTableEntry.w SonAni_HaulAss		; 35 ; $23
-	offsetTableEntry.w SonAni_JumpDash		; 36 ; $24
+	offsetTableEntry.w SonAni_WallJump		; 36 ; $24
 
 SupSonAni_Stand:	dc.b	7, $BA, $BB, $BC, $BB, $FF
 	rev02even
@@ -35760,7 +35772,13 @@ Obj08_CheckSkid:
 	bne.s	+
 	cmpi.b	#3,$21(a2)	; check for sliding
 	beq.s	Obj08_SkidDust
-+	move.b	#2,routine(a0)
++
+	cmpi.b	#ObjID_Sonic,id(a2)
+	bne.s	+
+	cmpi.b	#AniIDSonAni_WallJump,anim(a2)
+	beq.s	Obj08_SkidDust
++
+	move.b	#2,routine(a0)
 	move.b	#0,objoff_32(a0)
 	rts
 ; ===========================================================================
@@ -79062,7 +79080,7 @@ LevelArtPointers:
 	levartptrs PLCID_Ehz1,     PLCID_Ehz2,      PalID_EHZ,  ArtKos_EHZ, BM16_EHZ, BM128_EHZ ;   0 ; EHZ	; EMERALD HILL ZONE
 	levartptrs PLCID_Ghz1,	   PLCID_Ghz2,		PalID_GHZ,	ArtKos_GHZ, BM16_GHZ, BM128_GHZ ;   1 ; GHZ ; GREEN HILL ZONE
 	levartptrs PLCID_Wz1,	   PLCID_Wz2,		PalID_WZ,   ArtKos_WZ,	BM16_WZ,  BM128_WZ	;   2 ; WZ	; WOOD ZONE
-	levartptrs PLCID_Ehz1,	   PLCID_Ehz2,		PalID_GHZ,	ArtKos_EHZ,	BM16_EHZ, BM128_EHZ ;   3 ; LEV3; LEVEL 3 (UNUSED)
+	levartptrs PLCID_Ehz1,	   PLCID_Ehz2,		PalID_Test,	ArtKos_Test,BM16_Test,BM128_Test ;   3 ; LEV3; LEVEL 3 (UNUSED)
 	levartptrs PLCID_Mtz1,     PLCID_Mtz2,      PalID_MTZ,  ArtKos_MTZ, BM16_MTZ, BM128_MTZ ;   4 ; MTZ	; METROPOLIS ZONE ACTS 1 & 2
 	levartptrs PLCID_Mtz1,     PLCID_Mtz2,      PalID_MTZ,  ArtKos_MTZ, BM16_MTZ, BM128_MTZ ;   5 ; MTZ3; METROPOLIS ZONE ACT 3
 	levartptrs PLCID_Wfz1,     PLCID_Wfz2,      PalID_WFZ,  ArtKos_SCZ, BM16_WFZ, BM128_WFZ ;   6 ; WFZ	; WING FORTRESS ZONE
@@ -79181,20 +79199,18 @@ PLCptr_CnzAnimals:	offsetTableEntry.w PlrList_CnzAnimals		; 57
 PLCptr_CpzAnimals:	offsetTableEntry.w PlrList_CpzAnimals		; 58
 PLCptr_ArzAnimals:	offsetTableEntry.w PlrList_ArzAnimals		; 59
 PLCptr_SpecialStage:	offsetTableEntry.w PlrList_SpecialStage		; 60
-PLCptr_SpecStageBombs:	offsetTableEntry.w PlrList_SpecStageBombs	; 61
-PLCptr_WfzBoss:		offsetTableEntry.w PlrList_WfzBoss		; 62
-PLCptr_Tornado:		offsetTableEntry.w PlrList_Tornado		; 63
-PLCptr_Capsule:		offsetTableEntry.w PlrList_Capsule		; 64
-PLCptr_Explosion:	offsetTableEntry.w PlrList_Explosion		; 65
-PLCptr_ResultsTails:	offsetTableEntry.w PlrList_ResultsTails		; 66
-PLCptr_KnucklesLife:	offsetTableEntry.w PlrList_KnucklesLife	; 67
-PLCptr_ResultsKnuckles:	offsetTableEntry.w PlrList_ResultsKnuckles ; 68
-PLCptr_Ghz1:		offsetTableEntry.w PlrList_Ghz1			; 69
-PLCptr_Ghz2:		offsetTableEntry.w PlrList_Ghz2			; 70
-PLCptr_SpecialStageK:	offsetTableEntry.w PlrList_SpecialStageK		; 60
-PLCptr_Wz1:			offsetTableEntry.w PlrList_Wz1
-PLCptr_Wz2:			offsetTableEntry.w PlrList_Wz2
-PLCptr_Std2_Ice:		offsetTableEntry.w PlrList_Std2_Ice			; 1
+PLCptr_WfzBoss:		offsetTableEntry.w PlrList_WfzBoss		; 61
+PLCptr_Tornado:		offsetTableEntry.w PlrList_Tornado		; 62
+PLCptr_Capsule:		offsetTableEntry.w PlrList_Capsule		; 63
+PLCptr_Explosion:	offsetTableEntry.w PlrList_Explosion		; 64
+PLCptr_ResultsTails:	offsetTableEntry.w PlrList_ResultsTails		; 65
+PLCptr_KnucklesLife:	offsetTableEntry.w PlrList_KnucklesLife	; 66
+PLCptr_ResultsKnuckles:	offsetTableEntry.w PlrList_ResultsKnuckles ; 67
+PLCptr_Ghz1:		offsetTableEntry.w PlrList_Ghz1			; 68
+PLCptr_Ghz2:		offsetTableEntry.w PlrList_Ghz2			; 69
+PLCptr_Wz1:			offsetTableEntry.w PlrList_Wz1			; 70
+PLCptr_Wz2:			offsetTableEntry.w PlrList_Wz2			; 71
+PLCptr_Std2_Ice:		offsetTableEntry.w PlrList_Std2_Ice			; 72
 
 ; macro for a pattern load request list header
 ; must be on the same line as a label that has a corresponding _End label later
@@ -79812,38 +79828,6 @@ PlrList_SpecialStage: plrlistheader
 PlrList_SpecialStage_End
 ;---------------------------------------------------------------------------------------
 ; Pattern load queue
-; Special Stage
-;---------------------------------------------------------------------------------------
-PlrList_SpecialStageK: plrlistheader
-	plreq ArtTile_ArtNem_HUD, ArtNem_HUD
-	plreq ArtTile_ArtNem_Ring,		Nem_SSRing
-	plreq ArtTile_Nem_SSBgCloud,	Nem_SSBgCloud
-	plreq ArtTile_Nem_SSBgFish,		Nem_SSBgFish
-	plreq ArtTile_Nem_SSWalls,		Nem_SSWalls
-	plreq ArtTile_Nem_Bumper,		Nem_SYZBumper
-	plreq ArtTile_Nem_SSGOAL,		Nem_SSGOAL
-	plreq ArtTile_Nem_SSUpDown,		Nem_SSUpDown
-	plreq ArtTile_Nem_SSRBlock,		Nem_SSRBlock
-	plreq ArtTile_Nem_SS1UpBlock,	Nem_SS1UpBlock
-	plreq ArtTile_Nem_SSEmStars,	Nem_SSEmStars
-	plreq ArtTile_Nem_SSRedWhite,	Nem_SSRedWhite
-	plreq ArtTile_Nem_SSGhost,		Nem_SSGhost
-	plreq ArtTile_Nem_SSWBlock,		Nem_SSWBlock
-	plreq ArtTile_Nem_SSGlass,		Nem_SSGlass
-	plreq ArtTile_Nem_SSEmerald,	Nem_SSEmerald
-	plreq ArtTile_Nem_SSZone14,		Nem_SSZone1
-	plreq ArtTile_Nem_SSZone25,		Nem_SSZone2
-	plreq ArtTile_Nem_SSZone36,		Nem_SSZone3
-PlrList_SpecialStageK_End
-;---------------------------------------------------------------------------------------
-; Pattern load queue
-; Special Stage Bombs
-;---------------------------------------------------------------------------------------
-PlrList_SpecStageBombs: plrlistheader
-	plreq ArtTile_ArtNem_SpecialBomb, ArtNem_SpecialBomb
-PlrList_SpecStageBombs_End
-;---------------------------------------------------------------------------------------
-; Pattern load queue
 ; WFZ Boss
 ;---------------------------------------------------------------------------------------
 PlrList_WfzBoss: plrlistheader
@@ -80001,6 +79985,11 @@ ColP_WZ:	BINCLUDE	"collision/WZ primary 16x16 collision index.bin"
 	even
 ColS_WZ:	BINCLUDE	"collision/WZ secondary 16x16 collision index.bin"
 	even
+; test stuff
+ColP_Test:	BINCLUDE	"collision/Test primary 16x16 collision index.bin"
+	even
+ColS_Test:	BINCLUDE	"collision/Test secondary 16x16 collision index.bin"
+	even
 ;---------------------------------------------------------------------------------------
 ; MTZ primary 16x16 collision index (Kosinski compression)
 ColP_MTZ:	BINCLUDE	"collision/MTZ primary 16x16 collision index.bin"
@@ -80076,9 +80065,9 @@ Off_Level: zoneOrderedOffsetTable 2,2
 	zoneOffsetTableEntry.w Level_GHZ1	; 2
 	zoneOffsetTableEntry.w Level_GHZ2	; 3
 	zoneOffsetTableEntry.w Level_WZ1	; 4
-	zoneOffsetTableEntry.w Level_WZ1	; 5
-	zoneOffsetTableEntry.w Level_EHZ1	; 6
-	zoneOffsetTableEntry.w Level_EHZ1	; 7
+	zoneOffsetTableEntry.w Level_WZ2	; 5
+	zoneOffsetTableEntry.w Level_Test1	; 6
+	zoneOffsetTableEntry.w Level_Test2	; 7
 	zoneOffsetTableEntry.w Level_MTZ1	; 8
 	zoneOffsetTableEntry.w Level_MTZ2	; 9
 	zoneOffsetTableEntry.w Level_MTZ3	; 10
@@ -80118,11 +80107,15 @@ Level_EHZ2:	BINCLUDE	"level/layout/EHZ_2.bin"
 ; EHZ act 1 level layout (Kosinski compression)
 Level_GHZ1:	BINCLUDE	"level/layout/GHZ_1.bin"
 	even
-;---------------------------------------------------------------------------------------
-; EHZ act 2 level layout (Kosinski compression)
 Level_GHZ2:	BINCLUDE	"level/layout/GHZ_2.bin"
 	even
 Level_WZ1:	BINCLUDE	"level/layout/WZ_1.bin"
+	even
+Level_WZ2:	BINCLUDE	"level/layout/WZ_2.bin"
+	even
+Level_Test1:	BINCLUDE	"level/layout/Test_1.bin"
+	even
+Level_Test2:	BINCLUDE	"level/layout/Test_2.bin"
 	even
 ;---------------------------------------------------------------------------------------
 ; MTZ act 1 level layout (Kosinski compression)
@@ -81300,6 +81293,10 @@ BM128_GHZ:	BINCLUDE	"mappings/128x128/GHZ.bin"
 ArtKos_WZ:	BINCLUDE	"art/kosinski/WZ.bin"
 BM16_WZ:	BINCLUDE	"mappings/16x16/WZ.bin"
 BM128_WZ:	BINCLUDE	"mappings/128x128/WZ.bin"
+; lol funny test level go brrrrrrrrr
+ArtKos_Test:BINCLUDE	"art/kosinski/Test.bin"
+BM16_Test:	BINCLUDE	"mappings/16x16/Test.bin"
+BM128_Test:	BINCLUDE	"mappings/128x128/Test.bin"
 ;-----------------------------------------------------------------------------------
 ; EHZ 16x16 block mappings (Kosinski compression) ; was: (Kozinski compression)
 BM16_EHZ:	BINCLUDE	"mappings/16x16/EHZ.bin"
@@ -81420,320 +81417,6 @@ ArtKos_WFZ:	BINCLUDE	"art/kosinski/WFZ_Supp.bin"
 BM128_WFZ:	BINCLUDE	"mappings/128x128/WFZ_SCZ.bin"
 	even
 
-; >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-;-----------------------------------------------------------------------------------
-; Exit curve + slope up
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_CA904:
-MapSpec_Rise1:	BINCLUDE	"mappings/special stage/Slope up - Frame 1.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_CADA8:
-MapSpec_Rise2:	BINCLUDE	"mappings/special stage/Slope up - Frame 2.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_CB376:
-MapSpec_Rise3:	BINCLUDE	"mappings/special stage/Slope up - Frame 3.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_CB92E:
-MapSpec_Rise4:	BINCLUDE	"mappings/special stage/Slope up - Frame 4.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_CBF92:
-MapSpec_Rise5:	BINCLUDE	"mappings/special stage/Slope up - Frame 5.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_CC5BE:
-MapSpec_Rise6:	BINCLUDE	"mappings/special stage/Slope up - Frame 6.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_CCC7A:
-MapSpec_Rise7:	BINCLUDE	"mappings/special stage/Slope up - Frame 7.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_CD282:
-MapSpec_Rise8:	BINCLUDE	"mappings/special stage/Slope up - Frame 8.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_CD7C0:
-MapSpec_Rise9:	BINCLUDE	"mappings/special stage/Slope up - Frame 9.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_CDD44:
-MapSpec_Rise10:	BINCLUDE	"mappings/special stage/Slope up - Frame 10.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_CE2BE:
-MapSpec_Rise11:	BINCLUDE	"mappings/special stage/Slope up - Frame 11.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_CE7DE:
-MapSpec_Rise12:	BINCLUDE	"mappings/special stage/Slope up - Frame 12.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_CEC52:
-MapSpec_Rise13:	BINCLUDE	"mappings/special stage/Slope up - Frame 13.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_CF0BC:
-MapSpec_Rise14:	BINCLUDE	"mappings/special stage/Slope up - Frame 14.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_CF580:
-MapSpec_Rise15:	BINCLUDE	"mappings/special stage/Slope up - Frame 15.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_CFA00:
-MapSpec_Rise16:	BINCLUDE	"mappings/special stage/Slope up - Frame 16.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_CFE4A:
-MapSpec_Rise17:	BINCLUDE	"mappings/special stage/Slope up - Frame 17.bin"
-
-;-----------------------------------------------------------------------------------
-; Straight path
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D028C:
-MapSpec_Straight1:	BINCLUDE	"mappings/special stage/Straight path - Frame 1.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D090A:
-MapSpec_Straight2:	BINCLUDE	"mappings/special stage/Straight path - Frame 2.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D0EA6:
-MapSpec_Straight3:	BINCLUDE	"mappings/special stage/Straight path - Frame 3.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D1400:
-MapSpec_Straight4:	BINCLUDE	"mappings/special stage/Straight path - Frame 4.bin"
-
-;-----------------------------------------------------------------------------------
-; Exit curve + slope down
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D19FC:
-MapSpec_Drop1:	BINCLUDE	"mappings/special stage/Slope down - Frame 1.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D1EAC:
-MapSpec_Drop2:	BINCLUDE	"mappings/special stage/Slope down - Frame 2.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D23AE:
-MapSpec_Drop3:	BINCLUDE	"mappings/special stage/Slope down - Frame 3.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D27C6:
-MapSpec_Drop4:	BINCLUDE	"mappings/special stage/Slope down - Frame 4.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D2C14:
-MapSpec_Drop5:	BINCLUDE	"mappings/special stage/Slope down - Frame 5.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D3092:
-MapSpec_Drop6:	BINCLUDE	"mappings/special stage/Slope down - Frame 6.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D3522:
-MapSpec_Drop7:	BINCLUDE	"mappings/special stage/Slope down - Frame 7.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D39EC:
-MapSpec_Drop8:	BINCLUDE	"mappings/special stage/Slope down - Frame 8.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D3F78:
-MapSpec_Drop9:	BINCLUDE	"mappings/special stage/Slope down - Frame 9.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D4660:
-MapSpec_Drop10:	BINCLUDE	"mappings/special stage/Slope down - Frame 10.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D4DA6:
-MapSpec_Drop11:	BINCLUDE	"mappings/special stage/Slope down - Frame 11.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D53FC:
-MapSpec_Drop12:	BINCLUDE	"mappings/special stage/Slope down - Frame 12.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D5958:
-MapSpec_Drop13:	BINCLUDE	"mappings/special stage/Slope down - Frame 13.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D5F02:
-MapSpec_Drop14:	BINCLUDE	"mappings/special stage/Slope down - Frame 14.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D6596:
-MapSpec_Drop15:	BINCLUDE	"mappings/special stage/Slope down - Frame 15.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D6BAA:
-MapSpec_Drop16:	BINCLUDE	"mappings/special stage/Slope down - Frame 16.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D702E:
-MapSpec_Drop17:	BINCLUDE	"mappings/special stage/Slope down - Frame 17.bin"
-
-;-----------------------------------------------------------------------------------
-; Curved path
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D749C:
-MapSpec_Turning1:	BINCLUDE	"mappings/special stage/Curve right - Frame 1.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D7912:
-MapSpec_Turning2:	BINCLUDE	"mappings/special stage/Curve right - Frame 2.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D7DAA:
-MapSpec_Turning3:	BINCLUDE	"mappings/special stage/Curve right - Frame 3.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D8250:
-MapSpec_Turning4:	BINCLUDE	"mappings/special stage/Curve right - Frame 4.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D85F8:
-MapSpec_Turning5:	BINCLUDE	"mappings/special stage/Curve right - Frame 5.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings ; MapSpec_D89EC:
-MapSpec_Turning6:	BINCLUDE	"mappings/special stage/Curve right - Frame 6.bin"
-
-;-----------------------------------------------------------------------------------
-; Exit curve
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings
-; Exit curve  ; MapSpec_D8E24:
-MapSpec_Unturn1:	BINCLUDE	"mappings/special stage/Curve right - Frame 7.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings
-; Exit curve  ; MapSpec_D92B6:
-MapSpec_Unturn2:	BINCLUDE	"mappings/special stage/Curve right - Frame 8.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings
-; Exit curve  ; MapSpec_D9778:
-MapSpec_Unturn3:	BINCLUDE	"mappings/special stage/Curve right - Frame 9.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings
-; Exit curve  ; MapSpec_D9B80:
-MapSpec_Unturn4:	BINCLUDE	"mappings/special stage/Curve right - Frame 10.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings
-; Exit curve  ; MapSpec_DA016:
-MapSpec_Unturn5:	BINCLUDE	"mappings/special stage/Curve right - Frame 11.bin"
-
-;-----------------------------------------------------------------------------------
-; Enter curve
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings
-; Begin curve right ; MapSpec_DA4CE:
-MapSpec_Turn1:	BINCLUDE	"mappings/special stage/Begin curve right - Frame 1.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings
-; Begin curve right ; MapSpec_DAB20:
-MapSpec_Turn2:	BINCLUDE	"mappings/special stage/Begin curve right - Frame 2.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings
-; Begin curve right ; MapSpec_DB086:
-MapSpec_Turn3:	BINCLUDE	"mappings/special stage/Begin curve right - Frame 3.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings
-; Begin curve right ; MapSpec_DB5AE:
-MapSpec_Turn4:	BINCLUDE	"mappings/special stage/Begin curve right - Frame 4.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings
-; Begin curve right ; MapSpec_DBB62:
-MapSpec_Turn5:	BINCLUDE	"mappings/special stage/Begin curve right - Frame 5.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings
-; Begin curve right ; MapSpec_DC154:
-MapSpec_Turn6:	BINCLUDE	"mappings/special stage/Begin curve right - Frame 6.bin"
-;-----------------------------------------------------------------------------------
-; Special stage tube mappings
-; Begin curve right ; MapSpec_DC5E8:
-MapSpec_Turn7:	BINCLUDE	"mappings/special stage/Begin curve right - Frame 7.bin"
-
-;--------------------------------------------------------------------------------------
-; Kosinski compressed art
-; Special stage level patterns
-; Note: Only one line of each tile is stored in this archive. The other 7 lines are
-;  the same as this one line, so to get the full tiles, each line needs to be
-;  duplicated 7 times over.					; ArtKoz_DCA38:
-;--------------------------------------------------------------------------------------
-ArtKos_Special:	BINCLUDE	"art/kosinski/SpecStag.bin"
-;--------------------------------------------------------------------------------------
-; Nemesis compressed art (127 blocks)
-; Background patterns for special stage		; ArtNem_DCD68:
-	even
-ArtNem_SpecialBack:	BINCLUDE	"art/nemesis/Background art for special stage.bin"
-;--------------------------------------------------------------------------------------
-; Enigma compressed tile mappings
-; Main background mappings for special stage	; MapEng_DD1DE:
-	even
-MapEng_SpecialBack:	BINCLUDE	"mappings/misc/Main background mappings for special stage.bin"
-;--------------------------------------------------------------------------------------
-; Enigma compressed tile mappings
-; Lower background mappings for special stage	; MapEng_DD30C:
-	even
-MapEng_SpecialBackBottom:	BINCLUDE	"mappings/misc/Lower background mappings for special stage.bin"
-;--------------------------------------------------------------------------------------
-; Nemesis compressed art (62 blocks)
-; Sonic/Miles and number text from special stage	; ArtNem_DD48A:
-	even
-ArtNem_SpecialHUD:	BINCLUDE	"art/nemesis/Sonic and Miles number text from special stage.bin"
-	even
-ArtNem_SpecialHUDK:	BINCLUDE	"art/nemesis/Knuckles and Miles number text from special stage.bin"
-;--------------------------------------------------------------------------------------
-; Nemesis compressed art (48 blocks)
-; "Start" and checkered flag patterns in special stage	; ArtNem_DD790:
-	even
-ArtNem_SpecialStart:	BINCLUDE	"art/nemesis/Start text from special stage.bin"
-;--------------------------------------------------------------------------------------
-; Nemesis compressed art (37 blocks)
-; Stars in special stage	; ArtNem_DD8CE:
-	even
-ArtNem_SpecialStars:	BINCLUDE	"art/nemesis/Stars in special stage.bin"
-;--------------------------------------------------------------------------------------
-; Nemesis compressed art (13 blocks)
-; Text for most of the "Player VS Player" message in 2P special stage	; ArtNem_DD9C8:
-	even
-ArtNem_SpecialPlayerVSPlayer:	BINCLUDE	"art/nemesis/Special stage Player VS Player text.bin"
-;--------------------------------------------------------------------------------------
-; Nemesis compressed art (104 blocks)
-; Ring patterns in special stage	; ArtNem_DDA7E:
-	even
-ArtNem_SpecialRings:	BINCLUDE	"art/nemesis/Special stage ring art.bin"
-;--------------------------------------------------------------------------------------
-; Nemesis compressed art (38 blocks)
-; Horizontal shadow patterns in special stage	; ArtNem_DDFA4:
-	even
-ArtNem_SpecialFlatShadow:	BINCLUDE	"art/nemesis/Horizontal shadow from special stage.bin"
-;--------------------------------------------------------------------------------------
-; Nemesis compressed art (58 blocks)
-; Diagonal shadow patterns in special stage	; ArtNem_DE05A:
-	even
-ArtNem_SpecialDiagShadow:	BINCLUDE	"art/nemesis/Diagonal shadow from special stage.bin"
-;--------------------------------------------------------------------------------------
-; Nemesis compressed art (25 blocks)
-; Vertical shadow patterns in special stage	; ArtNem_DE120:
-	even
-ArtNem_SpecialSideShadow:	BINCLUDE	"art/nemesis/Vertical shadow from special stage.bin"
-;--------------------------------------------------------------------------------------
-; Nemesis compressed art (48 blocks)
-; Explosion patterns in special stage	; ArtNem_DE188:
-	even
-ArtNem_SpecialExplosion:	BINCLUDE	"art/nemesis/Explosion from special stage.bin"
-;--------------------------------------------------------------------------------------
-; Nemesis compressed art (80 blocks)
-; Bomb patterns in special stage	; ArtNem_DE4BC:
-	even
-ArtNem_SpecialBomb:	BINCLUDE	"art/nemesis/Bomb from special stage.bin"
-;--------------------------------------------------------------------------------------
-; Nemesis compressed art (46 blocks)
-; Emerald patterns in special stage	; ArtNem_DE8AC:
-	even
-ArtNem_SpecialEmerald:	BINCLUDE	"art/nemesis/Emerald from special stage.bin"
-;--------------------------------------------------------------------------------------
-; Nemesis compressed art (99 blocks)
-; Text for the messages and thumbs up/down icon in special stage	; ArtNem_DEAF4:
-	even
-ArtNem_SpecialMessages:	BINCLUDE	"art/nemesis/Special stage messages and icons.bin"
-;--------------------------------------------------------------------------------------
-; Nemesis compressed art (851 blocks)
-; Sonic and Tails animation frames from special stage
-; Art for Obj09 and Obj10 and Obj88	; ArtNem_DEEAE:
-	even
-ArtNem_SpecialSonicAndTails:	BINCLUDE	"art/nemesis/Sonic and Tails animation frames in special stage.bin"
-;--------------------------------------------------------------------------------------
-; Nemesis compressed art (5 blocks)
-; "Tails" patterns from special stage	; ArtNem_E247E:
-	even
-ArtNem_SpecialTailsText:	BINCLUDE	"art/nemesis/Tails text patterns from special stage.bin"
-
-;--------------------------------------------------------------------------------------
-; Special stage object perspective data (Kosinski compression)	; MiscKoz_E24FE:
-;--------------------------------------------------------------------------------------
-MiscKoz_SpecialPerspective:	BINCLUDE	"misc/Special stage object perspective data (Kosinski compression).bin"
-;--------------------------------------------------------------------------------------
-; Special stage level layout (Nemesis compression)	; MiscNem_E34EE:
-;--------------------------------------------------------------------------------------
-	even
-MiscKoz_SpecialLevelLayout:	BINCLUDE	"misc/Special stage level layouts (Nemesis compression).bin"
-;--------------------------------------------------------------------------------------
-; Special stage object location list (Kosinski compression)	; MiscKoz_E35F2:
-;--------------------------------------------------------------------------------------
-MiscKoz_SpecialObjectLocations:	BINCLUDE	"misc/Special stage object location lists (Kosinski compression).bin"
-	even
-
-
-
-
 ;--------------------------------------------------------------------------------------
 ; Offset index of ring locations
 ;  The first commented number on each line is an array index; the second is the
@@ -81745,9 +81428,9 @@ Off_Rings: zoneOrderedOffsetTable 2,2
 	zoneOffsetTableEntry.w  Rings_GHZ_1	; 2  $01
 	zoneOffsetTableEntry.w  Rings_GHZ_2	; 3
 	zoneOffsetTableEntry.w  Rings_WZ_1	; 4  $02
-	zoneOffsetTableEntry.w  Rings_WZ_1	; 5
-	zoneOffsetTableEntry.w  Rings_EHZ_1	; 6  $03
-	zoneOffsetTableEntry.w  Rings_EHZ_1	; 7
+	zoneOffsetTableEntry.w  Rings_WZ_2	; 5
+	zoneOffsetTableEntry.w  Rings_Test_1	; 6  $03
+	zoneOffsetTableEntry.w  Rings_Test_2	; 7
 	zoneOffsetTableEntry.w  Rings_MTZ_1	; 8  $04
 	zoneOffsetTableEntry.w  Rings_MTZ_2	; 9
 	zoneOffsetTableEntry.w  Rings_MTZ_3	; 10 $05
@@ -81781,7 +81464,9 @@ Rings_EHZ_2:	BINCLUDE	"level/rings/EHZ_2.bin"
 Rings_GHZ_1:	BINCLUDE	"level/rings/GHZ_1.bin"
 Rings_GHZ_2:	BINCLUDE	"level/rings/GHZ_2.bin"
 Rings_WZ_1:		BINCLUDE	"level/rings/WZ_1.bin"
-Rings_WZ_2:		BINCLUDE	"level/rings/02_2.bin"
+Rings_WZ_2:		BINCLUDE	"level/rings/WZ_2.bin"
+Rings_Test_1:	BINCLUDE	"level/rings/Test_1.bin"
+Rings_Test_2:	BINCLUDE	"level/rings/Test_2.bin"
 Rings_MTZ_1:	BINCLUDE	"level/rings/MTZ_1.bin"
 Rings_MTZ_2:	BINCLUDE	"level/rings/MTZ_2.bin"
 Rings_MTZ_3:	BINCLUDE	"level/rings/MTZ_3.bin"
@@ -81825,9 +81510,9 @@ Off_Objects: zoneOrderedOffsetTable 2,2
 	zoneOffsetTableEntry.w  Objects_GHZ_1	; 2  $01
 	zoneOffsetTableEntry.w  Objects_GHZ_2	; 3
 	zoneOffsetTableEntry.w  Objects_WZ_1	; 4  $02
-	zoneOffsetTableEntry.w  Objects_WZ_1	; 5
-	zoneOffsetTableEntry.w  Objects_EHZ_1	; 6  $03
-	zoneOffsetTableEntry.w  Objects_EHZ_1	; 7
+	zoneOffsetTableEntry.w  Objects_WZ_2	; 5
+	zoneOffsetTableEntry.w  Objects_Test_1	; 6  $03
+	zoneOffsetTableEntry.w  Objects_Test_2	; 7
 	zoneOffsetTableEntry.w  Objects_MTZ_1	; 8  $04
 	zoneOffsetTableEntry.w  Objects_MTZ_2	; 9
 	zoneOffsetTableEntry.w  Objects_MTZ_3	; 10 $05
@@ -81867,6 +81552,12 @@ Objects_GHZ_1:	BINCLUDE	"level/objects/GHZ_1.bin"
 Objects_GHZ_2:	BINCLUDE	"level/objects/GHZ_2.bin"
 	ObjectLayoutBoundary
 Objects_WZ_1:	BINCLUDE	"level/objects/WZ_1.bin"
+	ObjectLayoutBoundary
+Objects_WZ_2:	BINCLUDE	"level/objects/WZ_2.bin"
+	ObjectLayoutBoundary
+Objects_Test_1:	BINCLUDE	"level/objects/Test_1.bin"
+	ObjectLayoutBoundary
+Objects_Test_2:	BINCLUDE	"level/objects/Test_2.bin"
 	ObjectLayoutBoundary
 Objects_MTZ_1:	BINCLUDE	"level/objects/MTZ_1.bin"
 	ObjectLayoutBoundary

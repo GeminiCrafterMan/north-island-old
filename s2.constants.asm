@@ -268,7 +268,7 @@ cur_zone_str := "\{cur_zone_id}"
 emerald_hill_zone zoneID	$00
 green_hill_zone zoneID			$01
 wood_zone zoneID		$02
-zone_3 zoneID			$03
+test_zone zoneID			$03
 metropolis_zone zoneID		$04
 metropolis_zone_2 zoneID	$05
 wing_fortress_zone zoneID	$06
@@ -316,8 +316,8 @@ hidden_palace_zone_act_1 =	(hidden_palace_zone<<8)|$00
 hidden_palace_zone_act_2 =	(hidden_palace_zone<<8)|$01
 green_hill_zone_act_1 =		(green_hill_zone<<8)|$00
 green_hill_zone_act_2 =		(green_hill_zone<<8)|$01
-zone_3_act_1 =		(zone_3<<8)|$00
-zone_3_act_2 =		(zone_3<<8)|$01
+test_zone_act_1 =		(test_zone<<8)|$00
+test_zone_act_2 =		(test_zone<<8)|$01
 zone_9_act_1 =		(zone_9<<8)|$00
 zone_9_act_2 =		(zone_9<<8)|$01
 
@@ -372,55 +372,54 @@ offset :=	PalPointers
 ptrsize :=	8
 idstart :=	0
 
-PalID_SEGA =	id(PalPtr_SEGA) ; 0
-PalID_Title =	id(PalPtr_Title) ; 1
-PalID_MenuB =	id(PalPtr_MenuB) ; 2
-PalID_BGND =	id(PalPtr_BGND) ; 3
-PalID_EHZ =	id(PalPtr_EHZ) ; 4
-PalID_GHZ =	id(PalPtr_GHZ) ; 5
-PalID_WZ =	id(PalPtr_WZ) ; 6
-PalID_EHZ3 =	id(PalPtr_EHZ3) ; 7
-PalID_MTZ =	id(PalPtr_MTZ) ; 8
-PalID_MTZ2 =	id(PalPtr_MTZ2) ; 9
-PalID_WFZ =	id(PalPtr_WFZ) ; A
-PalID_HTZ =	id(PalPtr_HTZ) ; B
-PalID_HPZ =	id(PalPtr_HPZ) ; C
-PalID_EHZ4 =	id(PalPtr_EHZ4) ; D
-PalID_OOZ =	id(PalPtr_OOZ) ; E
-PalID_MCZ =	id(PalPtr_MCZ) ; F
-PalID_CNZ =	id(PalPtr_CNZ) ; 10
-PalID_CPZ =	id(PalPtr_CPZ) ; 11
-PalID_DEZ =	id(PalPtr_DEZ) ; 12
-PalID_ARZ =	id(PalPtr_ARZ) ; 13
-PalID_SCZ =	id(PalPtr_SCZ) ; 14
-PalID_HPZ_U =	id(PalPtr_HPZ_U) ; 15
-PalID_CPZ_U =	id(PalPtr_CPZ_U) ; 16
-PalID_ARZ_U =	id(PalPtr_ARZ_U) ; 17
-PalID_SS =	id(PalPtr_SS) ; 18
-PalID_MCZ_B =	id(PalPtr_MCZ_B) ; 19
-PalID_CNZ_B =	id(PalPtr_CNZ_B) ; 1A
-PalID_SS1 =	id(PalPtr_SS1) ; 1B
-PalID_SS2 =	id(PalPtr_SS2) ; 1C
-PalID_SS3 =	id(PalPtr_SS3) ; 1D
-PalID_SS4 =	id(PalPtr_SS4) ; 1E
-PalID_SS5 =	id(PalPtr_SS5) ; 1F
-PalID_SS6 =	id(PalPtr_SS6) ; 20
-PalID_SS7 =	id(PalPtr_SS7) ; 21
-PalID_SS1_2p =	id(PalPtr_SS1_2p) ; 22
-PalID_SS2_2p =	id(PalPtr_SS2_2p) ; 23
-PalID_SS3_2p =	id(PalPtr_SS3_2p) ; 24
-PalID_OOZ_B =	id(PalPtr_OOZ_B) ; 25
-PalID_Menu =	id(PalPtr_Menu) ; 26
-PalID_Result =	id(PalPtr_Result) ; 27
-PalID_Knux =	id(PalPtr_Knux) ; 28
-PalID_CPZ_K_U =	id(PalPtr_CPZ_K_U) ; 29
-PalID_ARZ_K_U =	id(PalPtr_ARZ_K_U) ; 30
-PalID_HPZ_K_U =	id(PalPtr_HPZ_K_U) ; 31
-PalID_P1Tails =	id(PalPtr_P1Tails) ; 32
-PalID_CPZ_T_U = id(PalPtr_CPZ_T_U) ; 33
-PalID_ARZ_T_U = id(PalPtr_ARZ_T_U) ; 34
-PalID_HPZ_T_U = id(PalPtr_HPZ_T_U) ; 35
-PalID_S1SS	=	id(PalPtr_S1SS)
+PalID_SEGA		=	id(PalPtr_SEGA)		; 0
+PalID_Title		=	id(PalPtr_Title)	; 1
+PalID_MenuB		=	id(PalPtr_MenuB)	; 2
+PalID_BGND		=	id(PalPtr_BGND)		; 3
+PalID_EHZ		=	id(PalPtr_EHZ)		; 4
+PalID_GHZ		=	id(PalPtr_GHZ)		; 5
+PalID_WZ		=	id(PalPtr_WZ)		; 6
+PalID_MTZ		=	id(PalPtr_MTZ)		; 7
+PalID_MTZ2		=	id(PalPtr_MTZ2)		; 8
+PalID_WFZ		=	id(PalPtr_WFZ)		; 9
+PalID_HTZ		=	id(PalPtr_HTZ)		; A
+PalID_HPZ		=	id(PalPtr_HPZ)		; B
+PalID_OOZ		=	id(PalPtr_OOZ)		; C
+PalID_MCZ		=	id(PalPtr_MCZ)		; D
+PalID_CNZ		=	id(PalPtr_CNZ)		; E
+PalID_CPZ		=	id(PalPtr_CPZ)		; F
+PalID_DEZ		=	id(PalPtr_DEZ)		; 10
+PalID_ARZ		=	id(PalPtr_ARZ)		; 11
+PalID_SCZ		=	id(PalPtr_SCZ)		; 12
+PalID_HPZ_U		=	id(PalPtr_HPZ_U)	; 13
+PalID_CPZ_U		=	id(PalPtr_CPZ_U)	; 14
+PalID_ARZ_U		=	id(PalPtr_ARZ_U)	; 15
+PalID_SS		=	id(PalPtr_SS)		; 16
+PalID_MCZ_B		=	id(PalPtr_MCZ_B)	; 17
+PalID_CNZ_B		=	id(PalPtr_CNZ_B)	; 18
+PalID_SS1		=	id(PalPtr_SS1)		; 19
+PalID_SS2		=	id(PalPtr_SS2)		; 1A
+PalID_SS3		=	id(PalPtr_SS3)		; 1B
+PalID_SS4		=	id(PalPtr_SS4)		; 1C
+PalID_SS5		=	id(PalPtr_SS5)		; 1D
+PalID_SS6		=	id(PalPtr_SS6)		; 1E
+PalID_SS7		=	id(PalPtr_SS7)		; 1F
+PalID_SS1_2p	=	id(PalPtr_SS1_2p)	; 20
+PalID_SS2_2p	=	id(PalPtr_SS2_2p)	; 21
+PalID_SS3_2p	=	id(PalPtr_SS3_2p)	; 22
+PalID_OOZ_B		=	id(PalPtr_OOZ_B)	; 23
+PalID_Menu		=	id(PalPtr_Menu)		; 24
+PalID_Result	=	id(PalPtr_Result)	; 25
+PalID_Knux		=	id(PalPtr_Knux)		; 26
+PalID_CPZ_K_U	=	id(PalPtr_CPZ_K_U)	; 27
+PalID_ARZ_K_U	=	id(PalPtr_ARZ_K_U)	; 28
+PalID_HPZ_K_U	=	id(PalPtr_HPZ_K_U)	; 29
+PalID_P1Tails	=	id(PalPtr_P1Tails)	; 2A
+PalID_CPZ_T_U	=	id(PalPtr_CPZ_T_U)	; 2B
+PalID_ARZ_T_U	=	id(PalPtr_ARZ_T_U)	; 2C
+PalID_HPZ_T_U	=	id(PalPtr_HPZ_T_U)	; 2D
+PalID_S1SS		=	id(PalPtr_S1SS)		; 2E
+PalID_Test		=	id(PalPtr_Test)		; 2F
 
 ; PLC IDs
 offset :=	ArtLoadCues
@@ -488,7 +487,6 @@ PLCID_CnzAnimals =		id(PLCptr_CnzAnimals) ; 39
 PLCID_CpzAnimals =		id(PLCptr_CpzAnimals) ; 3A
 PLCID_ArzAnimals =		id(PLCptr_ArzAnimals) ; 3B
 PLCID_SpecialStage =		id(PLCptr_SpecialStage) ; 3C
-PLCID_SpecStageBombs =	id(PLCptr_SpecStageBombs) ; 3D
 PLCID_WfzBoss =			id(PLCptr_WfzBoss) ; 3E
 PLCID_Tornado =			id(PLCptr_Tornado) ; 3F
 PLCID_Capsule =			id(PLCptr_Capsule) ; 40
@@ -498,7 +496,6 @@ PLCID_KnucklesLife =		id(PLCptr_KnucklesLife)
 PLCID_ResultsKnuckles =	id(PLCptr_ResultsKnuckles)
 PLCID_Ghz1 =			id(PLCptr_Ghz1) ; 45
 PLCID_Ghz2 =			id(PLCptr_Ghz2) ; 46
-PLCID_SpecialStageK =		id(PLCptr_SpecialStageK) ; 3C
 PLCID_Wz1 =			id(PLCptr_Wz1) ; 45
 PLCID_Wz2 =			id(PLCptr_Wz2) ; 46
 PLCID_Std2_Ice =			id(PLCptr_Std2_Ice) ; 1
@@ -789,7 +786,7 @@ AniIDSonAni_Continue		= id(SonAni_Continue_ptr)		; 32 ; $20
 AniIDSonAni_React			= id(SonAni_React_ptr)			; 33 ; $21
 AniIDSonAni_PeelChrg		= id(SonAni_PeelChrg_ptr)		; 34 ; $22
 AniIDSonAni_HaulAss		= id(SonAni_HaulAss_ptr)		; 35 ; $23
-AniIDSonAni_JumpDash	= id(SonAni_JumpDash_ptr)		; 36 ; $24
+AniIDSonAni_WallJump	= id(SonAni_WallJump_ptr)		; 36 ; $24
 
 
 offset :=	TailsAniData
@@ -1118,8 +1115,10 @@ Underwater_palette_line2:	ds.b palette_line_size
 Underwater_palette_line3:	ds.b palette_line_size
 Underwater_palette_line4:	ds.b palette_line_size
 
-S1SS_F780Rep:	ds.b	6
-				ds.b	$4FA	; $FFFFF100-$FFFFF5FF ; unused, leftover from the Sonic 1 sound driver (and used by it when you port it to Sonic 2)
+SSAngle:	ds.w	1
+SSRotate:	ds.w	1
+SSRotations:	ds.b	1
+				ds.b	$4FB	; $FFFFF100-$FFFFF5FF ; unused, leftover from the Sonic 1 sound driver (and used by it when you port it to Sonic 2)
 
 Game_Mode:			ds.w	1	; 1 byte ; see GameModesArray (master level trigger, Mstr_Lvl_Trigger)
 Ctrl_1_Logical:					; 2 bytes
@@ -1131,8 +1130,7 @@ Ctrl_1_Press:			ds.b	1	; 1 byte
 Ctrl_2:						; 2 bytes
 Ctrl_2_Held:			ds.b	1	; 1 byte
 Ctrl_2_Press:			ds.b	1	; 1 byte
-Palette_timer_Tails:			ds.b	1	; was "Palette_frame_count"
-				ds.b	3	; $FFFFF609-$FFFFF60B ; seems unused
+				ds.b	4	; $FFFFF608-$FFFFF60B ; seems unused
 VDP_Reg1_val:			ds.w	1	; normal value of VDP register #1 when display is disabled
 				ds.b	6	; $FFFFF60E-$FFFFF613 ; seems unused
 Demo_Time_left:			ds.w	1	; 2 bytes
@@ -1953,25 +1951,6 @@ ArtTile_ArtNem_1P2PWins               = $0070
 ArtTile_ArtNem_SpecialPlayerVSPlayer  = $03DF
 ArtTile_ArtNem_2p_Signpost            = $05E8
 ArtTile_TwoPlayerResults              = $0600
-
-; Special stage stuff.
-ArtTile_ArtNem_SpecialEmerald         = $0174
-ArtTile_ArtNem_SpecialMessages        = $01A2
-ArtTile_ArtNem_SpecialHUD             = $01FA
-ArtTile_ArtNem_SpecialFlatShadow      = $023C
-ArtTile_ArtNem_SpecialDiagShadow      = $0262
-ArtTile_ArtNem_SpecialSideShadow      = $029C
-ArtTile_ArtNem_SpecialExplosion       = $02B5
-ArtTile_ArtNem_SpecialSonic           = $02E5
-ArtTile_ArtNem_SpecialTails           = $0300
-ArtTile_ArtNem_SpecialTails_Tails     = $0316
-ArtTile_ArtNem_SpecialRings           = $0322
-ArtTile_ArtNem_SpecialStart           = $038A
-ArtTile_ArtNem_SpecialBomb            = $038A
-ArtTile_ArtNem_SpecialStageResults    = $0590
-ArtTile_ArtNem_SpecialBack            = $0700
-ArtTile_ArtNem_SpecialStars           = $077F
-ArtTile_ArtNem_SpecialTailsText       = $07A4
 
 ; S1 special stage stuff.
 ArtTile_Nem_SSBgCloud				  = $0000

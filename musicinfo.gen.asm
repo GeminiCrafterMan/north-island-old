@@ -1,6 +1,6 @@
 zMasterPlaylist:
 	zmakePlaylistEntry	Mus_GHZ,0
-	zmakePlaylistEntry	Mus_SHP,0
+	zmakePlaylistEntry	Mus_EGHZ,0
 	zmakePlaylistEntry	Mus_SR,musprop_uncompressed
 	zmakePlaylistEntry	Mus_DL,musprop_uncompressed
 	zmakePlaylistEntry	Mus_NT,musprop_uncompressed
@@ -8,6 +8,7 @@ zMasterPlaylist:
 	zmakePlaylistEntry	Mus_CM,musprop_uncompressed
 	zmakePlaylistEntry	Mus_MR,0
 	zmakePlaylistEntry	Mus_Baka,0
+	zmakePlaylistEntry	Mus_RM,musprop_uncompressed
 	zmakePlaylistEntry	Mus_WWGameSel,musprop_uncompressed
 	zmakePlaylistEntry	Mus_WM,musprop_uncompressed
 	zmakePlaylistEntry	Mus_S3DBInvincible,0

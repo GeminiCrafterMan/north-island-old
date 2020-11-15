@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using SonicRetro.SonLVL.API;
 
-namespace S2ObjectDefinitions.EHZ
+namespace S2ObjectDefinitions.WZ
 {
 	class Bridge : ObjectDefinition
 	{

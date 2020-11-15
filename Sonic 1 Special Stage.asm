@@ -68,8 +68,8 @@ SS_ClrNemRam:
 		move.l	#0,(Camera_Y_pos).w
 		move.b	#ObjID_SonicSS,(Object_RAM).w ; load	special	stage Sonic object
 		bsr.w	PalCycle_SS
-		clr.w	(S1SS_F780Rep).w	; set stage angle to "upright"
-		move.w	#$40,(S1SS_F780Rep+2).w ; set stage rotation	speed
+		clr.w	(SSAngle).w	; set stage angle to "upright"
+		move.w	#$40,(SSRotate).w ; set stage rotation	speed
 		move.w	#MusID_S3DBSpecStage,d0
 		bsr.w	PlayMusic	; play special stage BG	music
 		move.w	#0,(Demo_button_index).w
@@ -211,12 +211,12 @@ SS_ToSegaScreen:
 
 
 SS_BGLoad:				; XREF: SpecialStage
-		lea	(Chunk_Table).l,a1
+		lea	($FF0000).l,a1
 		lea	(Eni_SSBg1).l,a0 ; load	mappings for the birds and fish
 		move.w	#$4051,d0
 		bsr.w	EniDec
 		move.l	#$50000001,d3
-		lea	(Chunk_Table+$80).l,a2
+		lea	($FF0080).l,a2
 		moveq	#6,d7
 
 s1loc_48BE:
@@ -236,7 +236,7 @@ s1loc_48CE:
 		bne.s	s1loc_48E2
 		cmpi.w	#6,d7
 		bne.s	s1loc_48F2
-		lea	(Chunk_Table).l,a1
+		lea	($FF0000).l,a1
 
 s1loc_48E2:
 		movem.l	d0-d4,-(sp)
@@ -260,16 +260,16 @@ s1loc_48F2:
 s1loc_491C:
 		adda.w	#$80,a2
 		dbf	d7,s1loc_48BE
-		lea	(Chunk_Table).l,a1
+		lea	($FF0000).l,a1
 		lea	(Eni_SSBg2).l,a0 ; load	mappings for the clouds
 		move.w	#$4000,d0
 		bsr.w	EniDec
-		lea	(Chunk_Table).l,a1
+		lea	($FF0000).l,a1
 		move.l	#$40000003,d0
 		moveq	#$3F,d1
 		moveq	#$1F,d2
 		bsr.w	PlaneMapToVRAM_H40
-		lea	(Chunk_Table).l,a1
+		lea	($FF0000).l,a1
 		move.l	#$50000003,d0
 		moveq	#$3F,d1
 		moveq	#$3F,d2
