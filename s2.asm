@@ -18643,6 +18643,7 @@ Obj37_Delete:
 ; Unused - dead code/data S1 big ring:
 ; ===========================================================================
 ; BigRing:
+Obj4D:
 	; a0=object
 	moveq	#0,d0
 	move.b	routine(a0),d0
@@ -18695,7 +18696,7 @@ BigRing_Enter:
 	; If you want to restore the big ring object, you'll also have to
 	; restore the ring flash object (right after this) and assign its ID to
 	; the created object here (a1).
-	;move.b	#ObjID_BigRingFlash,id(a1)
+	move.b	#ObjID_BigRingFlash,id(a1)
 	move.w	x_pos(a0),x_pos(a1)
 	move.w	y_pos(a0),y_pos(a1)
 	move.l	a0,objoff_3C(a1)
@@ -18715,6 +18716,7 @@ BigRing_Delete:
 ; Unused - dead code/data S1 ring flash:
 ; ===========================================================================
 ; BigRingFlash:
+Obj4E:
 	; a0=object
 	moveq	#0,d0
 	move.b	routine(a0),d0
@@ -23160,10 +23162,10 @@ ObjPtr_Button:				dc.l Obj47		; Button
 ObjPtr_LauncherBall:		dc.l Obj48		; Round ball thing from OOZ that fires you off in a different direction
 ObjPtr_EHZWaterfall:		dc.l Obj49		; Waterfall from EHZ
 ObjPtr_Octus:				dc.l Obj4A		; Octus (octopus badnik) from OOZ
-ObjPtr_Buzzer:			dc.l Obj4B		; Buzzer (Buzz bomber) from EHZ
-ObjPtr_Batbot:			dc.l Obj4C_Batbot	; Batbot from HPZ
-						dc.l ObjNull		; Obj4D
-						dc.l ObjNull		; Obj4E
+ObjPtr_Buzzer:				dc.l Obj4B		; Buzzer (Buzz bomber) from EHZ
+ObjPtr_Batbot:				dc.l Obj4C_Batbot	; Batbot from HPZ
+ObjPtr_BigRing:				dc.l Obj4D		; Obj4D
+ObjPtr_BigRingFlash:		dc.l Obj4E		; Obj4E
 ObjPtr_Dinobot:			dc.l Obj4F_Dinobot	; Dinobot from HPZ
 ObjPtr_Aquis:				dc.l Obj50		; Aquis (seahorse badnik) from OOZ
 ObjPtr_CNZBoss:			dc.l Obj51		; CNZ boss
@@ -23286,7 +23288,7 @@ ObjPtr_SpeedLauncher:		dc.l ObjC0		; Speed launcher from WFZ
 ObjPtr_BreakablePlating:	dc.l ObjC1		; Breakable plating from WFZ / what sonic hangs onto on the back of Robotnic's getaway ship
 ObjPtr_Rivet:				dc.l ObjC2		; Rivet thing you bust to get into ship at the end of WFZ
 ObjPtr_TornadoSmoke:		dc.l ObjC3		; Plane's smoke from WFZ
-ObjPtr_MetalCirno:						dc.l ObjC4 		; Nothing.
+ObjPtr_MetalCirno:			dc.l ObjC4 		; Dumb boss I'm still working on...
 ObjPtr_WFZBoss:			dc.l ObjC5		; WFZ boss
 ObjPtr_Eggman:			dc.l ObjC6		; Eggman
 ObjPtr_Eggrobo:			dc.l ObjC7		; Eggrobo (final boss) from Death Egg
@@ -23300,7 +23302,7 @@ ObjPtr_EndingSeqSonic:
 ObjPtr_EndingSeqTails:		dc.l ObjCE		; Sonic and Tails jumping off the plane from ending sequence
 ObjPtr_TornadoHelixes:		dc.l ObjCF		;"Plane's helixes" from ending sequence
 ObjPtr_Snailer:			dc.l ObjD0		; Snailer - Beta EHZ enemy, now with vroom.
-						dc.l ObjNull		; ObjD1	;	ice cube -- but this shit doesn't work.
+							dc.l ObjNull		; ObjD1 - None
 ObjPtr_CNZRectBlocks:		dc.l ObjD2		; Flashing blocks that appear and disappear in a rectangular shape that you can walk across, from CNZ
 ObjPtr_BombPrize:			dc.l ObjD3		; Bomb prize from CNZ
 ObjPtr_CNZBigBlock:		dc.l ObjD4		; Big block from CNZ that moves back and fourth
@@ -27578,7 +27580,7 @@ Obj0D_Main_State3:
 	tst.w	(Debug_placement_mode).w
 	bne.w	return_194D0
 	btst	#1,(MainCharacter+status).w
-	bne.w	return_194D0
+	bne.s	loc_19434
 	move.b	#1,(Control_Locked).w
 	bra.s	loc_1944C
 ;	move.w	#(button_right_mask<<8)|0,(Ctrl_1_Logical).w
@@ -54859,8 +54861,6 @@ JmpTo22_ObjectMove
 	align 4
     endif
 
-;ObjD1:
-;	include	"Obj_ICZIceCube.asm"
 ObjC4:
 	include "Metal Cirno.asm"
 ; ----------------------------------------------------------------------------
