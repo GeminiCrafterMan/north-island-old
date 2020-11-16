@@ -78386,21 +78386,21 @@ Debug_ExitDebugMode:
 	move.b	#1,(Update_HUD_timer).w
 	move.b	#1,(Update_HUD_timer_2P).w
 	lea	(MainCharacter).w,a1 ; a1=character
-	cmpi.b	#1,(Player_option).w
+	cmpi.w	#1,(Player_option).w
 	bgt.s	+
 	move.l	#MapUnc_Sonic,mappings(a1)
 	tst.b	(Super_Sonic_flag).w
 	beq.s	+
 	move.l	#MapUnc_SuperSonic,mappings(a1)
 +
-	cmpi.b	#2,(Player_option).w
+	cmpi.w	#2,(Player_option).w
 	bne.s	+
 	move.l	#MapUnc_Tails,mappings(a1)
 	tst.b	(Super_Sonic_flag).w
 	beq.s	+
 	move.l	#MapUnc_SuperTails,mappings(a1)
 +
-	cmpi.b	#3,(Player_option).w
+	cmpi.w	#3,(Player_option).w
 	blt.s	+
 	move.l	#MapUnc_Knuckles,mappings(a1)
 	tst.b	(Super_Sonic_flag).w
@@ -78408,7 +78408,7 @@ Debug_ExitDebugMode:
 	move.l	#MapUnc_SuperKnuckles,mappings(a1)
 	bra.s	++
 +
-	cmpi.b	#2,(Player_option).w
+	cmpi.w	#2,(Player_option).w
 	bne.s	+
 	move.w	#make_art_tile(ArtTile_ArtUnc_Tails,0,0),art_tile(a1)
 	bra.s	++
