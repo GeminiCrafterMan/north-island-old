@@ -78492,7 +78492,7 @@ LoadDebugObjectSprite:
 JmpTbl_DbgObjLists: zoneOrderedOffsetTable 2,1
 	zoneOffsetTableEntry.w DbgObjList_EHZ	; 0
 	zoneOffsetTableEntry.w DbgObjList_GHZ	; 1
-	zoneOffsetTableEntry.w DbgObjList_Def	; 2
+	zoneOffsetTableEntry.w DbgObjList_WZ	; 2
 	zoneOffsetTableEntry.w DbgObjList_Def	; 3
 	zoneOffsetTableEntry.w DbgObjList_MTZ	; 4
 	zoneOffsetTableEntry.w DbgObjList_MTZ	; 5
@@ -78609,6 +78609,39 @@ DbgObjList_GHZ: dbglistheader
 	dbglistobj ObjID_EndPoints,	Obj7D_MapUnc_1F6FE,	  3,   3, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
 	dbglistobj ObjID_EggPrison,	Obj3E_MapUnc_3F436,   0,   0, make_art_tile(ArtTile_ArtNem_Capsule,1,0)
 DbgObjList_GHZ_End
+
+DbgObjList_WZ:	dbglistheader
+	dbglistobj ObjID_Ring,		Obj25_MapUnc_12382,   0,   0, make_art_tile(ArtTile_ArtNem_Ring,1,0) ; obj25 = ring
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   0,   0, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   1,   2, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   2,   3, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   3,   4, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   4,   5, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   5,   6, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   6,   7, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   7,   8, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   8,   9, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   9,   $A, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_EndPoints,	Obj7D_MapUnc_1F6FE,	  1,   1, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_EndPoints,	Obj7D_MapUnc_1F6FE,	  2,   2, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_EndPoints,	Obj7D_MapUnc_1F6FE,	  3,   3, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Starpost,	Obj79_MapUnc_1F424,   1,   0, make_art_tile(ArtTile_ArtNem_Checkpoint,0,0)
+	dbglistobj ObjID_PlaneSwitcher,	Obj03_MapUnc_1FFB8,   9,   1, make_art_tile(ArtTile_ArtNem_Ring,1,0)
+	dbglistobj ObjID_EHZPlatform,	Obj18_MapUnc_WZ,   1,   0, make_art_tile(ArtTile_ArtKos_LevelArt,2,0)
+	dbglistobj ObjID_EHZPlatform,	Obj18_MapUnc_WZ, $9A,   1, make_art_tile(ArtTile_ArtKos_LevelArt,2,0)
+	dbglistobj ObjID_Spikes,	Obj36_MapUnc_15B68,   0,   0, make_art_tile(ArtTile_ArtNem_Spikes,1,0)
+	dbglistobj ObjID_Spring,	Obj41_MapUnc_1901C, $81,   0, make_art_tile(ArtTile_ArtNem_VrtclSprng,0,0)
+	dbglistobj ObjID_Spring,	Obj41_MapUnc_1901C, $90,   3, make_art_tile(ArtTile_ArtNem_HrzntlSprng,0,0)
+	dbglistobj ObjID_Spring,	Obj41_MapUnc_1901C, $A0,   6, make_art_tile(ArtTile_ArtNem_VrtclSprng,0,0)
+	dbglistobj ObjID_Spring,	Obj41_MapUnc_1901C, $30,   7, make_art_tile(ArtTile_ArtNem_DignlSprng,0,0)
+	dbglistobj ObjID_Spring,	Obj41_MapUnc_1901C, $40,  $A, make_art_tile(ArtTile_ArtNem_DignlSprng,0,0)
+	dbglistobj ObjID_Buzzer,	Obj4B_MapUnc_2D2EA,   0,   0, make_art_tile(ArtTile_ArtNem_Buzzer,0,0)
+	dbglistobj ObjID_Snailer,	Snailer_Mappings, 0,   3, make_art_tile(ArtTile_ArtNem_Snailer,0,0)
+	dbglistobj ObjID_LeavesGenerator, Obj31_MapUnc_20E74,   0,   0, make_art_tile(ArtTile_ArtNem_Powerups,0,1)
+	dbglistobj ObjID_LeavesGenerator, Obj31_MapUnc_20E74,   1,   1, make_art_tile(ArtTile_ArtNem_Powerups,0,1)
+	dbglistobj ObjID_LeavesGenerator, Obj31_MapUnc_20E74,   2,   2, make_art_tile(ArtTile_ArtNem_Powerups,0,1)
+	dbglistobj ObjID_EggPrison,	Obj3E_MapUnc_3F436,   0,   0, make_art_tile(ArtTile_ArtNem_Capsule,1,0)
+DbgObjList_WZ_End
 
 DbgObjList_MTZ: dbglistheader
 	dbglistobj ObjID_Ring,		Obj25_MapUnc_12382,   0,   0, make_art_tile(ArtTile_ArtNem_Ring,1,0)
