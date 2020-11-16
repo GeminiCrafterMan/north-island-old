@@ -1136,12 +1136,12 @@
             "name": "",
             "palettes": [
                 {
-                    "path": "art\\palettes\\EHZ.bin",
-                    "length": 3
+                    "path": "art\\palettes\\Ending Photos.bin",
+                    "length": 1
                 }
             ],
             "art": {
-                "path": "art\\nemesis\\Breakable Wall.bin",
+                "path": "art\\nemesis\\Tails Movie sequence at end of game.bin",
                 "compression": "Nemesis"
             },
             "mappings": {
