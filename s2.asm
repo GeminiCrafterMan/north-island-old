@@ -23098,65 +23098,65 @@ ObjPtr_WaiInvinc:			dc.l Obj10		; Used to be Special Stage Tails, is now Wai Inv
 ObjPtr_Bridge:				dc.l Obj11		; Bridge in Emerald Hill Zone and Hidden Palace Zone
 ObjPtr_HPZEmerald:			dc.l Obj12		; Emerald from Hidden Palace Zone (unused)
 ObjPtr_HPZWaterfall:		dc.l Obj13		; Waterfall in Hidden Palace Zone (unused)
-ObjPtr_Seesaw:			dc.l Obj14		; Seesaw from Hill Top Zone
+ObjPtr_Seesaw:				dc.l Obj14		; Seesaw from Hill Top Zone
 ObjPtr_SwingingPlatform:	dc.l Obj15		; Swinging platform from Aquatic Ruin Zone
-ObjPtr_HTZLift:			dc.l Obj16		; Diagonally moving lift from HTZ
-						dc.l Obj17		; GHZ rotating log helix spikes (from Sonic 1, unused)
+ObjPtr_HTZLift:				dc.l Obj16		; Diagonally moving lift from HTZ
+							dc.l Obj17		; GHZ rotating log helix spikes (from Sonic 1, unused)
 ObjPtr_ARZPlatform:
-ObjPtr_EHZPlatform:		dc.l Obj18		; Stationary floating platform from ARZ and EHZ
+ObjPtr_EHZPlatform:			dc.l Obj18		; Stationary floating platform from ARZ and EHZ
 ObjPtr_CPZPlatform:
 ObjPtr_OOZMovingPform:
-ObjPtr_WFZPlatform:		dc.l Obj19		; Platform from CPZ, OOZ and WFZ
-ObjPtr_HPZCollapsPform:	dc.l Obj1A		; Collapsing platform from HPZ (and GHZ)
+ObjPtr_WFZPlatform:			dc.l Obj19		; Platform from CPZ, OOZ and WFZ
+ObjPtr_HPZCollapsPform:		dc.l Obj1A		; Collapsing platform from HPZ (and GHZ)
 ObjPtr_SpeedBooster:		dc.l Obj1B		; Speed booster from from CPZ
 ObjPtr_Scenery:
 ObjPtr_BridgeStake:
 ObjPtr_FallingOil:			dc.l Obj1C		; Bridge stake in Emerald Hill Zone and Hill Top Zone, falling oil in Oil Ocean Zone
 ObjPtr_BlueBalls:			dc.l Obj1D		; Blue balls in CPZ (jumping droplets hazard)
-ObjPtr_CPZSpinTube:		dc.l Obj1E		; Spin tube from CPZ
+ObjPtr_CPZSpinTube:			dc.l Obj1E		; Spin tube from CPZ
 ObjPtr_CollapsPform:		dc.l Obj1F		; Collapsing platform from ARZ, MCZ and OOZ (and MZ, SLZ and SBZ)
-ObjPtr_LavaBubble:		dc.l Obj20		; Lava bubble from Hill Top Zone (boss weapon)
-				dc.l ObjNull		; Obj21: Used to be Score/Rings/Time display (HUD)
+ObjPtr_LavaBubble:			dc.l Obj20		; Lava bubble from Hill Top Zone (boss weapon)
+							dc.l ObjNull		; Obj21: Used to be Score/Rings/Time display (HUD)
 ObjPtr_ArrowShooter:		dc.l Obj22		; Arrow shooter from ARZ
 ObjPtr_FallingPillar:		dc.l Obj23		; Pillar that drops its lower part from ARZ
-ObjPtr_ARZBubbles:		dc.l Obj24		; Bubbles in Aquatic Ruin Zone
+ObjPtr_ARZBubbles:			dc.l Obj24		; Bubbles in Aquatic Ruin Zone
 ObjPtr_Ring:				dc.l Obj25		; A ring
-ObjPtr_Monitor:			dc.l Obj26		; Monitor
+ObjPtr_Monitor:				dc.l Obj26		; Monitor
 ObjPtr_Explosion:			dc.l Obj27		; An explosion, giving off an animal and 100 points
-ObjPtr_Animal:			dc.l Obj28		; Animal and the 100 points from a badnik
-ObjPtr_Points:			dc.l Obj29		; "100 points" text
-ObjPtr_Stomper:			dc.l Obj2A		; Stomper from MCZ
-ObjPtr_RisingPillar:			dc.l Obj2B		; Rising pillar from ARZ
-ObjPtr_LeavesGenerator:	dc.l Obj2C		; Sprite that makes leaves fly off when you hit it from ARZ
-ObjPtr_Barrier:			dc.l Obj2D		; One way barrier from CPZ and DEZ
-ObjPtr_MonitorContents:	dc.l Obj2E		; Monitor contents (code for power-up behavior and rising image)
-ObjPtr_SmashableGround:	dc.l Obj2F		; Smashable ground in Hill Top Zone
+ObjPtr_Animal:				dc.l Obj28		; Animal and the 100 points from a badnik
+ObjPtr_Points:				dc.l Obj29		; "100 points" text
+ObjPtr_Stomper:				dc.l Obj2A		; Stomper from MCZ
+ObjPtr_RisingPillar:		dc.l Obj2B		; Rising pillar from ARZ
+ObjPtr_LeavesGenerator:		dc.l Obj2C		; Sprite that makes leaves fly off when you hit it from ARZ
+ObjPtr_Barrier:				dc.l Obj2D		; One way barrier from CPZ and DEZ
+ObjPtr_MonitorContents:		dc.l Obj2E		; Monitor contents (code for power-up behavior and rising image)
+ObjPtr_SmashableGround:		dc.l Obj2F		; Smashable ground in Hill Top Zone
 ObjPtr_RisingLava:			dc.l Obj30		; Large rising lava during earthquake in HTZ
-ObjPtr_LavaMarker:		dc.l Obj31		; Lava collision marker
+ObjPtr_LavaMarker:			dc.l Obj31		; Lava collision marker
 ObjPtr_BreakableBlock:
 ObjPtr_BreakableRock:		dc.l Obj32		; Breakable block/rock from CPZ and HTZ
-ObjPtr_OOZPoppingPform:	dc.l Obj33		; Green platform from OOZ
+ObjPtr_OOZPoppingPform:		dc.l Obj33		; Green platform from OOZ
 ObjPtr_TitleCard:			dc.l Obj34		; level title card (screen with red, yellow, and blue)
 ObjPtr_InvStars:			dc.l Obj35		; Invincibility Stars
-ObjPtr_Spikes:			dc.l Obj36		; Vertical spikes
+ObjPtr_Spikes:				dc.l Obj36		; Vertical spikes
 ObjPtr_LostRings:			dc.l Obj37		; Scattering rings (generated when Sonic is hurt and has rings)
 ObjPtr_Shield:				dc.l Obj38		; Shield
 ObjPtr_GameOver:
 ObjPtr_TimeOver:			dc.l Obj39		; Game/Time Over text
-ObjPtr_Results:			dc.l Obj3A		; End of level results screen
+ObjPtr_Results:				dc.l Obj3A		; End of level results screen
 ObjPtr_PurpleRock:			dc.l Obj3B		; Purple rock (from Sonic 1, unused)
 ObjPtr_BreakWall:			dc.l Obj3C		; Breakable wall (leftover from S1)
-ObjPtr_OOZLauncher:		dc.l Obj3D		; Block thingy in OOZ that launches you into the round ball things
+ObjPtr_OOZLauncher:			dc.l Obj3D		; Block thingy in OOZ that launches you into the round ball things
 ObjPtr_EggPrison:			dc.l Obj3E		; Egg prison
-ObjPtr_Fan:				dc.l Obj3F		; Fan from OOZ
-ObjPtr_Springboard:		dc.l Obj40		; Pressure spring from CPZ, ARZ, and MCZ (the red "diving board" springboard)
-ObjPtr_Spring:			dc.l Obj41		; Spring
-ObjPtr_SteamSpring:		dc.l Obj42		; Steam Spring from MTZ
+ObjPtr_Fan:					dc.l Obj3F		; Fan from OOZ
+ObjPtr_Springboard:			dc.l Obj40		; Pressure spring from CPZ, ARZ, and MCZ (the red "diving board" springboard)
+ObjPtr_Spring:				dc.l Obj41		; Spring
+ObjPtr_SteamSpring:			dc.l Obj42		; Steam Spring from MTZ
 ObjPtr_SlidingSpike:		dc.l Obj43		; Sliding spike obstacle thing from OOZ
-ObjPtr_RoundBumper:		dc.l Obj44		; Round bumper from Casino Night Zone
+ObjPtr_RoundBumper:			dc.l Obj44		; Round bumper from Casino Night Zone
 ObjPtr_OOZSpring:			dc.l Obj45		; Pressure spring from OOZ
-ObjPtr_OOZBall:			dc.l Obj46		; Ball from OOZ (unused, beta leftover)
-ObjPtr_Button:			dc.l Obj47		; Button
+ObjPtr_OOZBall:				dc.l Obj46		; Ball from OOZ (unused, beta leftover)
+ObjPtr_Button:				dc.l Obj47		; Button
 ObjPtr_LauncherBall:		dc.l Obj48		; Round ball thing from OOZ that fires you off in a different direction
 ObjPtr_EHZWaterfall:		dc.l Obj49		; Waterfall from EHZ
 ObjPtr_Octus:				dc.l Obj4A		; Octus (octopus badnik) from OOZ

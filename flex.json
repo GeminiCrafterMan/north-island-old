@@ -1136,17 +1136,21 @@
             "name": "",
             "palettes": [
                 {
-                    "path": "art\\palettes\\Ending Photos.bin",
+                    "path": "art\\palettes\\SonicAndTails.bin",
+                    "length": 1
+                },
+                {
+                    "path": "art\\palettes\\SonicAndTails2.bin",
                     "length": 1
                 }
             ],
             "art": {
-                "path": "art\\nemesis\\Tails Movie sequence at end of game.bin",
-                "compression": "Nemesis"
+                "path": "art\\uncompressed\\Giant Ring - Empty.bin",
+                "compression": "Uncompressed"
             },
             "mappings": {
-                "path": "",
-                "format": "Sonic 1",
+                "path": "mappings\\sprite\\obj37_b.bin",
+                "format": "Sonic 2",
                 "customDefinition": "",
                 "label": ""
             },
