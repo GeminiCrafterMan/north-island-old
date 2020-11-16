@@ -1285,27 +1285,6 @@ PlaneMapToVRAM_H40:
 ; End of function PlaneMapToVRAM_H40
 
 ; ---------------------------------------------------------------------------
-; Alternate subroutine to transfer a plane map to VRAM
-; (used for Special Stage background)
-; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-; sub_142E: ShowVDPGraphics2: PlaneMapToVRAM2:
-PlaneMapToVRAM_H80_SpecialStage:
-	lea	(VDP_data_port).l,a6
-	move.l	#vdpCommDelta(planeLocH80(0,1)),d4	; $1000000
--	move.l	d0,VDP_control_port-VDP_data_port(a6)
-	move.w	d1,d3
--	move.w	(a1)+,(a6)
-	dbf	d3,-
-	add.l	d4,d0
-	dbf	d2,--
-	rts
-; End of function PlaneMapToVRAM_H80_SpecialStage
-
-
-; ---------------------------------------------------------------------------
 ; Subroutine for queueing VDP commands (seems to only queue transfers to VRAM),
 ; to be issued the next time ProcessDMAQueue is called.
 ; Can be called a maximum of 18 times before the buffer needs to be cleared
@@ -78214,16 +78193,15 @@ Debug_Init:
 	andi.w	#$7FF,(Camera_BG_Y_pos).w
 	clr.b	(Scroll_lock).w
 	move.b	#0,mapping_frame(a0)
-	cmpi.b  #2,(Player_mode).w
-	beq.s   Tails_Debug_Init
 	move.b	#AniIDSonAni_Walk,anim(a0)
-	bsr.s  +
-Tails_Debug_Init:
-        move.b   #AniIDTailsAni_Walk,anim(a0)
-+
+
 	; S1 leftover
 	cmpi.b	#GameModeID_SpecialStage,(Game_Mode).w ; special stage mode? (you can't enter debug mode in S2's special stage)
 	bne.s	.islevel	; if not, branch
+	; putting this in since s1 had it...
+	move.w	#0,(SSRotate).w
+	move.w	#0,(SSAngle).w
+
 	moveq	#6,d0		; force zone 6's debug object list (was the ending in S1)
 	bra.s	.selectlist
 ; ===========================================================================
@@ -78237,16 +78215,16 @@ Tails_Debug_Init:
 	adda.w	(a2,d0.w),a2
 	move.w	(a2)+,d6
 	cmp.b	(Debug_object).w,d6
-	bhi.s	+
+	bhi.s	.noreset
 	move.b	#0,(Debug_object).w
-+
+.noreset:
 	bsr.w	LoadDebugObjectSprite
 	move.b	#$C,(Debug_Accel_Timer).w
 	move.b	#1,(Debug_Speed).w
 ; loc_41B0C:
 Debug_Main:
 	; S1 leftover
-	moveq	#6,d0		; force zone 6's debug object list (was the ending in S1)
+	moveq	#6,d0		; force default object list
 	cmpi.b	#GameModeID_SpecialStage,(Game_Mode).w	; special stage mode? (you can't enter debug mode in S2's special stage)
 	beq.s	.isntlevel	; if yes, branch
 
@@ -78271,9 +78249,11 @@ Debug_Control:
 	move.b	(Ctrl_1_Press).w,d4
 	andi.w	#button_up_mask|button_down_mask|button_left_mask|button_right_mask,d4
 	bne.s	Debug_Move
+
 	move.b	(Ctrl_1_Held).w,d0
 	andi.w	#button_up_mask|button_down_mask|button_left_mask|button_right_mask,d0
 	bne.s	Debug_ContinueMoving
+
 	move.b	#$C,(Debug_Accel_Timer).w
 	move.b	#$F,(Debug_Speed).w
 	bra.w	Debug_ControlObjects
@@ -78406,29 +78386,29 @@ Debug_ExitDebugMode:
 	move.b	#1,(Update_HUD_timer).w
 	move.b	#1,(Update_HUD_timer_2P).w
 	lea	(MainCharacter).w,a1 ; a1=character
-	cmpi.b	#ObjID_Sonic,id(a1)
-	bne.s	+
+	cmpi.b	#1,(Player_option).w
+	bgt.s	+
 	move.l	#MapUnc_Sonic,mappings(a1)
 	tst.b	(Super_Sonic_flag).w
 	beq.s	+
 	move.l	#MapUnc_SuperSonic,mappings(a1)
 +
-	cmpi.b	#ObjID_Tails,id(a1)
+	cmpi.b	#2,(Player_option).w
 	bne.s	+
 	move.l	#MapUnc_Tails,mappings(a1)
 	tst.b	(Super_Sonic_flag).w
 	beq.s	+
 	move.l	#MapUnc_SuperTails,mappings(a1)
 +
-	cmpi.b	#ObjID_Knuckles,id(a1)
-	bne.s	+
+	cmpi.b	#3,(Player_option).w
+	blt.s	+
 	move.l	#MapUnc_Knuckles,mappings(a1)
 	tst.b	(Super_Sonic_flag).w
 	beq.s	+
 	move.l	#MapUnc_SuperKnuckles,mappings(a1)
 	bra.s	++
 +
-	cmpi.b	#ObjID_Tails,id(a1)
+	cmpi.b	#2,(Player_option).w
 	bne.s	+
 	move.w	#make_art_tile(ArtTile_ArtUnc_Tails,0,0),art_tile(a1)
 	bra.s	++
@@ -78450,9 +78430,13 @@ Debug_ExitDebugMode:
 	move.b	#9,x_radius(a1)
 	move.w	(Camera_Min_Y_pos_Debug_Copy).w,(Camera_Min_Y_pos).w
 	move.w	(Camera_Max_Y_pos_Debug_Copy).w,(Camera_Max_Y_pos).w
-	; useless leftover; this is for S1's special stage
+	; leftover, but not useless anymore
 	cmpi.b	#GameModeID_SpecialStage,(Game_Mode).w	; special stage mode?
 	bne.s	return_41CB6		; if not, branch
+
+	clr.w	(SSAngle).w
+	move.w	#$40,(SSRotate).w
+
 	move.b	#AniIDSonAni_Roll,(MainCharacter+anim).w
 	bset	#2,(MainCharacter+status).w
 	bset	#1,(MainCharacter+status).w
@@ -79806,7 +79790,6 @@ PlrList_ArzAnimals_End
 ; Special Stage
 ;---------------------------------------------------------------------------------------
 PlrList_SpecialStage: plrlistheader
-	plreq ArtTile_ArtNem_HUD, ArtNem_HUD
 	plreq ArtTile_ArtNem_Ring,		Nem_SSRing
 	plreq ArtTile_Nem_SSBgCloud,	Nem_SSBgCloud
 	plreq ArtTile_Nem_SSBgFish,		Nem_SSBgFish

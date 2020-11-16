@@ -9,7 +9,7 @@ SS_ShowLayout:				; XREF: SpecialStage
 		bsr.w	SS_AniWallsRings
 		bsr.w	SS_AniItems
 		move.w	d5,-(sp)
-		lea	(Chunk_Table).l,a1
+		lea	(Chunk_Table_End).l,a1
 		move.b	(SSAngle).w,d0
 		andi.b	#$FC,d0
 		jsr	(CalcSine).l
@@ -72,7 +72,7 @@ s1loc_1B1C0:
 		move.w	(Camera_X_pos).w,d0
 		divu.w	#$18,d0
 		adda.w	d0,a0
-		lea	(Chunk_Table).l,a4
+		lea	(Chunk_Table_End).l,a4
 		move.w	#$F,d7
 
 s1loc_1B20C:
