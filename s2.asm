@@ -4194,14 +4194,15 @@ Level_ClrRam:
 
 	clearRAM CNZ_saucer_data,CNZ_saucer_data_End
 
+	cmpi.b	#green_hill_zone,(Current_Zone).w	; GHZ
+	beq.s	Level_InitS1Col
 	cmpi.w	#chemical_plant_zone_act_2,(Current_ZoneAndAct).w ; CPZ 2
 	beq.s	Level_InitWater
 	cmpi.b	#aquatic_ruin_zone,(Current_Zone).w ; ARZ
 	beq.s	Level_InitWater
 	cmpi.b	#hidden_palace_zone,(Current_Zone).w ; HPZ
 	beq.s	Level_InitWater
-	cmpi.b	#green_hill_zone,(Current_Zone).w	; GHZ
-	bne.s	Level_InitNormal
+	bra.s	Level_InitNormal
 
 Level_InitS1Col:
 	move.b	#1,(S1_Col_flag).w
@@ -15960,7 +15961,7 @@ Obj15_Init:
 	move.b	#$20,width_pixels(a0)
 	move.b	#8,y_radius(a0)
 +
-	bsr.w	Adjust2PArtPointer
+	jsr		Adjust2PArtPointer
 	moveq	#0,d1
 	move.b	subtype(a0),d1
 	bpl.s	+
@@ -18642,13 +18643,21 @@ Obj37_Delete:
 
 ; Unused - dead code/data S1 big ring:
 ; ===========================================================================
-; BigRing:
-Obj4D:
+Obj4D:	; BigRing:
 	; a0=object
+;		move.b	subtype(a0),d0
+;		move.l	(Collected_special_ring_array).w,d1
+;		btst	d0,d1
+;		beq.s	.cont
+;		jmp		DeleteObject
+;
+;.cont:
+	jsr	(MarkObjGone).l
 	moveq	#0,d0
 	move.b	routine(a0),d0
 	move.w	BigRing_States(pc,d0.w),d1
 	jmp	BigRing_States(pc,d1.w)
+;		bra.w	BigRing_Display
 ; ===========================================================================
 BigRing_States:	offsetTable
 		offsetTableEntry.w BigRing_Init		; 0
@@ -18667,11 +18676,11 @@ BigRing_Init:
 	bpl.s	BigRing_Main
 	cmpi.b	#6,(Got_Emerald).w
 	beq.w	BigRing_Delete
-	cmpi.w	#50,(Ring_count).w
-	bhs.s	+
-	rts
+;	cmpi.w	#50,(Ring_count).w
+;	bhs.s	+
+;	rts
 ; ===========================================================================
-+
+;+
 	addq.b	#2,routine(a0)
 	move.b	#2,priority(a0)
 	move.b	#$52,collision_flags(a0)
@@ -18773,6 +18782,7 @@ BigRingFlash_Animate:
 	addq.b	#2,routine(a0)
 	move.w	#0,(MainCharacter).w		; delete the player object
 	addq.l	#4,sp
+	move.b	#GameModeID_SpecialStage,(Game_Mode).w ; => SpecialStage
 	rts
 ; End of function BigRingFlash_Animate
 
@@ -27732,8 +27742,6 @@ Obj0D_MapRUnc_196EE:	BINCLUDE "mappings/spriteDPLC/obj0D.bin"
     if gameRevision<2
 	nop
     endif
-
-;	include	"Obj_WaitOffscreen.asm"	; s3k code port testing
 
 Set_PlayerEndingPose:
 		move.b	#-$7F,obj_control(a1)
@@ -81650,6 +81658,7 @@ ArtNem_WZ_Bridge:	BINCLUDE	"art/nemesis/WZ bridge.bin"
 ; --------------------------------------------------------------------
 ; Nemesis compressed art
 ; buncha HPZ stuff
+	even
 Hpz_Waterfall:	BINCLUDE	"art/nemesis/WatrFall.bin"
 	even
 HPZ_Emerald:	BINCLUDE	"art/nemesis/Emerald.bin"

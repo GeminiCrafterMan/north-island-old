@@ -2201,15 +2201,15 @@ ArtTile_ArtNem_Spiny                  = $052D
 ArtTile_ArtUnc_HPZPulseOrb_1          = $02F0
 ArtTile_ArtUnc_HPZPulseOrb_2          = $02F8
 ArtTile_ArtUnc_HPZPulseOrb_3          = $0300
+ArtTile_ArtNem_HPZ_Bridge             = $0308
+ArtTile_ArtNem_HPZ_Waterfall          = $031D
 ArtTile_ArtNem_HPZPlatform            = $0352
 ArtTile_ArtNem_HPZOrb                 = $0362
 ArtTile_Hpz_Unknow_Platform           = $0384
 ArtTile_ArtNem_HPZ_Emerald            = $039A
-ArtTile_ArtNem_HPZ_Bridge             = $0440
 ArtTile_ArtNem_HPZBreakBlock          = $043C
 ArtTile_Hpz_Dinobot                   = $0500
 ArtTile_Hpz_Batbot                    = $0530
-ArtTile_ArtNem_HPZ_Waterfall          = $042C
 
 ; DEZ
 ArtTile_ArtUnc_DEZAnimBack            = $0326
