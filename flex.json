@@ -1133,7 +1133,7 @@
             }
         },
         {
-            "name": "",
+            "name": "Empty Big Ring",
             "palettes": [
                 {
                     "path": "art\\palettes\\SonicAndTails.bin",
@@ -1150,6 +1150,32 @@
             },
             "mappings": {
                 "path": "mappings\\sprite\\obj37_d.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Gemini Man (SEGA screen replacement?)",
+            "palettes": [
+                {
+                    "path": "art\\palettes\\Gemini Man.bin",
+                    "length": 1
+                }
+            ],
+            "art": {
+                "path": "art\\uncompressed\\Gemini Man.bin",
+                "compression": "Uncompressed"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\Gemini Man.bin",
                 "format": "Sonic 2",
                 "customDefinition": "",
                 "label": ""

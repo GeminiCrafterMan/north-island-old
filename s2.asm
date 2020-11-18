@@ -28767,6 +28767,7 @@ loc_19F4C:
 ; ----------------------------------------------------------------------------
 ; Sprite_19F50: Object_Sonic:
 Obj01:
+	move.w #$8C80|%1001,$C00004	; Shadow/Highlight mode
 	; a0=character
 	tst.w	(Debug_placement_mode).w	; is debug mode being used?
 	beq.s	Obj01_Normal			; if not, branch
