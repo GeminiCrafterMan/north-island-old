@@ -1187,6 +1187,27 @@
                 "customDefinition": "",
                 "label": ""
             }
+        },
+        {
+            "name": "Title menu",
+            "palettes": [],
+            "art": {
+                "path": "",
+                "compression": "Uncompressed"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\obj0F.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 2/3&K",
+                "customDefinition": "",
+                "label": ""
+            }
         }
     ]
 }

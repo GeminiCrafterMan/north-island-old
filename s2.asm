@@ -3919,7 +3919,7 @@ TitleScreen_Loop:
 	moveq	#0,d0
 	move.w	d0,(Two_player_mode_copy).w
 	move.w	d0,(Two_player_mode).w
-	cmpi.w	#3,(Player_option).w
+	cmpi.w	#3,(Player_option).w	; Knuckles?
 	blt.s	+
 	move.w #emerald_hill_zone_act_1,(Current_ZoneAndAct).w
 	bra.s	++
@@ -3942,8 +3942,16 @@ TitleScreen_Loop:
 ; ===========================================================================
 ; loc_3CF6:
 TitleScreen_ChoseOptions:
+	subq.b	#1,d0
+	bne.s	TitleScreen_ChoseLevSel
+
 	move.b	#GameModeID_OptionsMenu,(Game_Mode).w ; => OptionsMenu
 	move.b	#0,(Options_menu_box).w
+	rts
+; ---------------------------------------------------------------------------
+; loc_3D20:
+TitleScreen_ChoseLevSel:
+	move.b	#GameModeID_LevelSelect,(Game_Mode).w ; => LevelSelectMenu
 	rts
 ; ===========================================================================
 ; loc_3D2E:
@@ -4222,6 +4230,13 @@ Level_InitNormal:
 	move.w	#$8004,(a6)		; H-INT disabled
 	move.w	#$8720,(a6)		; Background palette/color: 2/0
 	move.w	#$8C81,(a6)		; H res 40 cells, no interlace
+
+	cmpi.b	#zone_9,(Current_Zone).w
+	bne.s	.normalzone
+	move.w	#$8C89,(a6)	; H res 40 cells, no interlace, S/H enabled
+	bra.s	+
+
+.normalzone:
 	tst.b	(Debug_options_flag).w
 	beq.s	++
 	btst	#button_C,(Ctrl_1_Held).w
@@ -4596,6 +4611,8 @@ InitPlayers_SonicAndTails:
 	beq.s	+ ; skip loading Tails if this is DEZ
 	cmpi.b	#sky_chase_zone,(Current_Zone).w
 	beq.s	+ ; skip loading Tails if this is SCZ
+	cmpi.b	#zone_9,(Current_Zone).w
+	beq.s	+ ; skip loading Tails if this is Zone 9 (gonna be using shadow/highlight here...)
 
 	move.b	#ObjID_Tails,(Sidekick+id).w ; load Obj02 Tails object at $FFFFB040
 	move.w	(MainCharacter+x_pos).w,(Sidekick+x_pos).w
@@ -5787,6 +5804,13 @@ JmpTo_DrawInitialBG
 ; ===========================================================================
 ; loc_4F64:
 SpecialStage:
+	clearRAM Sprite_Table_Input,Sprite_Table_Input_End
+	clearRAM Object_RAM,Object_RAM_End ; clear object RAM
+	clearRAM MiscLevelVariables,MiscLevelVariables_End
+	clearRAM Misc_Variables,Misc_Variables_End
+	clearRAM Oscillating_Data,Oscillating_variables_End
+
+	clearRAM CNZ_saucer_data,CNZ_saucer_data_End
 	include	"Sonic 1 Special Stage.asm"
 
 word_728C_user:	; yo sonic 2 shut the FUCK up please
@@ -20510,8 +20534,8 @@ Obj0F_Main:
 	bcc.s	+
 	move.b	#2,d2
 +
-	btst	#button_down,d0
-	beq.s	+
+	btst	#button_down,d0	; pressing down?
+	beq.s	+	; no? get outta here lol
 	addq.b	#1,d2
 	cmpi.b	#3,d2
 	blo.s	+
@@ -23090,25 +23114,25 @@ RunObjectDisplayOnly:
 ; This array contains the pointers to all the objects used in the game.
 ; ---------------------------------------------------------------------------
 Obj_Index: ; ObjPtrs: ; loc_1600C:
-ObjPtr_Sonic:				dc.l Obj01		; Sonic
-ObjPtr_Tails:				dc.l Obj02		; Tails
-ObjPtr_PlaneSwitcher:		dc.l Obj03		; Collision plane/layer switcher
-ObjPtr_WaterSurface:		dc.l Obj04		; Surface of the water
-ObjPtr_TailsTails:			dc.l Obj05		; Tails' tails
-ObjPtr_Spiral:				dc.l Obj06		; Rotating cylinder in MTZ, twisting spiral pathway in EHZ
-ObjPtr_Oil:					dc.l Obj07		; Oil in OOZ
+ObjPtr_Sonic:				dc.l Obj01			; Sonic
+ObjPtr_Tails:				dc.l Obj02			; Tails
+ObjPtr_PlaneSwitcher:		dc.l Obj03			; Collision plane/layer switcher
+ObjPtr_WaterSurface:		dc.l Obj04			; Surface of the water
+ObjPtr_TailsTails:			dc.l Obj05			; Tails' tails
+ObjPtr_Spiral:				dc.l Obj06			; Rotating cylinder in MTZ, twisting spiral pathway in EHZ
+ObjPtr_Oil:					dc.l Obj07			; Oil in OOZ
 ObjPtr_SpindashDust:
-ObjPtr_Splash:				dc.l Obj08		; Water splash in Aquatic Ruin Zone, Spindash dust
-ObjPtr_SonicSS:				dc.l Obj09		; Sonic in Special Stage
-ObjPtr_SmallBubbles:		dc.l Obj0A		; Small bubbles from Sonic's face while underwater
-ObjPtr_TippingFloor:		dc.l Obj0B		; Section of pipe that tips you off from CPZ
-							dc.l Obj0C		; Small floating platform (unused)
-ObjPtr_Signpost:			dc.l Obj0D		; End of level signpost
-ObjPtr_IntroStars:			dc.l Obj0E		; Flashing stars from intro
-ObjPtr_TitleMenu:			dc.l Obj0F		; Title screen menu
-ObjPtr_WaiInvinc:			dc.l Obj10		; Used to be Special Stage Tails, is now Wai Invincibility sparkles
-ObjPtr_Bridge:				dc.l Obj11		; Bridge in Emerald Hill Zone and Hidden Palace Zone
-ObjPtr_HPZEmerald:			dc.l Obj12		; Emerald from Hidden Palace Zone (unused)
+ObjPtr_Splash:				dc.l Obj08			; Water splash in Aquatic Ruin Zone, Spindash dust
+ObjPtr_SonicSS:				dc.l Obj09			; Sonic in Special Stage
+ObjPtr_SmallBubbles:		dc.l Obj0A			; Small bubbles from Sonic's face while underwater
+ObjPtr_TippingFloor:		dc.l Obj0B			; Section of pipe that tips you off from CPZ
+							dc.l Obj0C			; Small floating platform (unused)
+ObjPtr_Signpost:			dc.l Obj0D			; End of level signpost
+ObjPtr_IntroStars:			dc.l Obj0E			; Flashing stars from intro
+ObjPtr_TitleMenu:			dc.l Obj0F			; Title screen menu
+ObjPtr_WaiInvinc:			dc.l Obj10			; Used to be Special Stage Tails, is now Wai Invincibility sparkles
+ObjPtr_Bridge:				dc.l Obj11			; Bridge in Emerald Hill Zone and Hidden Palace Zone
+ObjPtr_HPZEmerald:			dc.l Obj12			; Emerald from Hidden Palace Zone (unused)
 ObjPtr_HPZWaterfall:		dc.l Obj13		; Waterfall in Hidden Palace Zone (unused)
 ObjPtr_Seesaw:				dc.l Obj14		; Seesaw from Hill Top Zone
 ObjPtr_SwingingPlatform:	dc.l Obj15		; Swinging platform from Aquatic Ruin Zone
@@ -23176,86 +23200,86 @@ ObjPtr_Buzzer:				dc.l Obj4B		; Buzzer (Buzz bomber) from EHZ
 ObjPtr_Batbot:				dc.l Obj4C_Batbot	; Batbot from HPZ
 ObjPtr_BigRing:				dc.l Obj4D		; Obj4D
 ObjPtr_BigRingFlash:		dc.l Obj4E		; Obj4E
-ObjPtr_Dinobot:			dc.l Obj4F_Dinobot	; Dinobot from HPZ
+ObjPtr_Dinobot:				dc.l Obj4F_Dinobot	; Dinobot from HPZ
 ObjPtr_Aquis:				dc.l Obj50		; Aquis (seahorse badnik) from OOZ
-ObjPtr_CNZBoss:			dc.l Obj51		; CNZ boss
-ObjPtr_HTZBoss:			dc.l Obj52		; HTZ boss
-ObjPtr_MTZBossOrb:		dc.l Obj53		; Shield orbs that surround MTZ boss
-ObjPtr_MTZBoss:			dc.l Obj54		; MTZ boss
-ObjPtr_OOZBoss:			dc.l Obj55		; OOZ boss
-ObjPtr_EHZBoss:			dc.l Obj56		; EHZ boss
-ObjPtr_MCZBoss:			dc.l Obj57		; MCZ boss
+ObjPtr_CNZBoss:				dc.l Obj51		; CNZ boss
+ObjPtr_HTZBoss:				dc.l Obj52		; HTZ boss
+ObjPtr_MTZBossOrb:			dc.l Obj53		; Shield orbs that surround MTZ boss
+ObjPtr_MTZBoss:				dc.l Obj54		; MTZ boss
+ObjPtr_OOZBoss:				dc.l Obj55		; OOZ boss
+ObjPtr_EHZBoss:				dc.l Obj56		; EHZ boss
+ObjPtr_MCZBoss:				dc.l Obj57		; MCZ boss
 ObjPtr_BossExplosion:		dc.l Obj58		; Boss explosion
-ObjPtr_RobotMasters:			dc.l Obj59		; Zone-specific decorations
+ObjPtr_RobotMasters:		dc.l Obj59		; Zone-specific decorations
 							dc.l ObjNull		; Obj5A - Used to be Messages/checkpoint from Special Stage
 							dc.l ObjNull		; Obj5B - Used to be Ring spray/spill in Special Stage
-ObjPtr_Masher:			dc.l Obj5C		; Masher (jumping piranha fish badnik) from EHZ
-ObjPtr_CPZBoss:			dc.l Obj5D		; CPZ boss
+ObjPtr_Masher:				dc.l Obj5C		; Masher (jumping piranha fish badnik) from EHZ
+ObjPtr_CPZBoss:				dc.l Obj5D		; CPZ boss
 							dc.l ObjNull		; Obj5E - Used to be HUD from Special Stage
 							dc.l ObjNull		; Obj5F - Used to be Start banner/"Ending controller" from Special Stage
 							dc.l ObjNull		; Obj60 - Used to be Rings from Special Stage
 							dc.l ObjNull		; Obj61 - Used to be Bombs from Special Stage
 ObjPtr_Knuckles:			dc.l Obj62		; Knuckles
 							dc.l ObjNull		; Obj63 - Used to be Character shadow from Special Stage
-ObjPtr_MTZTwinStompers:	dc.l Obj64		; Twin stompers from MTZ
-ObjPtr_MTZLongPlatform:	dc.l Obj65		; Long moving platform from MTZ
+ObjPtr_MTZTwinStompers:		dc.l Obj64		; Twin stompers from MTZ
+ObjPtr_MTZLongPlatform:		dc.l Obj65		; Long moving platform from MTZ
 ObjPtr_MTZSpringWall:		dc.l Obj66		; Yellow spring walls from MTZ
-ObjPtr_MTZSpinTube:		dc.l Obj67		; Spin tube from MTZ
+ObjPtr_MTZSpinTube:			dc.l Obj67		; Spin tube from MTZ
 ObjPtr_SpikyBlock:			dc.l Obj68		; Block with a spike that comes out of each side sequentially from MTZ
-ObjPtr_Nut:				dc.l Obj69		; Nut from MTZ
+ObjPtr_Nut:					dc.l Obj69		; Nut from MTZ
 ObjPtr_MCZRotPforms:
-ObjPtr_MTZMovingPforms:	dc.l Obj6A		; Platform that moves when you walk off of it, from MTZ
+ObjPtr_MTZMovingPforms:		dc.l Obj6A		; Platform that moves when you walk off of it, from MTZ
 ObjPtr_MTZPlatform:
-ObjPtr_CPZSquarePform:	dc.l Obj6B		; Immobile platform from MTZ
+ObjPtr_CPZSquarePform:		dc.l Obj6B		; Immobile platform from MTZ
 ObjPtr_Conveyor:			dc.l Obj6C		; Small platform on pulleys (like at the start of MTZ2)
 ObjPtr_FloorSpike:			dc.l Obj6D		; Floor spike from MTZ
 ObjPtr_LargeRotPform:		dc.l Obj6E		; Platform moving in a circle (like at the start of MTZ3)
 ObjPtr_SSResults:			dc.l Obj6F		; End of special stage results screen
-ObjPtr_Cog:				dc.l Obj70		; Giant rotating cog from MTZ
+ObjPtr_Cog:					dc.l Obj70		; Giant rotating cog from MTZ
 ObjPtr_MTZLavaBubble:
 ObjPtr_HPZBridgeStake:
 ObjPtr_PulsingOrb:			dc.l Obj71		; Bridge stake and pulsing orb from Hidden Palace Zone
-ObjPtr_CNZConveyorBelt:	dc.l Obj72		; Conveyor belt from CNZ
+ObjPtr_CNZConveyorBelt:		dc.l Obj72		; Conveyor belt from CNZ
 ObjPtr_RotatingRings:		dc.l Obj73		; Solid rotating ring thing from Mystic Cave Zone (mostly unused)
 ObjPtr_InvisibleBlock:		dc.l Obj74		; Invisible solid block
 ObjPtr_MCZBrick:			dc.l Obj75		; Brick from MCZ
 ObjPtr_SlidingSpikes:		dc.l Obj76		; Spike block that slides out of the wall from MCZ
-ObjPtr_MCZBridge:		dc.l Obj77		; Bridge from MCZ
+ObjPtr_MCZBridge:			dc.l Obj77		; Bridge from MCZ
 ObjPtr_CPZStaircase:		dc.l Obj78		; Stairs from CPZ that move down to open the way
 ObjPtr_Starpost:			dc.l Obj79		; Star pole / starpost / checkpoint
 ObjPtr_SidewaysPform:		dc.l Obj7A		; Platform that moves back and fourth on top of water in CPZ
 ObjPtr_PipeExitSpring:		dc.l Obj7B		; Warp pipe exit spring from CPZ
-						dc.l ObjNull		; Obj7C
+							dc.l ObjNull		; Obj7C
 ObjPtr_EndPoints:			dc.l Obj7D		; Points that can be gotten at the end of an act (no longer unused)
-ObjPtr_SuperSonicStars:	dc.l Obj7E		; Super Sonic's stars
+ObjPtr_SuperSonicStars:		dc.l Obj7E		; Super Sonic's stars
 ObjPtr_VineSwitch:			dc.l Obj7F		; Vine switch that you hang off in MCZ
-ObjPtr_MovingVine:		dc.l Obj80		; Vine that you hang off and it moves down from MCZ
+ObjPtr_MovingVine:			dc.l Obj80		; Vine that you hang off and it moves down from MCZ
 ObjPtr_MCZDrawbridge:		dc.l Obj81		; Long invisible vertical barrier
 ObjPtr_SwingingPform:		dc.l Obj82		; Platform that is usually swinging, from ARZ
 ObjPtr_ARZRotPforms:		dc.l Obj83		; 3 adjoined platforms from ARZ that rotate in a circle
 ObjPtr_ForcedSpin:
-ObjPtr_PinballMode:		dc.l Obj84		; Pinball mode enable/disable (CNZ)
+ObjPtr_PinballMode:			dc.l Obj84		; Pinball mode enable/disable (CNZ)
 ObjPtr_LauncherSpring:		dc.l Obj85		; Spring from CNZ that you hold jump on to pull back further
-ObjPtr_Flipper:			dc.l Obj86		; Flipper from CNZ
+ObjPtr_Flipper:				dc.l Obj86		; Flipper from CNZ
 							dc.l ObjNull		; Obj87 - Used to be Number of rings in Special Stage
 							dc.l ObjNull		; Obj88 - Used to be Tails' tails in Special Stage
-ObjPtr_ARZBoss:			dc.l Obj89		; ARZ boss
-						dc.l Obj8A		; Sonic Team Presents/Credits (seemingly unused leftover from S1)
-ObjPtr_WFZPalSwitcher:	dc.l Obj8B		; Cycling palette switcher from Wing Fortress Zone
+ObjPtr_ARZBoss:				dc.l Obj89		; ARZ boss
+							dc.l Obj8A		; Sonic Team Presents/Credits (seemingly unused leftover from S1)
+ObjPtr_WFZPalSwitcher:		dc.l Obj8B		; Cycling palette switcher from Wing Fortress Zone
 ObjPtr_Whisp:				dc.l Obj8C		; Whisp (blowfly badnik) from ARZ
 ObjPtr_GrounderInWall:		dc.l Obj8D		; Grounder in wall, from ARZ
-						dc.l ObjNull		; Obj8E
+							dc.l ObjNull		; Obj8E
 ObjPtr_GrounderWall:		dc.l Obj8F		; Wall behind which Grounder hides, from ARZ
 ObjPtr_GrounderRocks:		dc.l Obj90		; Rocks thrown by Grounder behind wall, from ARZ
 ObjPtr_ChopChop:			dc.l Obj91		; Chop Chop (piranha/shark badnik) from ARZ
-ObjPtr_Spiker:			dc.l Obj92		; Spiker (drill badnik) from HTZ
+ObjPtr_Spiker:				dc.l Obj92		; Spiker (drill badnik) from HTZ
 ObjPtr_SpikerDrill:			dc.l Obj93		; Drill thrown by Spiker from HTZ
-ObjPtr_Rexon:			dc.l Obj94		; Rexon (lava snake badnik), from HTZ
-ObjPtr_Sol:				dc.l Obj95		; Sol (fireball-throwing orbit badnik) from HTZ
-ObjPtr_Rexon2:			dc.l Obj94		; Obj96 = Obj94
-ObjPtr_RexonHead:		dc.l Obj97		; Rexon's head, from HTZ
+ObjPtr_Rexon:				dc.l Obj94		; Rexon (lava snake badnik), from HTZ
+ObjPtr_Sol:					dc.l Obj95		; Sol (fireball-throwing orbit badnik) from HTZ
+ObjPtr_Rexon2:				dc.l Obj94		; Obj96 = Obj94
+ObjPtr_RexonHead:			dc.l Obj97		; Rexon's head, from HTZ
 ObjPtr_Projectile:			dc.l Obj98		; Projectile with optional gravity (EHZ coconut, CPZ spiny, etc.)
-ObjPtr_Nebula:			dc.l Obj99		; Nebula (bomber badnik) from SCZ
+ObjPtr_Nebula:				dc.l Obj99		; Nebula (bomber badnik) from SCZ
 ObjPtr_Turtloid:			dc.l Obj9A		; Turtloid (turtle badnik) from Sky Chase Zone
 ObjPtr_TurtloidRider:		dc.l Obj9B		; Turtloid rider from Sky Chase Zone
 ObjPtr_BalkiryJet:			dc.l Obj9C		; Balkiry's jet from Sky Chase Zone
@@ -23265,22 +23289,22 @@ ObjPtr_Shellcracker:		dc.l Obj9F		; Shellcraker (crab badnik) from MTZ
 ObjPtr_ShellcrackerClaw:	dc.l ObjA0		; Shellcracker's claw from MTZ
 ObjPtr_Slicer:				dc.l ObjA1		; Slicer (praying mantis dude) from MTZ
 ObjPtr_SlicerPincers:		dc.l ObjA2		; Slicer's pincers from MTZ
-ObjPtr_Flasher:			dc.l ObjA3		; Flasher (firefly/glowbug badnik) from MCZ
-ObjPtr_Asteron:			dc.l ObjA4		; Asteron (exploding starfish badnik) from MTZ
+ObjPtr_Flasher:				dc.l ObjA3		; Flasher (firefly/glowbug badnik) from MCZ
+ObjPtr_Asteron:				dc.l ObjA4		; Asteron (exploding starfish badnik) from MTZ
 ObjPtr_Spiny:				dc.l ObjA5		; Spiny (crawling badnik) from CPZ
-ObjPtr_SpinyOnWall:		dc.l ObjA6		; Spiny (on wall) from CPZ
-ObjPtr_Grabber:			dc.l ObjA7		; Grabber (spider badnik) from CPZ
-ObjPtr_GrabberLegs:		dc.l ObjA8		; Grabber's legs from CPZ
-ObjPtr_GrabberBox:		dc.l ObjA9		; The little hanger box thing a Grabber's string comes out of
+ObjPtr_SpinyOnWall:			dc.l ObjA6		; Spiny (on wall) from CPZ
+ObjPtr_Grabber:				dc.l ObjA7		; Grabber (spider badnik) from CPZ
+ObjPtr_GrabberLegs:			dc.l ObjA8		; Grabber's legs from CPZ
+ObjPtr_GrabberBox:			dc.l ObjA9		; The little hanger box thing a Grabber's string comes out of
 ObjPtr_GrabberString:		dc.l ObjAA		; The thin white string a Grabber hangs from
-						dc.l ObjAB		; Unknown (maybe unused?)
-ObjPtr_Balkiry:			dc.l ObjAC		; Balkiry (jet badnik) from SCZ
-ObjPtr_CluckerBase:		dc.l ObjAD		; Clucker's base from WFZ
-ObjPtr_Clucker:			dc.l ObjAE		; Clucker (chicken badnik) from WFZ
-ObjPtr_MechaSonic:		dc.l ObjAF		; Mecha Sonic / Silver Sonic from DEZ
-ObjPtr_SonicOnSegaScr:	dc.l ObjB0		; Sonic on the Sega screen
-ObjPtr_SegaHideTM:		dc.l ObjB1		; Object that hides TM symbol on JP region
-ObjPtr_Tornado:			dc.l ObjB2		; The Tornado (Tails' plane)
+							dc.l ObjAB		; Unknown (maybe unused?)
+ObjPtr_Balkiry:				dc.l ObjAC		; Balkiry (jet badnik) from SCZ
+ObjPtr_CluckerBase:			dc.l ObjAD		; Clucker's base from WFZ
+ObjPtr_Clucker:				dc.l ObjAE		; Clucker (chicken badnik) from WFZ
+ObjPtr_MechaSonic:			dc.l ObjAF		; Mecha Sonic / Silver Sonic from DEZ
+ObjPtr_SonicOnSegaScr:		dc.l ObjB0		; Sonic on the Sega screen
+ObjPtr_SegaHideTM:			dc.l ObjB1		; Object that hides TM symbol on JP region
+ObjPtr_Tornado:				dc.l ObjB2		; The Tornado (Tails' plane)
 ObjPtr_Cloud:				dc.l ObjB3		; Clouds (placeable object) from SCZ
 ObjPtr_VPropeller:			dc.l ObjB4		; Vertical propeller from WFZ
 ObjPtr_HPropeller:			dc.l ObjB5		; Horizontal propeller from WFZ
@@ -23289,9 +23313,9 @@ ObjPtr_VerticalLaser:		dc.l ObjB7		; Unused huge vertical laser from WFZ
 ObjPtr_WallTurret:			dc.l ObjB8		; Wall turret from WFZ
 ObjPtr_Laser:				dc.l ObjB9		; Laser from WFZ that shoots down the Tornado
 ObjPtr_WFZWheel:			dc.l ObjBA		; Wheel from WFZ
-						dc.l ObjBB		; Unknown
-ObjPtr_WFZShipFire:		dc.l ObjBC		; Fire coming out of Robotnik's ship in WFZ
-ObjPtr_SmallMetalPform:	dc.l ObjBD		; Ascending/descending metal platforms from WFZ
+							dc.l ObjBB		; Unknown
+ObjPtr_WFZShipFire:			dc.l ObjBC		; Fire coming out of Robotnik's ship in WFZ
+ObjPtr_SmallMetalPform:		dc.l ObjBD		; Ascending/descending metal platforms from WFZ
 ObjPtr_LateralCannon:		dc.l ObjBE		; Lateral cannon (temporary platform that pops in/out) from WFZ
 ObjPtr_WFZStick:			dc.l ObjBF		; Rotaty-stick badnik from WFZ
 ObjPtr_SpeedLauncher:		dc.l ObjC0		; Speed launcher from WFZ
@@ -23299,27 +23323,27 @@ ObjPtr_BreakablePlating:	dc.l ObjC1		; Breakable plating from WFZ / what sonic h
 ObjPtr_Rivet:				dc.l ObjC2		; Rivet thing you bust to get into ship at the end of WFZ
 ObjPtr_TornadoSmoke:		dc.l ObjC3		; Plane's smoke from WFZ
 ObjPtr_MetalCirno:			dc.l ObjC4 		; Dumb boss I'm still working on...
-ObjPtr_WFZBoss:			dc.l ObjC5		; WFZ boss
-ObjPtr_Eggman:			dc.l ObjC6		; Eggman
-ObjPtr_Eggrobo:			dc.l ObjC7		; Eggrobo (final boss) from Death Egg
+ObjPtr_WFZBoss:				dc.l ObjC5		; WFZ boss
+ObjPtr_Eggman:				dc.l ObjC6		; Eggman
+ObjPtr_Eggrobo:				dc.l ObjC7		; Eggrobo (final boss) from Death Egg
 ObjPtr_Crawl:				dc.l ObjC8		; Crawl (shield badnik) from CNZ
 ObjPtr_TtlScrPalChanger:	dc.l ObjC9		; "Palette changing handler" from title screen
 ObjPtr_CutScene:			dc.l ObjCA		; Cut scene at end of game
-ObjPtr_EndingSeqClouds:	dc.l ObjCB		; Background clouds from ending sequence
+ObjPtr_EndingSeqClouds:		dc.l ObjCB		; Background clouds from ending sequence
 ObjPtr_EndingSeqTrigger:	dc.l ObjCC		; Trigger for rescue plane and birds from ending sequence
 ObjPtr_EndingSeqBird:		dc.l ObjCD		; Birds from ending sequence
 ObjPtr_EndingSeqSonic:
 ObjPtr_EndingSeqTails:		dc.l ObjCE		; Sonic and Tails jumping off the plane from ending sequence
 ObjPtr_TornadoHelixes:		dc.l ObjCF		;"Plane's helixes" from ending sequence
-ObjPtr_Snailer:			dc.l ObjD0		; Snailer - Beta EHZ enemy, now with vroom.
+ObjPtr_Snailer:				dc.l ObjD0		; Snailer - Beta EHZ enemy, now with vroom.
 							dc.l ObjNull		; ObjD1 - None
 ObjPtr_CNZRectBlocks:		dc.l ObjD2		; Flashing blocks that appear and disappear in a rectangular shape that you can walk across, from CNZ
 ObjPtr_BombPrize:			dc.l ObjD3		; Bomb prize from CNZ
-ObjPtr_CNZBigBlock:		dc.l ObjD4		; Big block from CNZ that moves back and fourth
+ObjPtr_CNZBigBlock:			dc.l ObjD4		; Big block from CNZ that moves back and fourth
 ObjPtr_Elevator:			dc.l ObjD5		; Elevator from CNZ
-ObjPtr_PointPokey:		dc.l ObjD6		; Pokey that gives out points from CNZ
-ObjPtr_Bumper:			dc.l ObjD7		; Bumper from Casino Night Zone
-ObjPtr_BonusBlock:		dc.l ObjD8		; Block thingy from CNZ that disappears after 3 hits
+ObjPtr_PointPokey:			dc.l ObjD6		; Pokey that gives out points from CNZ
+ObjPtr_Bumper:				dc.l ObjD7		; Bumper from Casino Night Zone
+ObjPtr_BonusBlock:			dc.l ObjD8		; Block thingy from CNZ that disappears after 3 hits
 ObjPtr_Grab:				dc.l ObjD9		; Invisible sprite that you can hang on to, like the blocks in WFZ
 ObjPtr_ContinueText:
 ObjPtr_ContinueIcons:		dc.l ObjDA		; Continue text
@@ -28767,7 +28791,6 @@ loc_19F4C:
 ; ----------------------------------------------------------------------------
 ; Sprite_19F50: Object_Sonic:
 Obj01:
-	move.w #$8C80|%1001,$C00004	; Shadow/Highlight mode
 	; a0=character
 	tst.w	(Debug_placement_mode).w	; is debug mode being used?
 	beq.s	Obj01_Normal			; if not, branch
