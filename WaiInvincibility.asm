@@ -9,8 +9,9 @@ WaiStars_Index:	offsetTable
 ; ===========================================================================
 loc_12660:
         addq.b  #$2,objoff_A(a0)
+		jsr		Unc_Stars_Load
         move.l  #Obj35_MapUnc_1DCBC,mappings(a0)
-        move.w  #make_art_tile(ArtTile_ArtNem_Invincible_stars,0,0),art_tile(a0)
+        move.w  #make_art_tile(ArtTile_ShieldAndStars,0,0),art_tile(a0)
         bsr     Adjust2PArtPointer2     ; loc_DC30
         move.b  #$4,render_flags(a0)
         bset    #$6,render_flags(a0)

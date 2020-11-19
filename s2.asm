@@ -35405,8 +35405,19 @@ byte_1D8E9:	dc.b  $E,$FC
 byte_1D8EB:	dc.b  $E,  1,  2,  3,  4,$FC
 	even
 
+Unc_Stars_Load:
+    move.l    #ArtUnc_Invincibility,d1
+    move.w    #tiles_to_bytes(ArtTile_ShieldAndStars),d2
+    move.w    #$200,d3
+    jsr    (QueueDMATransfer).l
+    rts
 
-
+Unc_Shield_Load:
+    move.l    #ArtUnc_Shield,d1
+    move.w    #tiles_to_bytes(ArtTile_ShieldAndStars),d2
+    move.w    #$200,d3
+    jsr    (QueueDMATransfer).l
+    rts
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -35431,7 +35442,7 @@ Obj38_Main:
 	move.b	#4,render_flags(a0)
 	move.b	#1,priority(a0)
 	move.b	#$18,width_pixels(a0)
-	move.w	#make_art_tile(ArtTile_ArtNem_Shield,0,0),art_tile(a0)
+	move.w	#make_art_tile(ArtTile_ShieldAndStars,0,0),art_tile(a0)
 	bsr.w	Adjust2PArtPointer
 ; loc_1D92C:
 Obj38_Shield:
@@ -35449,6 +35460,7 @@ Obj38_Shield:
 	ori.w	#high_priority,art_tile(a0)
 ; loc_1D964:
 Obj38_Display:
+	jsr	Unc_Shield_Load
 	lea	(Ani_obj38).l,a1
 	jsr	(AnimateSprite).l
 	jmp	(DisplaySprite).l
@@ -35495,7 +35507,7 @@ loc_1D9A4:
 -	_move.b	id(a0),id(a1) ; load obj35
 	move.b	#4,objoff_A(a1)		; => loc_1DA80
 	move.l	#Obj35_MapUnc_1DCBC,mappings(a1)
-	move.w	#make_art_tile(ArtTile_ArtNem_Invincible_stars,0,0),art_tile(a1)
+	move.w	#make_art_tile(ArtTile_ShieldAndStars,0,0),art_tile(a1)
 	bsr.w	Adjust2PArtPointer2
 	move.b	#4,render_flags(a1)
 	bset	#6,render_flags(a1)
@@ -35510,6 +35522,7 @@ loc_1D9A4:
 	dbf	d1,-
 
 	move.b	#2,objoff_A(a0)		; => loc_1DA0C
+	jsr		Unc_Stars_Load
 	move.b	#4,objoff_34(a0)
 
 loc_1DA0C:
@@ -79294,14 +79307,10 @@ PlrList_Std1_End
 PlrList_Std2: plrlistheader
 	plreq ArtTile_ArtNem_Checkpoint, ArtNem_Checkpoint
 	plreq ArtTile_ArtNem_Powerups, ArtNem_Powerups
-	plreq ArtTile_ArtNem_Shield, ArtNem_Shield
-	plreq ArtTile_ArtNem_Invincible_stars, ArtNem_Invincible_stars
 PlrList_Std2_End
 PlrList_Std2_Ice: plrlistheader
 	plreq ArtTile_ArtNem_Checkpoint, ArtNem_Checkpoint
 	plreq ArtTile_ArtNem_Powerups, ArtNem_PowerupsIce
-	plreq ArtTile_ArtNem_Shield, ArtNem_Shield
-	plreq ArtTile_ArtNem_Invincible_stars, ArtNem_Invincible_stars
 PlrList_Std2_Ice_End
 ;---------------------------------------------------------------------------------------
 ; PATTERN LOAD REQUEST LIST
@@ -80345,16 +80354,11 @@ MapUnc_SuperTails:	BINCLUDE	"mappings/sprite/Super Tails.bin"
 MapRUnc_SuperTails:	BINCLUDE	"mappings/spriteDPLC/Super Tails.bin"
 	even
 ;--------------------------------------------------------------------------------------
-; Nemesis compressed art (32 blocks)
-; Shield			; ArtNem_71D8E:
+; Invincibility and shield(s?)
 ;--------------------------------------------------------------------------------------
-ArtNem_Shield:	BINCLUDE	"art/nemesis/Shield.bin"
-;--------------------------------------------------------------------------------------
-; Nemesis compressed art (34 blocks)
-; Invincibility stars		; ArtNem_71F14:
-;--------------------------------------------------------------------------------------
+ArtUnc_Shield:	BINCLUDE	"art/uncompressed/Shield.bin"
 	even
-ArtNem_Invincible_stars:	BINCLUDE	"art/nemesis/Invincibility stars.bin"
+ArtUnc_Invincibility:	BINCLUDE	"art/uncompressed/Invincibility stars.bin"
 ;--------------------------------------------------------------------------------------
 ; Uncompressed art
 ; Splash in water and dust from skidding	; ArtUnc_71FFC:
