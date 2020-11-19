@@ -23198,8 +23198,8 @@ ObjPtr_EHZWaterfall:		dc.l Obj49		; Waterfall from EHZ
 ObjPtr_Octus:				dc.l Obj4A		; Octus (octopus badnik) from OOZ
 ObjPtr_Buzzer:				dc.l Obj4B		; Buzzer (Buzz bomber) from EHZ
 ObjPtr_Batbot:				dc.l Obj4C_Batbot	; Batbot from HPZ
-ObjPtr_BigRing:				dc.l Obj4D		; Obj4D
-ObjPtr_BigRingFlash:		dc.l Obj4E		; Obj4E
+ObjPtr_BigRing:				dc.l ObjNull		; Obj4D
+ObjPtr_BigRingFlash:		dc.l ObjNull		; Obj4E
 ObjPtr_Dinobot:				dc.l Obj4F_Dinobot	; Dinobot from HPZ
 ObjPtr_Aquis:				dc.l Obj50		; Aquis (seahorse badnik) from OOZ
 ObjPtr_CNZBoss:				dc.l Obj51		; CNZ boss
