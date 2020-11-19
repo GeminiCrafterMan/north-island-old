@@ -28,6 +28,7 @@ Tails_RevertToNormal:
 	move.l	#MapUnc_Tails,mappings(a0)
 	move.w	#make_art_tile(ArtTile_ArtUnc_Tails,0,0),art_tile(a0)
 	move.b	#0,(MainCharacter+obj_control).w	; restore Sonic's movement
+	move.b	#2,(Super_Sonic_palette).w	; Remove rotating palette
 	move.b	#0,(Super_Sonic_flag).w
 	move.b	#1,prev_anim(a0)	; Change animation back to normal ?
 	move.w	#1,invincibility_time(a0)	; Remove invincibility

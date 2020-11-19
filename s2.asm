@@ -30276,6 +30276,8 @@ Sonic_Super:
 	bne.s	return_1AC3C
 ; loc_1ABF2:
 Sonic_RevertToNormal:
+	move.l	#MapUnc_Sonic,mappings(a0)
+	move.w	#make_art_tile(ArtTile_ArtUnc_Sonic,0,0),art_tile(a0)
 	move.b	#0,(MainCharacter+obj_control).w	; restore Sonic's movement
 	move.b	#2,(Super_Sonic_palette).w	; Remove rotating palette
 	move.w	#$28,(Palette_frame).w
