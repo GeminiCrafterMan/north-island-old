@@ -1210,7 +1210,7 @@
             }
         },
         {
-            "name": "",
+            "name": "Credit Text",
             "palettes": [
                 {
                     "path": "art\\palettes\\SonicAndTails.bin",
@@ -1227,6 +1227,48 @@
             },
             "mappings": {
                 "path": "mappings\\Credits Text.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Hyper Stars",
+            "palettes": [],
+            "art": {
+                "path": "art\\nemesis\\Hyper Sonic stars.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\Hyper Sonic Stars.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Super Stars",
+            "palettes": [],
+            "art": {
+                "path": "art\\nemesis\\Super Sonic stars.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\obj7E.bin",
                 "format": "Sonic 2",
                 "customDefinition": "",
                 "label": ""

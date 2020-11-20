@@ -133,24 +133,6 @@ objoff_28 =		$28 ; overlaps subtype, but a few objects use it for other things a
  enum objoff_30=$30,objoff_31=$31,objoff_32=$32,objoff_33=$33,objoff_34=$34,objoff_35=$35,objoff_36=$36,objoff_37=$37
  enum objoff_38=$38,objoff_39=$39,objoff_3A=$3A,objoff_3B=$3B,objoff_3C=$3C,objoff_3D=$3D,objoff_3E=$3E,objoff_3F=$3F
 ; ---------------------------------------------------------------------------
-; Special Stage object properties:
-ss_dplc_timer = $23
-ss_x_pos = objoff_2A
-ss_x_sub = objoff_2C
-ss_y_pos = objoff_2E
-ss_y_sub = objoff_30
-ss_init_flip_timer = objoff_32
-ss_flip_timer = objoff_33
-ss_z_pos = objoff_34
-ss_hurt_timer = objoff_36
-ss_slide_timer = objoff_37
-ss_parent = objoff_38
-ss_rings_base = objoff_3C	; word
-ss_rings_hundreds = objoff_3C
-ss_rings_tens = objoff_3D
-ss_rings_units = objoff_3E
-ss_last_angle_index = objoff_3F
-; ---------------------------------------------------------------------------
 ; property of all objects:
 object_size =		$40 ; the size of an object
 next_object =		object_size

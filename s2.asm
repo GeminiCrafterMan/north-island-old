@@ -20431,7 +20431,7 @@ JmpTo4_PlayMusic
 	align 4
     endif
 
-Obj10:	include	"WaiInvincibility.asm"
+Obj10:	include	"0517Stars.asm"
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -35845,6 +35845,9 @@ JmpTo8_DeleteObject
 ; sprite mappings
 ; -------------------------------------------------------------------------------
 Obj7E_MapUnc_1E1BE:	BINCLUDE "mappings/sprite/obj7E.bin"
+	even
+Map_HyperSonicStars:BINCLUDE "mappings/sprite/Hyper Sonic Stars.bin"
+	even
 ; ===========================================================================
 
     if gameRevision<2
@@ -80235,6 +80238,8 @@ ArtUnc_SplashAndDust:	BINCLUDE	"art/uncompressed/Splash and skid dust.bin"
 ;--------------------------------------------------------------------------------------
 	even
 ArtNem_SuperSonic_stars:	BINCLUDE	"art/nemesis/Super Sonic stars.bin"
+	even
+ArtNem_HyperSonicStars:		BINCLUDE	"art/nemesis/Hyper Sonic stars.bin"
 ;-------------------------------------------------------------------------------------
 ; Nemesis compressed art (127 blocks)
 ; "SEGA" Patterns	; ArtNem_74876:
