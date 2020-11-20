@@ -38,16 +38,16 @@ Obj62_Init:					  ; ...
 		move.w	#$600,(Sonic_top_speed).w
 		move.w	#$C,(Sonic_acceleration).w
 		move.w	#$80,(Sonic_deceleration).w
-		tst.b	($FFFFFE30).w
+		tst.b	(Last_star_pole_hit).w
 		bne.s	Obj62_Init_Continued
-		move.w	#$780,2(a0)
-		jsr		Adjust2PArtPointer
-		move.b	#$C,$3E(a0)
-		move.b	#$D,$3F(a0)
-		move.w	8(a0),($FFFFFE32).w
-		move.w	y_pos(a0),($FFFFFE34).w
-		move.w	2(a0),($FFFFFE3C).w
-		move.w	$3E(a0),($FFFFFE3E).w
+		move.w	#make_art_tile(ArtTile_ArtUnc_Sonic,0,0),art_tile(a0)
+		jsr	Adjust2PArtPointer
+		move.b	#$C,top_solid_bit(a0)
+		move.b	#$D,lrb_solid_bit(a0)
+		move.w	x_pos(a0),(Saved_x_pos).w
+		move.w	y_pos(a0),(Saved_y_pos).w
+		move.w	art_tile(a0),(Saved_art_tile).w
+		move.w	top_solid_bit(a0),(Saved_Solid_bits).w
 
 Obj62_Init_Continued:				  ; ...
 		move.b	#0,$2C(a0)
@@ -3143,7 +3143,7 @@ KnucklesAni_Transform:dc.b   2,$EB,$EB,$EC,$ED,$EC,$ED,$EC,$ED,$EC,$ED,$EC,$ED;	
 
 SuperKnucklesAniData:
 		dc.w KnucklesAni_Walk-SuperKnucklesAniData; 0 ; ...
-		dc.w SuperKnucklesAni_Run-SuperKnucklesAniData; 1
+		dc.w KnucklesAni_Run-SuperKnucklesAniData; 1
 		dc.w KnucklesAni_Roll-SuperKnucklesAniData; 2
 		dc.w KnucklesAni_Roll2-SuperKnucklesAniData;	3
 		dc.w KnucklesAni_Push-SuperKnucklesAniData; 4
@@ -3180,7 +3180,6 @@ SuperKnucklesAniData:
 		dc.w KnucklesAni_HardFall-SuperKnucklesAniData; 35
 		dc.w KnucklesAni_Badass-SuperKnucklesAniData; 36
 
-SuperKnucklesAni_Run:	dc.b $FF, $21, $22, $FF, $FF, $FF, $FF, $FF, $FF, $FF
 SuperKnucklesAni_Stand:	dc.b	7, $D2, $D3, $D4, $D3, $FF
 ; =============== S U B	R O U T	I N E =======================================
 

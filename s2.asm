@@ -19222,7 +19222,7 @@ Obj2E_Types:	offsetTable
 		offsetTableEntry.w super_shoes		; 5 - Speed Shoes
 		offsetTableEntry.w shield_monitor	; 6 - Shield
 		offsetTableEntry.w invincible_monitor	; 7 - Invincibility
-		offsetTableEntry.w teleport_monitor	; 8 - Teleport
+		offsetTableEntry.w super_monitor	; 8 - Teleport
 		offsetTableEntry.w qmark_monitor	; 9 - Question mark
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -19415,17 +19415,6 @@ invincible_monitor:
 ; swaps both players around
 ; ---------------------------------------------------------------------------
 ;loc_12AA6:
-teleport_monitor:
-	addq.w	#1,(a2)
-	tst.w	(Two_player_mode).w	; if two-player mode is on (1)
-	beq.s	super_monitor
-	cmpi.b	#6,(MainCharacter+routine).w	; is player 1 dead or respawning?
-	bhs.s	+				; if yes, branch
-	cmpi.b	#6,(Sidekick+routine).w		; is player 2 dead or respawning?
-	blo.w	swap_players			; if not, branch
-+	; can't teleport if either player is dead	
-	rts
-
 super_monitor:
 	addi.w	#50,(Ring_count).w
 	move.b	#1,(Super_Sonic_palette).w
@@ -19485,173 +19474,8 @@ super_monitor:
 	jsr	(PlayMusic).l	; load the Super Sonic song and return
 +
 	move.w	#SndID_S3KSuperTransform,d0
-	jmp	(PlaySound).l	; Play transformation sound effect.
-; ---------------------------------------------------------------------------
-; Routine to make both players swap positions
-; and handle anything else that needs to be done
-; ---------------------------------------------------------------------------
-swap_players:
-	lea	(teleport_swap_table).l,a3
-	moveq	#(teleport_swap_table_end-teleport_swap_table)/6-1,d2	; amount of entries in table - 1
-
-process_swap_table:
-	movea.w	(a3)+,a1	; address for main character
-	movea.w	(a3)+,a2	; address for sidekick
-	move.w	(a3)+,d1	; amount of word length data to be swapped
-
--	; swap data between the main character and the sidekick d1 times
-	move.w	(a1),d0
-	move.w	(a2),(a1)+
-	move.w	d0,(a2)+
-	dbf	d1,-
-
-	dbf	d2,process_swap_table	; process remaining entries in the list
-
-	move.b	#1,(MainCharacter+prev_anim).w
-	move.b	#1,(Sidekick+prev_anim).w
-    if gameRevision>0
-	move.b	#0,(MainCharacter+mapping_frame).w
-	move.b	#0,(Sidekick+mapping_frame).w
-    endif
-	move.b	#-1,(Sonic_LastLoadedDPLC).w
-	move.b	#-1,(Tails_LastLoadedDPLC).w
-	move.b	#-1,(TailsTails_LastLoadedDPLC).w
-	lea	(unk_F786).w,a1
-	lea	(unk_F789).w,a2
-
-	moveq	#2,d1
--	move.b	(a1),d0
-	move.b	(a2),(a1)+
-	move.b	d0,(a2)+
-	dbf	d1,-
-
-	subi.w	#$180,(Camera_Y_pos).w
-	subi.w	#$180,(Camera_Y_pos_P2).w
-	move.w	(MainCharacter+art_tile).w,d0
-	andi.w	#drawing_mask,(MainCharacter+art_tile).w
-	tst.w	(Sidekick+art_tile).w
-	bpl.s	+
-	ori.w	#high_priority,(MainCharacter+art_tile).w
-+
-	andi.w	#drawing_mask,(Sidekick+art_tile).w
-	tst.w	d0
-	bpl.s	+
-	ori.w	#high_priority,(Sidekick+art_tile).w
-+
-	move.b	#1,(Camera_Max_Y_Pos_Changing).w
-	lea	(Dynamic_Object_RAM).w,a1
-	moveq	#(Dynamic_Object_RAM_End-Dynamic_Object_RAM)/object_size-1,d1
-
-; process objects:
-swap_loop_objects:
-	cmpi.b	#ObjID_PinballMode,id(a1) ; is it obj84 (pinball mode switcher)?
-	beq.s	+ ; if yes, branch
-	cmpi.b	#ObjID_PlaneSwitcher,id(a1) ; is it obj03 (collision plane switcher)?
-	bne.s	++ ; if not, branch further
-
-+
-	move.b	objoff_34(a1),d0
-	move.b	objoff_35(a1),objoff_34(a1)
-	move.b	d0,objoff_35(a1)
-
-+
-	cmpi.b	#ObjID_PointPokey,id(a1) ; is it objD6 (CNZ point giver)?
-	bne.s	+ ; if not, branch
-	move.l	objoff_30(a1),d0
-	move.l	objoff_34(a1),objoff_30(a1)
-	move.l	d0,objoff_34(a1)
-
-+
-	cmpi.b	#ObjID_LauncherSpring,id(a1) ; is it obj85 (CNZ pressure spring)?
-	bne.s	+ ; if not, branch
-	move.b	objoff_36(a1),d0
-	move.b	objoff_37(a1),objoff_36(a1)
-	move.b	d0,objoff_37(a1)
-
-+
-	lea	next_object(a1),a1 ; look at next object ; a1=object
-	dbf	d1,swap_loop_objects ; loop
-
-
-	lea	(MainCharacter).w,a1 ; a1=character
-	move.b	#ObjID_Shield,(Sonic_Shield+id).w ; load Obj38 (shield) at $FFFFD180
-	move.w	a1,(Sonic_Shield+parent).w
-	move.b	#ObjID_InvStars,(Sonic_InvincibilityStars+id).w ; load Obj35 (invincibility stars) at $FFFFD200
-	move.w	a1,(Sonic_InvincibilityStars+parent).w
-	btst	#2,status(a1)	; is Sonic spinning?
-	bne.s	+		; if yes, branch
-	move.b	#$13,y_radius(a1)	; set to standing height
-	move.b	#9,x_radius(a1)
-+
-	btst	#3,status(a1)	; is Sonic on an object?
-	beq.s	+		; if not, branch
-	moveq	#0,d0
-	move.b	interact(a1),d0
-    if object_size=$40
-	lsl.w	#6,d0
-    else
-	mulu.w	#object_size,d0
-    endif
-	addi.l	#Object_RAM,d0
-	movea.l	d0,a2	; a2=object
-	bclr	#4,status(a2)
-	bset	#3,status(a2)
-
-+
-	lea	(Sidekick).w,a1 ; a1=character
-	move.b	#ObjID_Shield,(Tails_Shield+id).w ; load Obj38 (shield) at $FFFFD1C0
-	move.w	a1,(Tails_Shield+parent).w
-	move.b	#ObjID_InvStars,(Tails_InvincibilityStars+id).w ; load Obj35 (invincibility) at $FFFFD300
-	move.w	a1,(Tails_InvincibilityStars+parent).w
-	btst	#2,status(a1)	; is Tails spinning?
-	bne.s	+		; if yes, branch
-	move.b	#$F,y_radius(a1)	; set to standing height
-	move.b	#9,x_radius(a1)
-
-+
-	btst	#3,status(a1)	; is Tails on an object?
-	beq.s	+		; if not, branch
-	moveq	#0,d0
-	move.b	interact(a1),d0
-    if object_size=$40
-	lsl.w	#6,d0
-    else
-	mulu.w	#object_size,d0
-    endif
-	addi.l	#Object_RAM,d0
-	movea.l	d0,a2	; a2=object
-	bclr	#3,status(a2)
-	bset	#4,status(a2)
-
-+
-	move.b	#$40,(Teleport_timer).w
-	move.b	#1,(Teleport_flag).w
-	move.w	#SndID_Teleport,d0
-	jmp	(PlayMusic).l
-; ===========================================================================
-; Table listing all the addresses for players 1 and 2 that need to be swapped
-; when a teleport monitor is destroyed
-;byte_12C52:
-teleport_swap_table:
-	dc.w MainCharacter+x_pos,	Sidekick+x_pos,			$1B
-	dc.w Camera_X_pos_last,		Camera_X_pos_last_P2,		  0
-	dc.w Obj_respawn_index,		Obj_respawn_index_P2,		  0
-	dc.w Obj_load_addr_right,	Obj_load_addr_2,		  3
-	dc.w Sonic_top_speed,		Tails_top_speed,		  2
-	dc.w Ring_start_addr,		Ring_start_addr_P2,		  1
-	dc.w CNZ_Visible_bumpers_start,	CNZ_Visible_bumpers_start_P2,  3
-	dc.w Camera_X_pos,		Camera_X_pos_P2,		 $F
-	dc.w Camera_X_pos_coarse,	Camera_X_pos_coarse_P2,		  0
-	dc.w Camera_Min_X_pos,		Tails_Min_X_pos,		  3
-	dc.w Horiz_scroll_delay_val,	Horiz_scroll_delay_val_P2,	  1
-	dc.w Camera_Y_pos_bias,		Camera_Y_pos_bias_P2,		  0
-	dc.w Horiz_block_crossed_flag,	Horiz_block_crossed_flag_P2,	  3
-	dc.w Scroll_flags,		Scroll_flags_P2,		  3
-	dc.w Camera_RAM_copy,		Camera_P2_copy,			 $F
-	dc.w Scroll_flags_copy,		Scroll_flags_copy_P2,		  3
-	dc.w Camera_X_pos_diff,		Camera_X_pos_diff_P2,		  1
-	dc.w Sonic_Pos_Record_Buf,	Tails_Pos_Record_Buf,		$7F
-teleport_swap_table_end:
+	jsr	(PlaySound).l	; Play transformation sound effect.
+	jmp	Unc_SuperIcons_Load
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; '?' Monitor
@@ -22385,6 +22209,7 @@ LoadTitleCardSS:
 
 ; sub_157B0:
 LoadTitleCard0:
+	jsr		Unc_NormalIcons_Reload
 	move.l	#vdpComm(tiles_to_bytes(ArtTile_ArtNem_TitleCard),VRAM,WRITE),(VDP_control_port).l
 ; beginning of special title card code
 	cmpi.w	#3,(Player_option).w
@@ -30176,6 +30001,7 @@ Sonic_CheckGoSuper:
 	blo.w	return_1ABA4		; if not, branch
 
 SuperSonic_Cont: ; known as Sonic_Transform: in S3K
+	jsr		Unc_SuperIcons_Load
 	move.b	#1,(Super_Sonic_palette).w
 	move.b	#$F,(Palette_timer).w
 	move.b	#1,(Super_Sonic_flag).w
@@ -30276,6 +30102,7 @@ Sonic_Super:
 	bne.s	return_1AC3C
 ; loc_1ABF2:
 Sonic_RevertToNormal:
+	jsr		Unc_NormalIcons_Reload
 	move.l	#MapUnc_Sonic,mappings(a0)
 	move.w	#make_art_tile(ArtTile_ArtUnc_Sonic,0,0),art_tile(a0)
 	move.b	#0,(MainCharacter+obj_control).w	; restore Sonic's movement
@@ -35406,18 +35233,54 @@ byte_1D8EB:	dc.b  $E,  1,  2,  3,  4,$FC
 	even
 
 Unc_Stars_Load:
-    move.l    #ArtUnc_Invincibility,d1
-    move.w    #tiles_to_bytes(ArtTile_ShieldAndStars),d2
-    move.w    #$200,d3
-    jsr    (QueueDMATransfer).l
-    rts
+	move.l	#ArtUnc_Invincibility,d1
+	move.w	#tiles_to_bytes(ArtTile_ShieldAndStars),d2
+	move.w	#$200,d3
+	jsr		(QueueDMATransfer).l
+	rts
 
 Unc_Shield_Load:
-    move.l    #ArtUnc_Shield,d1
-    move.w    #tiles_to_bytes(ArtTile_ShieldAndStars),d2
-    move.w    #$200,d3
-    jsr    (QueueDMATransfer).l
-    rts
+	move.l	#ArtUnc_Shield,d1
+	move.w	#tiles_to_bytes(ArtTile_ShieldAndStars),d2
+	move.w	#$200,d3
+	jsr		(QueueDMATransfer).l
+	rts
+
+Unc_SuperIcons_Load:
+	cmpi.w	#1,(Player_mode).w
+	bgt.s	.tailscheck
+	move.l	#ArtUnc_SuperSonicLife,d1
+	bra.s	.cont
+.tailscheck:
+	cmpi.w	#2,(Player_mode).w
+	bne.s	.knux
+	move.l	#ArtUnc_SuperTailsLife,d1
+	bra.s	.cont
+.knux:
+	move.l	#ArtUnc_SuperKnucklesLife,d1
+.cont:
+	move.w	#tiles_to_bytes(ArtTile_ArtNem_life_counter),d2
+	move.w	#$40,d3
+	jsr		(QueueDMATransfer).l
+	rts
+
+Unc_NormalIcons_Reload:
+	cmpi.w	#1,(Player_mode).w
+	bgt.s	.tailscheck
+	move.l	#ArtUnc_SonicLife,d1
+	bra.s	.cont
+.tailscheck:
+	cmpi.w	#2,(Player_mode).w
+	bne.s	.knux
+	move.l	#ArtUnc_TailsLife,d1
+	bra.s	.cont
+.knux:
+	move.l	#ArtUnc_KnucklesLife,d1
+.cont:
+	move.w	#tiles_to_bytes(ArtTile_ArtNem_life_counter),d2
+	move.w	#$40,d3
+	jsr		(QueueDMATransfer).l
+	rts
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -80446,6 +80309,18 @@ ArtNem_HUD:	BINCLUDE	"art/nemesis/HUD.bin"
 ; Sonic lives counter		ArtNem_79346:
 	even
 ArtNem_Sonic_life_counter:	BINCLUDE	"art/nemesis/Sonic lives counter.bin"
+	even
+ArtUnc_SonicLife:	BINCLUDE	"art/uncompressed/Sonic lives counter.bin"
+	even
+ArtUnc_TailsLife:	BINCLUDE	"art/uncompressed/Tails lives counter.bin"
+	even
+ArtUnc_KnucklesLife:	BINCLUDE	"art/uncompressed/Knuckles lives counter.bin"
+	even
+ArtUnc_SuperSonicLife:	BINCLUDE	"art/uncompressed/Super Sonic lives counter.bin"
+	even
+ArtUnc_SuperTailsLife:	BINCLUDE	"art/uncompressed/Super Tails lives counter.bin"
+	even
+ArtUnc_SuperKnucklesLife:	BINCLUDE	"art/uncompressed/Super Knuckles lives counter.bin"
 ;---------------------------------------------------------------------------------------
 ; Nemesis compressed art (14 blocks)
 ; Ring				ArtNem_7945C:
@@ -80569,20 +80444,10 @@ ArtNem_MiniKnuckles: BINCLUDE "art/nemesis/Knuckles continue.bin"
 	even
 ArtNem_KTELife:	BINCLUDE "art/nemesis/Knuckles lives counter.bin"
 ;---------------------------------------------------------------------------------------
-; Nemesis compressed art (12 blocks)
-; lmao i have no goddamn idea
-	even
-ArtNem_SpecialKnuckles:	BINCLUDE "art/nemesis/Knuckles animation frames in special stage.bin"
-;---------------------------------------------------------------------------------------
 ; Nemesis compressed art (88 blocks)
 ; Standard font		; ArtNem_7C43A:
 	even
 ArtNem_FontStuff:	BINCLUDE	"art/nemesis/Standard font.bin"
-;---------------------------------------------------------------------------------------
-; Nemesis compressed art (38 blocks)
-; 1P/2P wins text from 2P mode		; ArtNem_7C9AE:
-	even
-ArtNem_1P2PWins:	BINCLUDE	"art/nemesis/1P and 2P wins text from 2P mode.bin"
 ;---------------------------------------------------------------------------------------
 ; Enigma compressed art mappings
 ; Sonic/Miles animated background mappings	; MapEng_7CB80:

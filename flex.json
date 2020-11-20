@@ -1208,6 +1208,27 @@
                 "customDefinition": "",
                 "label": ""
             }
+        },
+        {
+            "name": "",
+            "palettes": [],
+            "art": {
+                "path": "",
+                "compression": "Uncompressed"
+            },
+            "mappings": {
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
         }
     ]
 }

@@ -25,6 +25,7 @@
 	bne.s	Tails_Super_Return
 ; loc_1ABF2:
 Tails_RevertToNormal:
+	jsr		Unc_NormalIcons_Reload
 	move.l	#MapUnc_Tails,mappings(a0)
 	move.w	#make_art_tile(ArtTile_ArtUnc_Tails,0,0),art_tile(a0)
 	move.b	#0,(MainCharacter+obj_control).w	; restore Sonic's movement
