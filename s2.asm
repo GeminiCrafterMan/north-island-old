@@ -9078,7 +9078,7 @@ off_B2CA:
 
 ; credits text pointers for each screen of credits
 vram_pnt := VRAM_Plane_A_Name_Table
-off_B322: creditsPtrs	byte_BC46,textLoc($0E,$0B), byte_BC51,textLoc($18,$0B), byte_BC55,textLoc($02,$0F)
+off_B322: creditsPtrs	byte_BC46,textLoc($0E,$0B), byte_BC51,textLoc($08,$0F), byte_BC55,textLoc($02,$13)
 off_B336: creditsPtrs	byte_B55C,textLoc($03,$0B), byte_B56F,textLoc($16,$0B), byte_B581,textLoc($06,$0F)
 off_B34A: creditsPtrs	byte_B56F,textLoc($0C,$0B), byte_B59F,textLoc($07,$0F)
 off_B358: creditsPtrs	byte_B5BC,textLoc($0C,$0B), byte_B5CD,textLoc($06,$0F)
@@ -9356,8 +9356,8 @@ LevelSize: zoneOrderedTable 2,8	; WrdArr_LvlSize
 	zoneTableEntry.w	$0,	$2940,	$0,	$420	; EHZ act 2
 	zoneTableEntry.w	$0,	$24BF,	$0,	$300	; GHZ act 1
 	zoneTableEntry.w	$0,	$1EBF,	$0,	$720	; GHZ act 2
-	zoneTableEntry.w	$0,	$3FFF,	$0,	$720	; $02
-	zoneTableEntry.w	$0,	$3FFF,	$0,	$720
+	zoneTableEntry.w	$0,	$29A0,	$0,	$720	; WZ act 1
+	zoneTableEntry.w	$0,	$3FFF,	$0,	$720	; WZ act 2
 	zoneTableEntry.w	$0,	$3FFF,	$0,	$720	; $03
 	zoneTableEntry.w	$0,	$3FFF,	$0,	$720
 	zoneTableEntry.w	$0,	$2280,	-$100,	$800	; MTZ act 1
@@ -9447,7 +9447,7 @@ StartLocations: zoneOrderedTable 2,4	; WrdArr_StartLoc
 	zoneTableBinEntry	2, "startpos/GHZ_1.bin"	; $01
 	zoneTableBinEntry	2, "startpos/GHZ_2.bin"
 	zoneTableBinEntry	2, "startpos/WZ_1.bin"	; $02
-	zoneTableBinEntry	2, "startpos/WZ_1.bin"
+	zoneTableBinEntry	2, "startpos/WZ_2.bin"
 	zoneTableBinEntry	2, "startpos/EHZ_1.bin"
 	zoneTableBinEntry	2, "startpos/EHZ_1.bin"
 	zoneTableBinEntry	2, "startpos/MTZ_1.bin"	; $04

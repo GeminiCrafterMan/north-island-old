@@ -1211,14 +1211,23 @@
         },
         {
             "name": "",
-            "palettes": [],
+            "palettes": [
+                {
+                    "path": "art\\palettes\\SonicAndTails.bin",
+                    "length": 1
+                },
+                {
+                    "path": "art\\palettes\\SonicAndTails2.bin",
+                    "length": 1
+                }
+            ],
             "art": {
-                "path": "",
-                "compression": "Uncompressed"
+                "path": "art\\nemesis\\Credit Text.bin",
+                "compression": "Nemesis"
             },
             "mappings": {
-                "path": "",
-                "format": "Sonic 1",
+                "path": "mappings\\Credits Text.bin",
+                "format": "Sonic 2",
                 "customDefinition": "",
                 "label": ""
             },
