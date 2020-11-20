@@ -31,6 +31,7 @@ Obj62_Init:					  ; ...
 		addq.b	#2,routine(a0)
 		move.b	#$13,y_radius(a0)
 		move.b	#9,x_radius(a0)
+	jsr	(Unc_NormalIcons_Reload).l
 		move.l	#MapUnc_Knuckles,4(a0)	  ; MapUnc_Knuckles
 		move.b	#2,$18(a0)
 		move.b	#$18,$19(a0)

@@ -22209,7 +22209,6 @@ LoadTitleCardSS:
 
 ; sub_157B0:
 LoadTitleCard0:
-	jsr		Unc_NormalIcons_Reload
 	move.l	#vdpComm(tiles_to_bytes(ArtTile_ArtNem_TitleCard),VRAM,WRITE),(VDP_control_port).l
 ; beginning of special title card code
 	cmpi.w	#3,(Player_option).w
@@ -28643,6 +28642,7 @@ Obj01_Init:
 	addq.b	#2,routine(a0)	; => Obj01_Control
 	move.b	#$13,y_radius(a0) ; this sets Sonic's collision height (2*pixels)
 	move.b	#9,x_radius(a0)
+	jsr	(Unc_NormalIcons_Reload).l
 	move.l	#MapUnc_Sonic,mappings(a0)
 	move.b	#2,priority(a0)
 	move.b	#$18,width_pixels(a0)
@@ -31470,6 +31470,7 @@ Obj02_Init:
 	addq.b	#2,routine(a0)	; => Obj02_Normal
 	move.b	#$F,y_radius(a0) ; this sets Tails' collision height (2*pixels) to less than Sonic's height
 	move.b	#9,x_radius(a0)
+	jsr	(Unc_NormalIcons_Reload).l
 	move.l	#MapUnc_Tails,mappings(a0)
 	move.b	#2,priority(a0)
 	move.b	#$18,width_pixels(a0)
