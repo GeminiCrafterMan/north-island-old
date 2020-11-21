@@ -80239,7 +80239,7 @@ ArtUnc_SplashAndDust:	BINCLUDE	"art/uncompressed/Splash and skid dust.bin"
 	even
 ArtNem_SuperSonic_stars:	BINCLUDE	"art/nemesis/Super Sonic stars.bin"
 	even
-ArtNem_HyperSonicStars:		BINCLUDE	"art/nemesis/Hyper Sonic stars.bin"
+ArtUnc_HyperSonicStars:		BINCLUDE	"art/uncompressed/Hyper Sonic stars.bin"
 ;-------------------------------------------------------------------------------------
 ; Nemesis compressed art (127 blocks)
 ; "SEGA" Patterns	; ArtNem_74876:

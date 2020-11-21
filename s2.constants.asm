@@ -20,6 +20,7 @@ x_pos =			  8 ; and 9 ... some objects use $A and $B as well when extra precisio
 x_sub =			 $A ; and $B
 y_pos =			 $C ; and $D ... some objects use $E and $F as well when extra precision is required ... screen-space objects use y_pixel instead
 y_sub =			 $E ; and $F
+height_pixels =	$14 ; requires bit 6 of render_flags to be set
 priority =		$18 ; 0 = front
 width_pixels =		$19
 mapping_frame =		$1A
