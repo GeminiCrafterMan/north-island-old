@@ -1247,7 +1247,7 @@
             }
         },
         {
-            "name": "Newtron",
+            "name": "Newtron (Unused)",
             "palettes": [
                 {
                     "path": "art\\palettes\\SonicAndTails.bin",
@@ -1264,6 +1264,27 @@
             },
             "mappings": {
                 "path": "mappings\\sprite\\Obj42_Newtron.asm",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Motobug",
+            "palettes": [],
+            "art": {
+                "path": "art\\nemesis\\motobug.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\motobug.bin",
                 "format": "Sonic 2",
                 "customDefinition": "",
                 "label": ""

@@ -2045,6 +2045,7 @@ ArtTile_ArtUnc_EHZMountains           = $0500
 ArtTile_ArtNem_BreakWall              = $051B
 
 ; GHZ
+ArtTile_ArtNem_MotoBug				  = $0380
 ArtTile_Art_GhzWater				  = $0378
 ArtTile_ArtNem_Stalk				  = $0358
 ArtTile_Art_GhzFlower1				  = $035C

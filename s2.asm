@@ -21125,7 +21125,7 @@ loc_142E2:
 LevelOrder: zoneOrderedTable 2,2	; WrdArr_LevelOrder
 	zoneTableEntry.w  emerald_hill_zone_act_2
 	zoneTableEntry.w  chemical_plant_zone_act_1	; 1
-	zoneTableEntry.w  emerald_hill_zone_act_1	; 2
+	zoneTableEntry.w  green_hill_zone_act_2	; 2
 	zoneTableEntry.w  emerald_hill_zone_act_1	; 3
 	zoneTableEntry.w  wood_zone_act_2		; 4
 	zoneTableEntry.w  metropolis_zone_act_1		; 5
@@ -27513,7 +27513,7 @@ Ani_obj0D:	offsetTable
 		offsetTableEntry.w .Knuckles; 5
 .Eggman:	dc.b	$0F, $00, $FF
 	rev02even
-.Spin:	dc.b	$01, $02, $04, $05, $06, $03, $04, $05, $06, $FF
+.Spin:	dc.b	$01, $04, $05, $06, $01, $04, $05, $06, $02, $04, $05, $06, $03, $04, $05, $06, $00, $FF
 	rev02even
 .Sonic:	dc.b	$0F, $01, $FF
 	rev02even
@@ -54814,11 +54814,15 @@ JmpTo22_ObjectMove
 ObjC4:
 	include "Metal Cirno.asm"
 ; ----------------------------------------------------------------------------
-; Object D0 - Beta Snail Badnik from EHZ
+; Object D0 - Beta Snail Badnik from EHZ & Motobug
 ; ----------------------------------------------------------------------------
 ObjD0:
+	cmpi.b	#green_hill_zone,(Current_Zone).w	; GHZ
+	beq.w	MotoBug
 	include	"badniks/Snailer.asm"
 
+MotoBug:
+	include "badniks/Motobug.asm"
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
 ; Object 58 - Boss explosion
@@ -78552,7 +78556,7 @@ DbgObjList_GHZ: dbglistheader
 	dbglistobj ObjID_Buzzer,	Obj4B_MapUnc_2D2EA,   0,   0, make_art_tile(ArtTile_ArtNem_Buzzer,0,0)
 	dbglistobj ObjID_Masher,	Obj5C_MapUnc_2D442,   0,   0, make_art_tile(ArtTile_ArtNem_Masher,0,0)
 	dbglistobj ObjID_PurpleRock,Obj3B_MapUnc_15D2E, 0,   0, make_art_tile(ArtTile_ArtNem_GHZ_Purple_Rock,3,0)
-	dbglistobj ObjID_Snailer,	Snailer_Mappings, 0,   3, make_art_tile(ArtTile_ArtNem_Snailer,0,0)
+	dbglistobj ObjID_Snailer,	Map_Moto, 0,   0, make_art_tile(ArtTile_ArtNem_MotoBug,0,0)
 	dbglistobj ObjID_EndPoints,	Obj7D_MapUnc_1F6FE,	  1,   1, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
 	dbglistobj ObjID_EndPoints,	Obj7D_MapUnc_1F6FE,	  2,   2, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
 	dbglistobj ObjID_EndPoints,	Obj7D_MapUnc_1F6FE,	  3,   3, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
@@ -79858,7 +79862,7 @@ PlrList_Ghz1: plrlistheader
 	plreq ArtTile_ArtNem_EHZ_Bridge, ArtNem_EHZ_Bridge
 	plreq ArtTile_ArtNem_Buzzer, ArtNem_Buzzer
 	plreq ArtTile_ArtNem_Masher, ArtNem_Masher
-	plreq ArtTile_ArtNem_Snailer, ArtNem_Snailer
+	plreq ArtTile_ArtNem_MotoBug, ArtNem_MotoBug
 PlrList_Ghz1_End
 ;---------------------------------------------------------------------------------------
 ; PATTERN LOAD REQUEST LIST
@@ -80825,6 +80829,8 @@ ArtNem_Masher:	BINCLUDE	"art/nemesis/EHZ Pirahna badnik.bin"
 ; Snail badnik from Beta EHZ		; ArtNem_839EA:	ArtNem_Pirahna:
 	even
 ArtNem_Snailer:	BINCLUDE	"art/nemesis/Snailer.bin"
+	even
+ArtNem_MotoBug:	BINCLUDE	"art/nemesis/motobug.bin"
 	even
 ArtNem_GHZ_Purple_Rock:	BINCLUDE	"art/nemesis/GHZ Purple Rock.bin"
 	even
