@@ -77,7 +77,8 @@ Obj62_Control:					  ; ...
 	clr.b	(Control_Locked).w		; unlock control
 	rts
 ; ---------------------------------------------------------------------------
-+               tst.b	($FFFFF7CC).w
++
+		tst.b	($FFFFF7CC).w
 		bne.s	loc_31542E
 		move.w	($FFFFF604).w,(Ctrl_1_Logical).w
 
@@ -309,7 +310,15 @@ Obj62_MdAir:					  ; ...
 		bsr.w	Knuckles_JumpHeight
 		bsr.w	Knuckles_ChgJumpDir
 		bsr.w	Knuckles_LevelBoundaries
-		jsr	ObjectMoveAndFall
+	jsr	(ObjectMoveAndFall).l
+
+	cmpi.b	#ObjID_WhirlwindShield,(Shield+id).w
+	bne.s	.nowind
+	btst	#button_up,(Ctrl_1_Held_Logical).w	; is up being pressed?
+	beq.s	.nowind
+	subi.w	#$28,y_vel(a0)	; reduce gravity by $28 ($38-$28=$10)
+
+.nowind:
 		btst	#6,status(a0)
 		beq.s	loc_31569C
 		sub.w	#$28,y_vel(a0)
@@ -985,7 +994,15 @@ Obj62_MdJump:					  ; ...
 		bsr.w	Knuckles_JumpHeight
 		bsr.w	Knuckles_ChgJumpDir
 		bsr.w	Knuckles_LevelBoundaries
-		jsr	ObjectMoveAndFall
+	jsr	(ObjectMoveAndFall).l
+
+	cmpi.b	#ObjID_WhirlwindShield,(Shield+id).w
+	bne.s	.nowind
+	btst	#button_up,(Ctrl_1_Held_Logical).w	; is up being pressed?
+	beq.s	.nowind
+	subi.w	#$28,y_vel(a0)	; reduce gravity by $28 ($38-$28=$10)
+
+.nowind:
 		btst	#6,status(a0)
 		beq.s	loc_315DE2
 		sub.w	#$28,y_vel(a0)

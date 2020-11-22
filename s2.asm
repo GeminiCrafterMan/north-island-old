@@ -49,7 +49,8 @@ relativeLea = 0|gameRevision<>2|allOptimizations
 useFullWaterTables = 1
 ;	| If 1, zone offset tables for water levels cover all level slots instead of only slots 8-$F
 ;	| Set to 1 if you've shifted level IDs around or you want water in levels with a level slot below 8
-
+newtronEnable = 0
+;	| if 1, newtron is allowed to fucking exist. i dont have the vram for this shit aaaagh
 ; >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 ; AS-specific macros and assembler settings
 	CPU 68000
@@ -4108,7 +4109,7 @@ JmpTo_SwScrl_Title
 MusicList: zoneOrderedTable 1,2
 	zoneTableEntry.b MusID_SR,	MusID_DL	; 0 ; Lavender Valley
 	zoneTableEntry.b MusID_GHZ, MusID_EGHZ	; 1 ; Green Hill
-	zoneTableEntry.b MusID_WM,	MusID_WM	; 2 ; Wood
+	zoneTableEntry.b MusID_WM,	MusID_Jungle; 2 ; Wood
 	zoneTableEntry.b MusID_RM,	MusID_RM	; 3 ; Test
 	zoneTableEntry.b MusID_MTZ, MusID_MTZ	; 4 ; MTZ1,2
 	zoneTableEntry.b MusID_MTZ, MusID_EHZ	; 5 ; MTZ3
@@ -4418,8 +4419,6 @@ Level_FromCheckpoint:
 	move.b	d0,(Teleport_flag).w
 	move.w	d0,(Rings_Collected).w
 	move.w	d0,(Rings_Collected_2P).w
-	move.w	d0,(Monitors_Broken).w
-	move.w	d0,(Monitors_Broken_2P).w
 	move.w	d0,(Loser_Time_Left).w
 	bsr.w	OscillateNumInit
 	move.b	#1,(Update_HUD_score).w
@@ -5494,7 +5493,7 @@ CheckLoadSignpostArt:
 	move.w	d1,(Camera_Min_X_pos).w ; prevent camera from scrolling back to the left
 	tst.w	(Two_player_mode).w
 	bne.s	+	; rts
-	moveq	#PLCID_Signpost,d0 ; <== PLC_1F
+	moveq	#PLCID_EndOfLevel,d0 ; <== PLC_1F
 	bra.w	LoadPLC2		; load signpost art
 ; ---------------------------------------------------------------------------
 ; loc_4C80:
@@ -7147,8 +7146,15 @@ LevSelControls_SwitchSide:	; not in soundtest, not up/down pressed
 	beq.s	+	; if not, branch
 	addq.w	#1,(Player_option).w	; select next character
 	cmpi.w	#4,(Player_option).w	; did we go over the limit?
-	bls.s	+	; if not, branch
+	bls.s	++	; if not, branch
 	clr.w	(Player_option).w	; reset to 0
++
+	btst	#button_B,(Ctrl_1_Press).w	; is C pressed?
+	beq.s	+	; if not, branch
+	subq.w	#1,(Player_option).w	; select next character
+	cmpi.w	#$FF,(Player_option).w	; did we go under the limit?
+	bls.s	+	; if not, branch
+	move.w	#4,(Player_option).w	; reset to 0
 +
 	rts
 ; ===========================================================================
@@ -19121,6 +19127,8 @@ Obj26_SpawnSmoke:
 ; Object 2E - Monitor contents (code for power-up behavior and rising image)
 ; ----------------------------------------------------------------------------
 
+shield_change_timer = objoff_32
+
 Obj2E:
 	moveq	#0,d0
 	move.b	routine(a0),d0
@@ -19199,12 +19207,7 @@ Obj2E_Raise:
 	addq.b	#2,routine(a0)
 	move.w	#$1D,anim_frame_duration(a0)
 	movea.w	parent(a0),a1 ; a1=character
-	lea	(Monitors_Broken).w,a2
-	cmpa.w	#MainCharacter,a1	; did Sonic break the monitor?
-	beq.s	+			; if yes, branch
-	lea	(Monitors_Broken_2P).w,a2
 
-+
 	moveq	#0,d0
 	move.b	anim(a0),d0
 	add.w	d0,d0
@@ -19215,15 +19218,15 @@ Obj2E_Raise:
 ; ===========================================================================
 Obj2E_Types:	offsetTable
 		offsetTableEntry.w robotnik_monitor	; 0 - Static
-		offsetTableEntry.w sonic_1up		; 1 - Sonic 1-up
-		offsetTableEntry.w tails_1up		; 2 - Tails 1-up
+		offsetTableEntry.w One_up_monitor	; 1 - 1-up
+		offsetTableEntry.w silver_ring		; 2 - Silver Ring
 		offsetTableEntry.w robotnik_monitor	; 3 - Robotnik
 		offsetTableEntry.w super_ring		; 4 - Super Ring
 		offsetTableEntry.w super_shoes		; 5 - Speed Shoes
 		offsetTableEntry.w shield_monitor	; 6 - Shield
 		offsetTableEntry.w invincible_monitor	; 7 - Invincibility
-		offsetTableEntry.w super_monitor	; 8 - Teleport
-		offsetTableEntry.w qmark_monitor	; 9 - Question mark
+		offsetTableEntry.w super_monitor	; 8 - Super
+		offsetTableEntry.w whirlwind_monitor; 9 - Whirlwind Shield
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Robotnik Monitor
@@ -19231,15 +19234,13 @@ Obj2E_Types:	offsetTable
 ; ---------------------------------------------------------------------------
 ; badnik_monitor:
 robotnik_monitor:
-	addq.w	#1,(a2)
 	bra.w	Touch_ChkHurt2
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Sonic 1up Monitor
 ; gives Sonic an extra life, or Tails in a 'Tails alone' game
 ; ---------------------------------------------------------------------------
-sonic_1up:
-	addq.w	#1,(Monitors_Broken).w
+One_up_monitor:
 	cmpi.b	#99,(Life_count).w
 	bhs.s	+
 	addq.b	#1,(Life_count).w
@@ -19250,21 +19251,9 @@ sonic_1up:
 	rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Tails 1up Monitor
-; gives Tails an extra life in two player mode
+; Silver Ring monitor
+; Gives 25 rings
 ; ---------------------------------------------------------------------------
-tails_1up:
-	tst.w	(Two_player_mode).w	; if two-player mode is on (1)
-	beq.s	silver_ring
-	addq.w	#1,(Monitors_Broken_2P).w
-	cmpi.b	#99,(Life_count_2P).w
-	bhs.s	+
-	addq.b	#1,(Life_count_2P).w
-	addq.b	#1,(Update_HUD_lives_2P).w
-	move.w	#MusID_ExtraLife,d0
-	jsr	(PlayMusic).l	; Play extra life music
-+
-	rts
 silver_ring:
 	lea	(Ring_count).w,a2
 	lea	(Update_HUD_rings).w,a3
@@ -19286,25 +19275,18 @@ silver_ring:
 ; gives the player 10 rings
 ; ---------------------------------------------------------------------------
 super_ring:
-	addq.w	#1,(a2)
-
 	lea	(Ring_count).w,a2
 	lea	(Update_HUD_rings).w,a3
 	lea	(Extra_life_flags).w,a4
 	lea	(Rings_Collected).w,a5
-	cmpa.w	#MainCharacter,a1
-	beq.s	+
-	lea	(Ring_count_2P).w,a2
-	lea	(Update_HUD_rings_2P).w,a3
-	lea	(Extra_life_flags_2P).w,a4
-	lea	(Rings_Collected_2P).w,a5
-+
+
+; give player 10 rings and max out at 999
 	addi.w	#10,(a5)
 	cmpi.w	#999,(a5)
 	blo.s	+
 	move.w	#999,(a5)
 
-+	; give player 10 rings and max out at 999
++
 	addi.w	#10,(a2)
 	cmpi.w	#999,(a2)
 	blo.s	superring100check
@@ -19315,28 +19297,20 @@ superring100check:
 	cmpi.w	#100,(a2)
 	blo.s	+		; branch, if player has less than 100 rings
 	bset	#1,(a4)		; set flag for first 1up
-	beq.s	ChkPlayer_1up	; branch, if not yet set
+	beq.w	One_up_monitor	; branch, if not yet set
 	cmpi.w	#200,(a2)
 	blo.s	+		; branch, if player has less than 200 rings
 	bset	#2,(a4)		; set flag for second 1up
-	beq.s	ChkPlayer_1up	; branch, if not yet set
+	beq.w	One_up_monitor	; branch, if not yet set
 +
 	move.w	#SndID_Ring,d0
 	jmp	(PlayMusic).l
-; ---------------------------------------------------------------------------
-;loc_129D4:
-ChkPlayer_1up:
-	; give 1up to correct player
-	cmpa.w	#MainCharacter,a1
-	beq.w	sonic_1up
-	bra.w	tails_1up
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Super Sneakers Monitor
 ; speeds the player up temporarily
 ; ---------------------------------------------------------------------------
 super_shoes:
-	addq.w	#1,(a2)
 	tst.b	(Super_Sonic_flag).w	; is Sonic super?
 	bne.s	++	; rts		; if yes, branch
 	bset	#status_sec_hasSpeedShoes,status_secondary(a1)	; give super sneakers status
@@ -19366,19 +19340,30 @@ super_shoes_Tails:
 ; gives the player a shield that absorbs one hit
 ; ---------------------------------------------------------------------------
 shield_monitor:
-	addq.w	#1,(a2)
+	tst.b	(Shield+id).w
+	bne.w	super_ring
 	bset	#status_sec_hasShield,status_secondary(a1)	; give shield status
 	move.w	#SndID_Shield,d0
 	jsr	(PlayMusic).l
-	tst.b	parent+1(a0)
-	bne.s	+
-	move.b	#ObjID_Shield,(Sonic_Shield+id).w ; load Obj38 (shield) at $FFFFD180
-	move.w	a1,(Sonic_Shield+parent).w
+	move.b	#ObjID_Shield,(Shield+id).w ; load Obj38 (shield) at $FFFFD180
+	move.w	a1,(Shield+parent).w
++
 	rts
+; ===========================================================================
 ; ---------------------------------------------------------------------------
-+	; give shield to sidekick
-	move.b	#ObjID_Shield,(Tails_Shield+id).w ; load Obj38 (shield) at $FFFFD1C0
-	move.w	a1,(Tails_Shield+parent).w
+; Whirlwind Shield monitor
+; ---------------------------------------------------------------------------
+whirlwind_monitor:
+	tst.b	(Shield+id).w
+	bne.w	super_ring
+	bset	#status_sec_hasShield,status_secondary(a1)	; give shield status
+	move.w	#SndID_WhirlwindShield,d0
+	jsr	(PlayMusic).l
+	move.w	#SndID_OilSlide,d0
+	jsr	(PlaySound).l
+	move.b	#ObjID_WhirlwindShield,(Shield+id).w ; load Obj38 (shield) at $FFFFD180
+	move.w	a1,(Shield+parent).w
++
 	rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -19386,7 +19371,6 @@ shield_monitor:
 ; makes the player temporarily invincible
 ; ---------------------------------------------------------------------------
 invincible_monitor:
-	addq.w	#1,(a2)
 	tst.b	(Super_Sonic_flag).w	; is Sonic super?
 	bne.s	+++	; rts		; if yes, branch
 	bset	#status_sec_isInvincible,status_secondary(a1)	; give invincibility status
@@ -19398,16 +19382,8 @@ invincible_monitor:
 	move.w	#MusID_S3DBInvincible,d0
 	jsr	(PlayMusic).l
 +
-	tst.b	parent+1(a0)
-	bne.s	+
 	move.b	#ObjID_InvStars,(Sonic_InvincibilityStars+id).w ; load Obj35 (invincibility stars) at $FFFFD200
 	move.w	a1,(Sonic_InvincibilityStars+parent).w
-	rts
-; ---------------------------------------------------------------------------
-+	; give invincibility to sidekick
-	move.b	#ObjID_InvStars,(Tails_InvincibilityStars+id).w ; load Obj35 (invincibility stars) at $FFFFD300
-	move.w	a1,(Tails_InvincibilityStars+parent).w
-+
 	rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -19476,14 +19452,6 @@ super_monitor:
 	move.w	#SndID_S3KSuperTransform,d0
 	jsr	(PlaySound).l	; Play transformation sound effect.
 	jmp	Unc_SuperIcons_Load
-; ===========================================================================
-; ---------------------------------------------------------------------------
-; '?' Monitor
-; doesn't actually do anything other than increase the player's monitor score
-; ---------------------------------------------------------------------------
-qmark_monitor:
-	addq.w	#1,(a2)
-	rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Holds icon in place for a while, then destroys it
@@ -20431,7 +20399,7 @@ JmpTo4_PlayMusic
 	align 4
     endif
 
-Obj10:	include	"0517Stars.asm"
+Obj10:	include	"WaiStars.asm"
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -22976,7 +22944,7 @@ ObjPtr_BlueBalls:			dc.l Obj1D		; Blue balls in CPZ (jumping droplets hazard)
 ObjPtr_CPZSpinTube:			dc.l Obj1E		; Spin tube from CPZ
 ObjPtr_CollapsPform:		dc.l Obj1F		; Collapsing platform from ARZ, MCZ and OOZ (and MZ, SLZ and SBZ)
 ObjPtr_LavaBubble:			dc.l Obj20		; Lava bubble from Hill Top Zone (boss weapon)
-							dc.l ObjNull		; Obj21: Used to be Score/Rings/Time display (HUD)
+ObjPtr_WhirlwindShield:		dc.l Obj21		; Whirlwind Shield: Used to be Score/Rings/Time display (HUD)
 ObjPtr_ArrowShooter:		dc.l Obj22		; Arrow shooter from ARZ
 ObjPtr_FallingPillar:		dc.l Obj23		; Pillar that drops its lower part from ARZ
 ObjPtr_ARZBubbles:			dc.l Obj24		; Bubbles in Aquatic Ruin Zone
@@ -27244,20 +27212,6 @@ Obj0D_Index:	offsetTable
 ; ===========================================================================
 ; loc_191DC: Obj_0D_sub_0:
 Obj0D_Init:
-	tst.w	(Two_player_mode).w
-	beq.s	loc_19208
-	move.l	#Obj0D_MapUnc_19656,mappings(a0)
-	move.w	#make_art_tile(ArtTile_ArtNem_2p_Signpost,0,0),art_tile(a0)
-	move.b	#-1,(Signpost_prev_frame).w
-	moveq	#0,d1
-	move.w	#$1020,d1
-	move.w	#-$80,d4
-	moveq	#0,d5
-	bsr.w	loc_19564
-	bra.s	loc_1922C
-; ---------------------------------------------------------------------------
-
-loc_19208:
 	cmpi.w	#metropolis_zone_act_2,(Current_ZoneAndAct).w
 	beq.s	loc_1921E
 	cmpi.w	#green_hill_zone_act_2,(Current_ZoneAndAct).w
@@ -27269,7 +27223,7 @@ loc_19208:
 ; ---------------------------------------------------------------------------
 loc_1921E:
 	move.l	#Obj0D_MapUnc_195BE,mappings(a0)
-	move.w	#make_art_tile(ArtTile_ArtNem_Signpost,0,0),art_tile(a0)
+	move.w	#make_art_tile(ArtTile_Signpost,0,0),art_tile(a0)
 
 loc_1922C:
 	addq.b	#2,routine(a0) ; => Obj0D_Main
@@ -27514,8 +27468,6 @@ TimeBonuses:
 ; ===========================================================================
 
 PLCLoad_Signpost:
-	tst.w	(Two_player_mode).w
-	beq.s	return_1958C
 	moveq	#0,d0
 	move.b	mapping_frame(a0),d0
 	cmp.b	(Signpost_prev_frame).w,d0
@@ -27527,7 +27479,7 @@ PLCLoad_Signpost:
 	move.w	(a2)+,d5
 	subq.w	#1,d5
 	bmi.s	return_1958C
-	move.w	#tiles_to_bytes(ArtTile_ArtUnc_Signpost),d4
+	move.w	#tiles_to_bytes(ArtTile_Signpost),d4
 
 loc_19560:
 	moveq	#0,d1
@@ -27553,34 +27505,28 @@ return_1958C:
 ; animation script
 ; off_1958E:
 Ani_obj0D:	offsetTable
-		offsetTableEntry.w byte_19598	; 0
-		offsetTableEntry.w byte_1959B	; 1
-		offsetTableEntry.w byte_195A9	; 2
-		offsetTableEntry.w byte_195B7	; 3
-		offsetTableEntry.w byte_195BA	; 4
-		offsetTableEntry.w SignpostKTE ; 5
-byte_19598:	dc.b	$0F, $02, $FF
+		offsetTableEntry.w .Eggman	; 0
+		offsetTableEntry.w .Spin	; 1
+		offsetTableEntry.w .Spin	; 2
+		offsetTableEntry.w .Sonic	; 3
+		offsetTableEntry.w .Tails	; 4
+		offsetTableEntry.w .Knuckles; 5
+.Eggman:	dc.b	$0F, $00, $FF
 	rev02even
-byte_1959B:	dc.b	$01, $02, $03, $04, $05, $01, $03, $04, $05, $00, $03, $04, $05, $FF
+.Spin:	dc.b	$01, $02, $04, $05, $06, $03, $04, $05, $06, $FF
 	rev02even
-byte_195A9:	dc.b	$01, $02, $03, $04, $05, $01, $03, $04, $05, $00, $03, $04, $05, $FF
+.Sonic:	dc.b	$0F, $01, $FF
 	rev02even
-byte_195B7:	dc.b	$0F, $00, $FF
+.Tails:	dc.b	$0F, $02, $FF
 	rev02even
-byte_195BA:	dc.b	$0F, $01, $FF
-	rev02even
-SignpostKTE:	dc.b $0F, $06, $FF
+.Knuckles:	dc.b $0F, $03, $FF
 	even
 ; -------------------------------------------------------------------------------
 ; sprite mappings - Primary sprite table for object 0D (signpost)
 ; -------------------------------------------------------------------------------
 ; SprTbl_0D_Primary:
-Obj0D_MapUnc_195BE:	BINCLUDE "mappings/sprite/obj0D_a.bin"
-; -------------------------------------------------------------------------------
-; sprite mappings - Secondary sprite table for object 0D (signpost)
-; -------------------------------------------------------------------------------
-; SprTbl_0D_Scndary:
-Obj0D_MapUnc_19656:	BINCLUDE "mappings/sprite/obj0D_b.bin"
+Obj0D_MapUnc_195BE:	BINCLUDE "mappings/sprite/obj0D.bin"
+	even
 ; -------------------------------------------------------------------------------
 ; dynamic pattern loading cues
 ; -------------------------------------------------------------------------------
@@ -28986,6 +28932,13 @@ Obj01_MdAir:
 	bsr.w	Sonic_LevelBound
 	jsr	(ObjectMoveAndFall).l
 
+	cmpi.b	#ObjID_WhirlwindShield,(Shield+id).w
+	bne.s	.nowind
+	btst	#button_up,(Ctrl_1_Held_Logical).w	; is up being pressed?
+	beq.s	.nowind
+	subi.w	#$28,y_vel(a0)	; reduce gravity by $28 ($38-$28=$10)
+
+.nowind:
 		tst.b	double_jump_flag(a0)
 		beq.s	.nowalljump
 		subi.w	#$30,y_vel(a0)
@@ -29032,6 +28985,13 @@ Obj01_MdJump:
 	bsr.w	Sonic_LevelBound
 	jsr	(ObjectMoveAndFall).l
 
+	cmpi.b	#ObjID_WhirlwindShield,(Shield+id).w
+	bne.s	.nowind
+	btst	#button_up,(Ctrl_1_Held_Logical).w	; is up being pressed?
+	beq.s	.nowind
+	subi.w	#$28,y_vel(a0)	; reduce gravity by $28 ($38-$28=$10)
+
+.nowind:
 		tst.b	double_jump_flag(a0)
 		beq.s	.nowalljump
 		subi.w	#$30,y_vel(a0)
@@ -29878,6 +29838,8 @@ Sonic_Thok:
     move.b    (Ctrl_1_Press_Logical).w,d0
     andi.b    #button_C_mask,d0 ; is C pressed?
     beq.w    return_Thok    ; if not, return
+	cmpi.b	#ObjID_WhirlwindShield,(Shield+id).w
+	beq.w	WindShieldAbility
 	move.w	#SndID_SpindashRelease,d0	; spindash zoom sound
 	jsr	(PlaySound).l
 	move.b	#1,(AirMove_Performed).w
@@ -29901,6 +29863,15 @@ Super_Thok:
 
 return_Thok:
     rts
+
+WindShieldAbility:
+	move.w	#SndID_OilSlide,d0
+	jsr	(PlaySound).l
+	move.b	#1,(AirMove_Performed).w
+	move.w	#-$600,y_vel(a0)
+	move.b	#AniIDSonAni_Spring,anim(a0)
+	move.b	#2,routine(a0)
+	bra.s	return_Thok
 
 ; ---------------------------------------------------------------------------
 ; Subroutine letting Sonic control the height of the jump
@@ -30719,7 +30690,7 @@ Sonic_ResetOnFloor:
 ; loc_1B0AC:
 Sonic_ResetOnFloor_Part2:
 	cmpi.b	#ObjID_Knuckles,id(a0)	; is this object ID Knuckles?
-	beq.w	Knuckles_ResetOnFloor_Part2	; if it is, branch to the Knuckles version of this code
+	beq.s	JmpTo_Knuckles_ResetOnFloor_Part2	; if it is, branch to the Knuckles version of this code
 	; some routines outside of Tails' code can call Sonic_ResetOnFloor_Part2
 	; when they mean to call Tails_ResetOnFloor_Part2, so fix that here
 	_cmpi.b	#ObjID_Sonic,id(a0)	; is this object ID Sonic (obj01)?
@@ -30750,6 +30721,9 @@ Sonic_ResetOnFloor_Part3:
 
 return_1B11E:
 	rts
+
+JmpTo_Knuckles_ResetOnFloor_Part2:
+	jmp	Knuckles_ResetOnFloor_Part2
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -32231,6 +32205,16 @@ Obj02_MdAir:
 	bsr.w	Tails_ChgJumpDir
 	bsr.w	Tails_LevelBound
 	jsr	(ObjectMoveAndFall).l
+
+	cmpi.w	#2,(Player_mode).w
+	bne.s	.nowind
+	cmpi.b	#ObjID_WhirlwindShield,(Shield+id).w
+	bne.s	.nowind
+	btst	#button_up,(Ctrl_1_Held_Logical).w	; is up being pressed?
+	beq.s	.nowind
+	subi.w	#$28,y_vel(a0)	; reduce gravity by $28 ($38-$28=$10)
+
+.nowind:
 	btst	#6,status(a0)	; is Tails underwater?
 	beq.s	+		; if not, branch
 	subi.w	#$28,y_vel(a0)	; reduce gravity by $28 ($38-$28=$10)
@@ -32416,6 +32400,16 @@ Obj02_MdJump:
 	bsr.w	Tails_ChgJumpDir
 	bsr.w	Tails_LevelBound
 	jsr	(ObjectMoveAndFall).l
+
+	cmpi.w	#2,(Player_mode).w
+	bne.s	.nowind
+	cmpi.b	#ObjID_WhirlwindShield,(Shield+id).w
+	bne.s	.nowind
+	btst	#button_up,(Ctrl_1_Held_Logical).w	; is up being pressed?
+	beq.s	.nowind
+	subi.w	#$28,y_vel(a0)	; reduce gravity by $28 ($38-$28=$10)
+
+.nowind:
 	btst	#6,status(a0)	; is Tails underwater?
 	beq.s	+		; if not, branch
 	subi.w	#$28,y_vel(a0)	; reduce gravity by $28 ($38-$28=$10)
@@ -35236,7 +35230,7 @@ byte_1D8EB:	dc.b  $E,  1,  2,  3,  4,$FC
 Unc_Stars_Load:
 	move.l	#ArtUnc_Invincibility,d1
 	move.w	#tiles_to_bytes(ArtTile_ShieldAndStars),d2
-	move.w	#$200,d3
+	move.w	#$220,d3
 	jsr		(QueueDMATransfer).l
 	rts
 
@@ -35302,12 +35296,13 @@ Obj38_Index:	offsetTable
 ; loc_1D904:
 Obj38_Main:
 	addq.b	#2,routine(a0)
-	move.l	#Obj38_MapUnc_1DBE4,mappings(a0)
+	move.l	#MapUnc_Shield,mappings(a0)
 	move.b	#4,render_flags(a0)
 	move.b	#1,priority(a0)
 	move.b	#$18,width_pixels(a0)
 	move.w	#make_art_tile(ArtTile_ShieldAndStars,0,0),art_tile(a0)
 	bsr.w	Adjust2PArtPointer
+
 ; loc_1D92C:
 Obj38_Shield:
 	movea.w	parent(a0),a2 ; a2=character
@@ -35324,9 +35319,9 @@ Obj38_Shield:
 	ori.w	#high_priority,art_tile(a0)
 ; loc_1D964:
 Obj38_Display:
-	jsr	Unc_Shield_Load
 	lea	(Ani_obj38).l,a1
 	jsr	(AnimateSprite).l
+	jsr	Shield_LoadGraphics
 	jmp	(DisplaySprite).l
 ; ===========================================================================
 
@@ -35337,6 +35332,43 @@ return_1D976:
 JmpTo7_DeleteObject
 	jmp	(DeleteObject).l
 ; ===========================================================================
+
+	include	"Whirlwind Shield.asm"
+
+Shield_LoadGraphics:
+	moveq	#0,d0
+	move.b	mapping_frame(a0),d0	; load frame number
+; loc_1B84E:
+Shield_LoadGraphics_Part2:
+	cmp.b	(Shield_LastLoadedDPLC).w,d0
+	beq.s	Shield_Return
+	move.b	d0,(Shield_LastLoadedDPLC).w
+	lea	(MapRUnc_Shield).l,a2
+	add.w	d0,d0
+	adda.w	(a2,d0.w),a2
+	move.w	(a2)+,d5
+	subq.w	#1,d5
+	bmi.s	Shield_Return
+	move.w	#tiles_to_bytes(ArtTile_ShieldAndStars),d4
+; loc_1B86E:
+Shield_ReadEntry:
+	moveq	#0,d1
+	move.w	(a2)+,d1
+	move.w	d1,d3
+	lsr.w	#8,d3
+	andi.w	#$F0,d3
+	addi.w	#$10,d3
+	andi.w	#$FFF,d1
+	lsl.l	#5,d1
+	addi.l	#ArtUnc_Shield,d1
+	move.w	d4,d2
+	add.w	d3,d4
+	add.w	d3,d4
+	jsr	(QueueDMATransfer).l
+	dbf	d5,Shield_ReadEntry	; repeat for number of entries
+
+Shield_Return:
+	rts
 ; ----------------------------------------------------------------------------
 ; Object 35 - Invincibility Stars
 ; ----------------------------------------------------------------------------
@@ -35372,7 +35404,7 @@ loc_1D9A4:
 	move.b	#4,objoff_A(a1)		; => loc_1DA80
 	move.l	#Obj35_MapUnc_1DCBC,mappings(a1)
 	move.w	#make_art_tile(ArtTile_ShieldAndStars,0,0),art_tile(a1)
-	bsr.w	Adjust2PArtPointer2
+	jsr		Adjust2PArtPointer2
 	move.b	#4,render_flags(a1)
 	bset	#6,render_flags(a1)
 	move.b	#$10,mainspr_width(a1)
@@ -35537,7 +35569,10 @@ Ani_obj38:	offsetTable
 ; -------------------------------------------------------------------------------
 ; sprite mappings
 ; -------------------------------------------------------------------------------
-Obj38_MapUnc_1DBE4:	BINCLUDE "mappings/sprite/obj38.bin"
+MapUnc_Shield:	BINCLUDE "mappings/sprite/obj38.bin"
+	even
+MapRUnc_Shield:	BINCLUDE "mappings/spriteDPLC/obj38.bin"
+	even
 ; -------------------------------------------------------------------------------
 ; sprite mappings
 ; -------------------------------------------------------------------------------
@@ -35679,7 +35714,7 @@ Obj08_SkidDust:
 	subq.b	#1,objoff_32(a0)
 	bpl.s	loc_1DEE0
 	move.b	#3,objoff_32(a0)
-	bsr.w	SingleObjLoad
+	jsr		SingleObjLoad
 	bne.s	loc_1DEE0
 	_move.b	id(a0),id(a1) ; load obj08
 	move.w	x_pos(a2),x_pos(a1)
@@ -38040,8 +38075,6 @@ JmpTo5_Adjust2PArtPointer
 Obj44_S1:
 	include "44 GHZ Edge Walls.asm"
 
-	even
-ArtUnc_Sonic:	BINCLUDE	"art/uncompressed/Sonic's art.bin"
 	even
 
 ; ===========================================================================
@@ -44718,6 +44751,8 @@ JmpTo11_ObjectMove
 ; ----------------------------------------------------------------------------
 ; Sprite_2588C:
 Obj23:
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	beq.w	Obj23_S1
 	moveq	#0,d0
 	move.b	routine(a0),d0
 	move.w	Obj23_Index(pc,d0.w),d1
@@ -45544,6 +45579,8 @@ JmpTo_SlopedSolid_SingleCharacter
 ; ----------------------------------------------------------------------------
 ; Sprite_26634:
 Obj42:
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	beq.w	Obj42_S1
 	moveq	#0,d0
 	move.b	routine(a0),d0
 	move.w	Obj42_Index(pc,d0.w),d1
@@ -45752,8 +45789,7 @@ JmpTo2_SolidObject_Always_SingleCharacter
 	align 4
     endif
 
-
-
+Obj42_S1:	include	"Badniks/Newtron.asm"
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -53779,8 +53815,8 @@ JmpTo56_Adjust2PArtPointer
 	align 4
     endif
 
-
-
+ArtUnc_Sonic:	BINCLUDE	"art/uncompressed/Sonic's art.bin"
+	even
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -78457,7 +78493,6 @@ DbgObjList_Def: dbglistheader
 DbgObjList_Def_End
 
 DbgObjList_EHZ: dbglistheader
-;	dbglistobj ObjID_IceCube,	Map_ICZPlatforms,	0,	0,	make_art_tile(ArtTile_ArtKos_LevelArt,1,1)
 	dbglistobj ObjID_Ring,		Obj25_MapUnc_12382,   0,   0, make_art_tile(ArtTile_ArtNem_Ring,1,0)
 	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   0,   0, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
 	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   1,   2, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
@@ -79106,7 +79141,7 @@ PLCptr_Arz2:		offsetTableEntry.w PlrList_Arz2			; 35
 PLCptr_Scz1:		offsetTableEntry.w PlrList_Scz1			; 36
 PLCptr_Scz2:		offsetTableEntry.w PlrList_Scz2			; 37
 PLCptr_Results:		offsetTableEntry.w PlrList_Results		; 38
-PLCptr_Signpost:	offsetTableEntry.w PlrList_Signpost		; 39
+PLCptr_EndOfLevel:	offsetTableEntry.w PlrList_EndOfLevel	; 39
 PLCptr_CpzBoss:		offsetTableEntry.w PlrList_CpzBoss		; 40
 PLCptr_EhzBoss:		offsetTableEntry.w PlrList_EhzBoss		; 41
 PLCptr_HtzBoss:		offsetTableEntry.w PlrList_HtzBoss		; 42
@@ -79549,10 +79584,10 @@ PlrList_Results_End
 ; Pattern load queue
 ; End of level signpost
 ;---------------------------------------------------------------------------------------
-PlrList_Signpost: plrlistheader
-	plreq ArtTile_ArtNem_Signpost, ArtNem_Signpost
+PlrList_EndOfLevel: plrlistheader
+	plreq ArtTile_Signpost,	ArtNem_EggSign
 	plreq ArtTile_ArtNem_Powerups, ArtNem_EndPoints
-PlrList_Signpost_End
+PlrList_EndOfLevel_End
 ;---------------------------------------------------------------------------------------
 ; Pattern load queue
 ; CPZ Boss
@@ -80359,19 +80394,10 @@ ArtNem_Numbers:	BINCLUDE	"art/nemesis/Numbers.bin"
 	even
 ArtNem_Checkpoint:	BINCLUDE	"art/nemesis/Star pole.bin"
 ;---------------------------------------------------------------------------------------
-; Nemesis compressed art (78 blocks)
-; Signpost		; ArtNem_79BDE:
-	even
-ArtNem_Signpost:	BINCLUDE	"art/nemesis/Signpost.bin"
-;---------------------------------------------------------------------------------------
-; Nemesis compressed art (78 blocks)
-; Signpost		; ArtNem_79BDE:
-	even
-ArtNem_SignpostTails:	BINCLUDE	"art/nemesis/Signpost Tails.bin"
-;---------------------------------------------------------------------------------------
 ; Uncompressed art
 ; Signpost		; ArtUnc_7A18A:
-; Yep, it's in the ROM twice: once compressed and once uncompressed
+	even
+ArtNem_EggSign:	BINCLUDE	"art/nemesis/Signpost.bin"
 	even
 ArtUnc_Signpost:	BINCLUDE	"art/uncompressed/Signpost.bin"
 ;---------------------------------------------------------------------------------------

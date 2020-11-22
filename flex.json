@@ -185,7 +185,7 @@
             }
         },
         {
-            "name": "Signpost (Unc)",
+            "name": "Signposts",
             "palettes": [
                 {
                     "path": "art\\palettes\\SonicAndTails.bin",
@@ -206,50 +206,15 @@
                 "accessor": ""
             },
             "mappings": {
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Signpost (Nem)",
-            "palettes": [
-                {
-                    "path": "art\\palettes\\SonicAndTails.bin",
-                    "length": 1
-                },
-                {
-                    "path": "art\\palettes\\Tails.bin",
-                    "length": 1
-                },
-                {
-                    "path": "art\\palettes\\Knuckles.bin",
-                    "length": 1
-                }
-            ],
-            "art": {
-                "path": "art\\nemesis\\Signpost.bin",
-                "compression": "Nemesis",
-                "accessor": ""
-            },
-            "mappings": {
-                "path": "mappings\\sprite\\obj0D_a.bin",
+                "path": "mappings\\sprite\\obj0D.bin",
                 "format": "Sonic 2",
                 "customDefinition": "",
                 "label": "",
                 "accessor": ""
             },
             "dplcs": {
-                "enabled": false,
-                "path": "",
+                "enabled": true,
+                "path": "mappings\\spriteDPLC\\obj0D.bin",
                 "format": "Sonic 2/3&K",
                 "customDefinition": "",
                 "label": "",
@@ -488,8 +453,8 @@
             "name": "Shield",
             "palettes": [],
             "art": {
-                "path": "art\\nemesis\\Shield.bin",
-                "compression": "Nemesis",
+                "path": "art\\uncompressed\\Shield.bin",
+                "compression": "Uncompressed",
                 "accessor": ""
             },
             "mappings": {
@@ -499,8 +464,8 @@
                 "label": ""
             },
             "dplcs": {
-                "enabled": false,
-                "path": "",
+                "enabled": true,
+                "path": "mappings\\spriteDPLC\\obj38.bin",
                 "format": "Sonic 2/3&K",
                 "customDefinition": "",
                 "label": "",
@@ -511,8 +476,8 @@
             "name": "Invincibility Stars",
             "palettes": [],
             "art": {
-                "path": "art\\nemesis\\Invincibility stars.bin",
-                "compression": "Nemesis"
+                "path": "art\\uncompressed\\Invincibility stars.bin",
+                "compression": "Uncompressed"
             },
             "mappings": {
                 "path": "mappings\\sprite\\obj35.bin",
@@ -639,27 +604,6 @@
             "palettes": [],
             "art": {
                 "path": "art\\nemesis\\Standard font.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "1PLAYER2VS",
-            "palettes": [],
-            "art": {
-                "path": "art\\nemesis\\1Player2VS.bin",
                 "compression": "Nemesis"
             },
             "mappings": {
@@ -1269,6 +1213,57 @@
             },
             "mappings": {
                 "path": "mappings\\sprite\\obj7E.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Whirlwind Shield",
+            "palettes": [],
+            "art": {
+                "path": "art\\uncompressed\\Whirlwind Shield.bin",
+                "compression": "Uncompressed"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\obj21.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": true,
+                "path": "mappings\\spriteDPLC\\obj21.bin",
+                "format": "Sonic 2/3&K",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Newtron",
+            "palettes": [
+                {
+                    "path": "art\\palettes\\SonicAndTails.bin",
+                    "length": 1
+                },
+                {
+                    "path": "art\\palettes\\GHZ.bin",
+                    "length": 3
+                }
+            ],
+            "art": {
+                "path": "art\\nemesis\\Newtron.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\Obj42_Newtron.asm",
                 "format": "Sonic 2",
                 "customDefinition": "",
                 "label": ""

@@ -12,6 +12,6 @@ SndID__First = MusID__End
 	enum SndID_LaserBurst=SndID_DrawbridgeDown+1,SndID_LaserFloor,SndID_Teleport,SndID_Error,SndID_MechaSonicBuzz,SndID_LargeLaser,SndID_OilSlide
 	enum SndID_PushBlock=SndID_OilSlide+1,SndID_TailsPutPut,SndID_TailsPudPud,SndID_PeeloutCharge,SndID_PeeloutRelease,SndID_S3KSuperTransform,SndID_S3K84
 	enum SndID_KnuxGrab=SndID_S3K84+1,SndID_KnuxLand,SndID_KnuxSlide,SndID_Waterfall,SndID_CDJump,SndID_CDSkidding,SndID_SSExit
-	enum SndID_SSDiamond=SndID_SSExit+1,SndID__End
+	enum SndID_SSDiamond=SndID_SSExit+1,SndID_WhirlwindShield,SndID__End
 DACSFXID__First = SndID__End
 	enum DACSFXID__End=DACSFXID__First

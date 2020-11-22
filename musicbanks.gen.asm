@@ -82,6 +82,7 @@ SndMus7_Start:	startBank
 Mus_EHZ:	BINCLUDE "sound/music/S2/EHZ_cmp.bin" ; $518 bytes
 Mus_Ending:	BINCLUDE "sound/music/S2/Ending_cmp.bin" ; $4E8 bytes
 Mus_CNZ:	BINCLUDE "sound/music/S2/CNZ_cmp.bin" ; $4E1 bytes
+Mus_Jungle:	BINCLUDE "sound/music/Stage 2 - Jungle_cmp.bin" ; $491 bytes
 Mus_2PResult:	BINCLUDE "sound/music/S2/Results screen 2p_cmp.bin" ; $3B4 bytes
 Mus_MTZ:	BINCLUDE "sound/music/S2/MTZ_cmp.bin" ; $37D bytes
 Mus_DEZ:	BINCLUDE "sound/music/S2/DEZ_cmp.bin" ; $37B bytes

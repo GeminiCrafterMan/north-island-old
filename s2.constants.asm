@@ -45,7 +45,7 @@ collision_property =	$21
 respawn_index =		$23
 subtype =		$28
 ; ---------------------------------------------------------------------------
-; conventions specific to sonic/tails (Obj01, Obj02, and ObjDB):
+; conventions specific to sonic/tails/knuckles (Obj01, Obj02, and ObjDB):
 inertia =		$14 ; and $15 ; directionless representation of speed... not updated in the air
 double_jump_property =  $1F
 double_jump_flag =      $20 ; and $21
@@ -219,10 +219,10 @@ prev_bumper_x       = bumper_x-next_bumper
 ; status_secondary bitfield variables
 ;
 ; status_secondary variable bit numbers
-status_sec_hasShield:		EQU	0
-status_sec_isInvincible:	EQU	1
-status_sec_hasSpeedShoes:	EQU	2
-status_sec_isSliding:		EQU	7
+status_sec_hasShield:			EQU	0
+status_sec_isInvincible:		EQU	1
+status_sec_hasSpeedShoes:		EQU	2
+status_sec_isSliding:			EQU	7
 ; status_secondary variable masks (1 << x == pow(2, x))
 status_sec_hasShield_mask:	EQU	1<<status_sec_hasShield		; $01
 status_sec_isInvincible_mask:	EQU	1<<status_sec_isInvincible	; $02
@@ -446,7 +446,7 @@ PLCID_Arz2 =			id(PLCptr_Arz2) ; 23
 PLCID_Scz1 =				id(PLCptr_Scz1) ; 24
 PLCID_Scz2 =			id(PLCptr_Scz2) ; 25
 PLCID_Results =			id(PLCptr_Results) ; 26
-PLCID_Signpost =			id(PLCptr_Signpost) ; 27
+PLCID_EndOfLevel =			id(PLCptr_EndOfLevel) ; 27
 PLCID_CpzBoss =			id(PLCptr_CpzBoss) ; 28
 PLCID_EhzBoss =			id(PLCptr_EhzBoss) ; 29
 PLCID_HtzBoss =			id(PLCptr_HtzBoss) ; 2A
@@ -524,6 +524,7 @@ ObjID_BlueBalls =			id(ObjPtr_BlueBalls)		; 1D
 ObjID_CPZSpinTube =		id(ObjPtr_CPZSpinTube)	; 1E
 ObjID_CollapsPform =		id(ObjPtr_CollapsPform)	; 1F
 ObjID_LavaBubble =		id(ObjPtr_LavaBubble)		; 20
+ObjID_WhirlwindShield = id(ObjPtr_WhirlwindShield)	; 21
 ObjID_ArrowShooter =		id(ObjPtr_ArrowShooter)	; 22
 ObjID_FallingPillar =		id(ObjPtr_FallingPillar)		; 23
 ObjID_ARZBubbles =		id(ObjPtr_ARZBubbles)		; 24
@@ -952,10 +953,10 @@ Sonic_Dust:			; Sonic's spin dash dust
 				ds.b	object_size
 Tails_Dust:			; Tails' spin dash dust
 				ds.b	object_size
-Sonic_Shield:
+Shield:
 				ds.b	object_size
-Tails_Shield:
-				ds.b	object_size
+; used to be Tails_Shield
+				ds.b	$40
 Sonic_InvincibilityStars:
 				ds.b	object_size
 				ds.b	object_size
@@ -971,7 +972,9 @@ LevelOnly_Object_RAM_End:
 Object_RAM_End:
 LevSel_Page:		ds.b	1
 MCirno_LastLoadedDPLC:	ds.b	1
-				ds.b	$1FE	; unused
+Shield_LastLoadedDPLC:	ds.b	1
+WhirlSh_LastLoadedDPLC:	ds.b	1
+				ds.b	$1FC	; unused
 
 Primary_Collision:		ds.b	$300
 Secondary_Collision:		ds.b	$300
@@ -1459,8 +1462,7 @@ Saved_art_tile_2P:		ds.w	1
 Saved_Solid_bits_2P:			ds.w	1
 Rings_Collected:		ds.w	1	; number of rings collected during an act in two player mode
 Rings_Collected_2P:		ds.w	1
-Monitors_Broken:		ds.w	1	; number of monitors broken during an act in two player mode
-Monitors_Broken_2P:		ds.w	1
+						ds.w	2 ; used to be Monitors_Broken and Monitors_Broken_2P
 Loser_Time_Left:				; 2 bytes
 				ds.b	1	; seconds
 				ds.b	1	; frames
@@ -2284,12 +2286,10 @@ ArtTile_ArtNem_TitleCard              = $0580
 ArtTile_LevelName                     = $05DE
 
 ; End of level.
-ArtTile_ArtNem_Signpost               = $0434
-ArtTile_ArtNem_SignpostTails          = $0434
+ArtTile_Signpost					  = $0434
 ArtTile_HUD_Bonus_Score               = $0520
 ArtTile_ArtNem_Perfect                = $0540
 ArtTile_ArtNem_ResultsText            = $05B0
-ArtTile_ArtUnc_Signpost               = $05E8
 ArtTile_ArtNem_MiniCharacter          = $05F4
 ArtTile_ArtNem_Capsule                = $0680
 

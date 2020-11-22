@@ -12,6 +12,7 @@ SongNames:	offsetTable
 	offsetTableEntry.w	MusNam_RM
 	offsetTableEntry.w	MusNam_WWGameSel
 	offsetTableEntry.w	MusNam_WM
+	offsetTableEntry.w	MusNam_Jungle
 	offsetTableEntry.w	MusNam_S3DBInvincible
 	offsetTableEntry.w	MusNam_S3DBSpecStage
 	offsetTableEntry.w	MusNam_S3KEndLevel
@@ -54,6 +55,7 @@ MusNam_Baka:	songtext	"BELOVED TOMBOY"
 MusNam_RM:	songtext	"ROBOT MUSEUM"
 MusNam_WWGameSel:	songtext	"GAME SELECT"
 MusNam_WM:	songtext	"WOOD MAN"
+MusNam_Jungle:	songtext	"STAGE 2 JUNGLE"
 MusNam_S3DBInvincible:	songtext	"S3D INVINCIBLE"
 MusNam_S3DBSpecStage:	songtext	"S3D SPECIALSTAGE"
 MusNam_S3KEndLevel:	songtext	"S3K ACT CLEAR"

@@ -38,7 +38,7 @@
       <ArtFile filename="../art/nemesis/Monitor and contents.bin" />
       <MapFile type="Binary" filename="../mappings/sprite/obj26.bin" frame="9" startpal="0" />
     </ImageFromMappings>
-    <ImageFromMappings id="random">
+    <ImageFromMappings id="whirlwind">
       <ArtFile filename="../art/nemesis/Monitor and contents.bin" />
       <MapFile type="Binary" filename="../mappings/sprite/obj26.bin" frame="10" startpal="0" />
     </ImageFromMappings>
@@ -57,7 +57,7 @@
     <Subtype id="06" name="Shield" image="shield" />
     <Subtype id="07" name="Invincibility" image="invincibility" />
     <Subtype id="08" name="S" image="s" />
-    <Subtype id="09" name="Random" image="random" />
+    <Subtype id="09" name="Whirlwind Shield" image="whirlwind" />
     <Subtype id="0A" name="Broken" image="broken" />
   </Subtypes>
   <Properties>
@@ -74,7 +74,7 @@
       <EnumMember name="Shield" />
       <EnumMember name="Invincibility" />
       <EnumMember name="S" />
-      <EnumMember name="Random" />
+      <EnumMember name="Whirlwind Shield" />
       <EnumMember name="Broken" />
     </Enum>
   </Enums>

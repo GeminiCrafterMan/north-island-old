@@ -91,6 +91,7 @@ SoundIndex:
 	zSoundIndexEntry	Snd_CDSkidding,$70
 	zSoundIndexEntry	Snd_SSExit,$80
 	zSoundIndexEntry	Snd_SSDiamond,$60
+	zSoundIndexEntry	Snd_WhirlwindShield,$70
 
 Snd_Jump:	include "sound/SFX/S2/Sound20.asm"
 Snd_Checkpoint:	include "sound/SFX/S2/Sound21.asm"
@@ -184,4 +185,5 @@ Snd_CDJump:	include "sound/SFX/SCD/Jump.asm"
 Snd_CDSkidding:	include "sound/SFX/SCD/Skidding.asm"
 Snd_SSExit:	include "sound/SFX/S1/SndA8 - SS Goal.asm"
 Snd_SSDiamond:	include "sound/SFX/S1/SndBA - SS Glass.asm"
+Snd_WhirlwindShield:	include "sound/SFX/WhirlwindShield.asm"
 
