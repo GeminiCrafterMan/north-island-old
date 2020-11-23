@@ -64,7 +64,7 @@ SndMus6_Start:	startBank
 
 Mus_CM:	include "sound/music/Mega Man & Bass/Cold Man.asm" ; $1E32 bytes
 Mus_RM:	include "sound/music/Mega Man & Bass/Robot Museum.asm" ; $1DE1 bytes
-Mus_SPASpecStag:	include "sound/music/SPA/Special Stage.asm" ; $14FF bytes
+Mus_SPASpecStag:	include "sound/music/Other/SPA Special Stage.asm" ; $14FF bytes
 Mus_Phantom:	include "sound/music/Thunder Force IV/Phantom.asm" ; $BD0 bytes
 Mus_WWGameSel:	include "sound/music/Mega Man The Wily Wars/Game Select.asm" ; $BBF bytes
 Mus_S3DBSpecStage:	include "sound/music/S3DB/Special Stage.asm" ; $AB2 bytes
@@ -90,6 +90,7 @@ Mus_HTZ:	BINCLUDE "sound/music/S2/HTZ_cmp.bin" ; $35E bytes
 Mus_S3KEndLevel:	BINCLUDE "sound/music/Level Outro_cmp.bin" ; $351 bytes
 Mus_WFZ:	BINCLUDE "sound/music/S2/WFZ_cmp.bin" ; $348 bytes
 Mus_SCZ:	BINCLUDE "sound/music/S2/SCZ_cmp.bin" ; $326 bytes
+Mus_ChoosePlayer:	BINCLUDE "sound/music/SMB2 Character Select_cmp.bin" ; $310 bytes
 Mus_S3DBInvincible:	BINCLUDE "sound/music/Invincible_cmp.bin" ; $2AD bytes
 Mus_ExtraLife:	BINCLUDE "sound/music/Extra life_cmp.bin" ; $B7 bytes
 

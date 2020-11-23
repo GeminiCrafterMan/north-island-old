@@ -830,53 +830,6 @@
             }
         },
         {
-            "name": "Tails Ending",
-            "palettes": [
-                {
-                    "path": "art\\palettes\\Ending Sonic.bin",
-                    "length": 1
-                }
-            ],
-            "art": {
-                "path": "art\\nemesis\\Final image of Tails.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "mappings\\Tails Ending Pose.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Sonic Ending",
-            "palettes": [],
-            "art": {
-                "path": "art\\nemesis\\Small pictures of Sonic and final image of Sonic.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "mappings\\Sonic Ending Pose.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
             "name": "Super Slot",
             "palettes": [
                 {
@@ -1285,6 +1238,57 @@
             },
             "mappings": {
                 "path": "mappings\\sprite\\motobug.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Breakable Block (GHZ)",
+            "palettes": [
+                {
+                    "path": "art\\palettes\\SonicAndTails.bin",
+                    "length": 1
+                },
+                {
+                    "path": "art\\palettes\\GHZ.bin",
+                    "length": 3
+                }
+            ],
+            "art": {
+                "path": "art\\nemesis\\GHZ Breakable Block.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\GHZ Smashable Block.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Pushable Block (GHZ)",
+            "palettes": [],
+            "art": {
+                "path": "art\\nemesis\\GHZ Pushable Block.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\GHZ Pushable Block.bin",
                 "format": "Sonic 2",
                 "customDefinition": "",
                 "label": ""

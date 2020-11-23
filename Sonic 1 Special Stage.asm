@@ -101,7 +101,7 @@ SS_NoDebug:
 
 SS_MainLoop:
 		bsr.w	PauseGame
-		move.b	#$A,(Vint_routine).w
+		move.b	#VintID_S1SS,(Vint_routine).w
 		bsr.w	WaitForVint
 		bsr.w	MoveSonicInDemo
 		move.w	(Ctrl_1).w,(Ctrl_1_Logical).w
@@ -131,7 +131,7 @@ SS_End:
 		clr.w	(PalChangeSpeed).w
 
 SS_EndLoop:
-		move.b	#$16,(Vint_routine).w
+		move.b	#VintID_Menu,(Vint_routine).w
 		bsr.w	WaitForVint
 		bsr.w	MoveSonicInDemo
 		move.w	(Ctrl_1).w,(Ctrl_1_Logical).w
@@ -184,7 +184,7 @@ SS_EndClrObjRam:
 
 SS_NormalExit:
 		bsr.w	PauseGame
-		move.b	#$C,(Vint_routine).w
+		move.b	#VintID_TitleCard,(Vint_routine).w
 		bsr.w	WaitForVint
 		jsr	(RunObjects).l
 		jsr	(BuildSprites).l

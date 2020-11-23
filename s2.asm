@@ -498,7 +498,7 @@ Vint_SEGA_ptr:		offsetTableEntry.w Vint_SEGA		;   2
 Vint_Title_ptr:		offsetTableEntry.w Vint_Title		;   4
 Vint_Unused6_ptr:	offsetTableEntry.w Vint_Unused6		;   6
 Vint_Level_ptr:		offsetTableEntry.w Vint_Level		;   8
-Vint_S2SS_ptr:		offsetTableEntry.w Vint_S2SS		;  $A
+Vint_S1SS_ptr:		offsetTableEntry.w Vint_S1SS		;  $A
 Vint_TitleCard_ptr:	offsetTableEntry.w Vint_TitleCard	;  $C
 Vint_UnusedE_ptr:	offsetTableEntry.w Vint_UnusedE		;  $E
 Vint_Pause_ptr:		offsetTableEntry.w Vint_Pause		; $10
@@ -719,8 +719,7 @@ loc_86E:
 	rts
 ; ========================================================================>>>
 ;VintSubA
-Vint_S2SS:
-VBlank_S1_SS_0x1C: ; Offset_0x000E72:   ; Sonic 2 Delta
+Vint_S1SS:
                ; move.w  #$0100,(Z80_Bus_Request)                    ; $00A11100
 VBlank_S1_SS_Z80_Not_Stopped: ; Offset_0x000E7A:
                ; btst    #$00,(Z80_Bus_Request)                     ; $00A11100
@@ -21068,9 +21067,6 @@ loc_14270:
 	add.b	(Current_Act).w,d0
 	add.w	d0,d0
 	lea	LevelOrder(pc),a1
-	tst.w	(Two_player_mode).w
-	beq.s	loc_1428C
-	lea	LevelOrder_2P(pc),a1
 
 loc_1428C:
 	move.w	(a1,d0.w),d0
@@ -21150,44 +21146,6 @@ LevelOrder: zoneOrderedTable 2,2	; WrdArr_LevelOrder
 	zoneTableEntry.w  casino_night_zone_act_2	; 24
 	zoneTableEntry.w  hill_top_zone_act_1		; 25
 	zoneTableEntry.w  chemical_plant_zone_act_2	; 26
-	zoneTableEntry.w  aquatic_ruin_zone_act_1	; 27
-	zoneTableEntry.w  $FFFF				; 28
-	zoneTableEntry.w  emerald_hill_zone_act_1	; 29
-	zoneTableEntry.w  aquatic_ruin_zone_act_2	; 30
-	zoneTableEntry.w  casino_night_zone_act_1	; 31
-	zoneTableEntry.w  wing_fortress_zone_act_1 	; 32
-	zoneTableEntry.w  emerald_hill_zone_act_1	; 33
-    zoneTableEnd
-
-;word_1433C:
-LevelOrder_2P: zoneOrderedTable 2,2	; WrdArr_LevelOrder_2P
-	zoneTableEntry.w  emerald_hill_zone_act_2
-	zoneTableEntry.w  casino_night_zone_act_1	; 1
-	zoneTableEntry.w  emerald_hill_zone_act_1	; 2
-	zoneTableEntry.w  emerald_hill_zone_act_1	; 3
-	zoneTableEntry.w  wood_zone_act_2		; 4
-	zoneTableEntry.w  metropolis_zone_act_1		; 5
-	zoneTableEntry.w  emerald_hill_zone_act_1	; 6
-	zoneTableEntry.w  emerald_hill_zone_act_1	; 7
-	zoneTableEntry.w  metropolis_zone_act_2		; 8
-	zoneTableEntry.w  metropolis_zone_act_3		; 9
-	zoneTableEntry.w  sky_chase_zone_act_1		; 10
-	zoneTableEntry.w  emerald_hill_zone_act_1	; 11
-	zoneTableEntry.w  death_egg_zone_act_1		; 12
-	zoneTableEntry.w  emerald_hill_zone_act_1	; 13
-	zoneTableEntry.w  hill_top_zone_act_2		; 14
-	zoneTableEntry.w  mystic_cave_zone_act_1	; 15
-	zoneTableEntry.w  hidden_palace_zone_act_2 	; 16
-	zoneTableEntry.w  oil_ocean_zone_act_1		; 17
-	zoneTableEntry.w  emerald_hill_zone_act_1	; 18
-	zoneTableEntry.w  emerald_hill_zone_act_1	; 19
-	zoneTableEntry.w  oil_ocean_zone_act_2		; 20
-	zoneTableEntry.w  metropolis_zone_act_1		; 21
-	zoneTableEntry.w  mystic_cave_zone_act_2	; 22
-	zoneTableEntry.w  $FFFF				; 23
-	zoneTableEntry.w  casino_night_zone_act_2	; 24
-	zoneTableEntry.w  mystic_cave_zone_act_1	; 25
-	zoneTableEntry.w  chemical_plant_zone_act_2 	; 26
 	zoneTableEntry.w  aquatic_ruin_zone_act_1	; 27
 	zoneTableEntry.w  $FFFF				; 28
 	zoneTableEntry.w  emerald_hill_zone_act_1	; 29
@@ -23003,8 +22961,8 @@ ObjPtr_EHZBoss:				dc.l Obj56		; EHZ boss
 ObjPtr_MCZBoss:				dc.l Obj57		; MCZ boss
 ObjPtr_BossExplosion:		dc.l Obj58		; Boss explosion
 ObjPtr_RobotMasters:		dc.l Obj59		; Zone-specific decorations
-							dc.l ObjNull		; Obj5A - Used to be Messages/checkpoint from Special Stage
-							dc.l ObjNull		; Obj5B - Used to be Ring spray/spill in Special Stage
+							dc.l ObjNull	; Obj5A - Used to be Messages/checkpoint from Special Stage
+ObjPtr_PushBlock:			dc.l ObjNull		; Obj5B - Used to be Ring spray/spill in Special Stage
 ObjPtr_Masher:				dc.l Obj5C		; Masher (jumping piranha fish badnik) from EHZ
 ObjPtr_CPZBoss:				dc.l Obj5D		; CPZ boss
 							dc.l ObjNull		; Obj5E - Used to be HUD from Special Stage
@@ -24563,22 +24521,29 @@ byte_16F06:
 
 ; ===========================================================================
 ; loc_16F16: ; unused/dead code? ; a0=object
+ChkObjOnScreen:
 	move.w	x_pos(a0),d0
 	sub.w	(Camera_X_pos).w,d0
 	bmi.s	+
 	cmpi.w	#320,d0
 	bge.s	+
+
 	move.w	y_pos(a0),d1
 	sub.w	(Camera_Y_pos).w,d1
 	bmi.s	+
 	cmpi.w	#$E0,d1
 	bge.s	+
+
 	moveq	#0,d0
 	rts
-+	moveq	#1,d0
+; ===========================================================================
+; NotOnScreen:
++
+	moveq	#1,d0
 	rts
 ; ===========================================================================
-; loc_16F3E: ; unused/dead code? ; a0=object
+; loc_16F3E: ; unused/dead code? ; a0=object	; leftover from s1!!
+ChkObjOnScreen2:
 	moveq	#0,d1
 	move.b	width_pixels(a0),d1
 	move.w	x_pos(a0),d0
@@ -24589,14 +24554,19 @@ byte_16F06:
 	sub.w	d1,d0
 	cmpi.w	#320,d0
 	bge.s	+
+
 	move.w	y_pos(a0),d1
 	sub.w	(Camera_Y_pos).w,d1
 	bmi.s	+
 	cmpi.w	#$E0,d1
 	bge.s	+
+
 	moveq	#0,d0
 	rts
-+	moveq	#1,d0
+; ===========================================================================
+; NotOnScreen2
++
+	moveq	#1,d0
 	rts
 ; ===========================================================================
 	nop
@@ -30052,8 +30022,8 @@ Sonic_Super:
 	beq.w	return_1AC3C
 	cmpi.b	#1,(Super_Sonic_palette).w	; is Super Sonic's transformation sequence finished?
 	beq.s	return_1ABA4			; if not, branch
-;	tst.b	(Update_HUD_timer).w
-;	beq.s	Sonic_RevertToNormal ; ?
+	tst.b	(Update_HUD_timer).w
+	beq.s	Sonic_RevertToNormal ; ?
 	subq.w	#1,(Super_Sonic_frame_count).w
 	bhi.w	return_1AC3C
 	move.w	#60,(Super_Sonic_frame_count).w	; Reset frame counter to 60
@@ -42336,6 +42306,13 @@ Obj32_Init:
 	move.b	#$10,width_pixels(a0)
 	move.l	#Obj32_VelArray2,objoff_3C(a0)
 +
+	cmpi.b	#green_hill_zone,(Current_Zone).w
+	bne.s	+
+	move.l	#Map_SmashBlock,mappings(a0)
+	move.w	#make_art_tile(ArtTile_ArtNem_Waterfall,0,0),art_tile(a0)
+	move.b	#$10,width_pixels(a0)
+	move.l	#Obj32_VelArray3,objoff_3C(a0)
++
 	jsrto	(Adjust2PArtPointer).l, JmpTo18_Adjust2PArtPointer
 	move.b	#4,render_flags(a0)
 	move.b	#4,priority(a0)
@@ -42443,6 +42420,12 @@ Obj32_VelArray2:
 	dc.w  $100,-$200
 	dc.w  -$C0,-$1C0
 	dc.w   $C0,-$1C0
+Obj32_VelArray3:
+	;	 x_vel y_vel
+	dc.w -$200,-$200
+	dc.w -$100,-$100
+	dc.w  $200,-$200
+	dc.w  $100,-$100
 
 ; ===========================================================================
 ; loc_236A8:
@@ -42489,6 +42472,10 @@ Obj32_MapUnc_23852:	BINCLUDE "mappings/sprite/obj32_a.bin"
 ; sprite mappings
 ; ----------------------------------------------------------------------------
 Obj32_MapUnc_23886:	BINCLUDE "mappings/sprite/obj32_b.bin"
+; ---------------------------------------------------------------------------
+; Sprite mappings - smashable green block (MZ)
+; ---------------------------------------------------------------------------
+Map_SmashBlock:		BINCLUDE "mappings/sprite/GHZ Smashable Block.bin"
 ; ===========================================================================
 
     if gameRevision<2
@@ -55100,7 +55087,7 @@ JmpTo59_Adjust2PArtPointer
     endif
 
 	include	"Robot Masters.asm"
-
+;Obj5B: include "Pushable Block.asm"
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -79863,6 +79850,8 @@ PlrList_Ghz1: plrlistheader
 	plreq ArtTile_ArtNem_Buzzer, ArtNem_Buzzer
 	plreq ArtTile_ArtNem_Masher, ArtNem_Masher
 	plreq ArtTile_ArtNem_MotoBug, ArtNem_MotoBug
+	plreq ArtTile_ArtNem_Waterfall, ArtNem_GHZBreakBlock
+	plreq ArtTile_ArtNem_Coconuts, ArtNem_GHZPushBlock
 PlrList_Ghz1_End
 ;---------------------------------------------------------------------------------------
 ; PATTERN LOAD REQUEST LIST
@@ -80831,6 +80820,10 @@ ArtNem_Masher:	BINCLUDE	"art/nemesis/EHZ Pirahna badnik.bin"
 ArtNem_Snailer:	BINCLUDE	"art/nemesis/Snailer.bin"
 	even
 ArtNem_MotoBug:	BINCLUDE	"art/nemesis/motobug.bin"
+	even
+ArtNem_GHZPushBlock:	BINCLUDE	"art/nemesis/GHZ Pushable Block.bin"
+	even
+ArtNem_GHZBreakBlock:	BINCLUDE	"art/nemesis/GHZ Breakable Block.bin"
 	even
 ArtNem_GHZ_Purple_Rock:	BINCLUDE	"art/nemesis/GHZ Purple Rock.bin"
 	even
@@ -81856,8 +81849,6 @@ DACSample	macro	pPtr,pDelay,pFlags
 ArtUnc_SuperSonic:	BINCLUDE	"art/uncompressed/Super Sonic's art.bin"
 	even
 MapUnc_Sonic:	BINCLUDE	"mappings/sprite/Sonic.bin"
-	even
-MapUnc_SonicSS:	BINCLUDE	"mappings/s1ss/Sonic.bin"
 	even
 MapUnc_SuperSonic:	BINCLUDE	"mappings/sprite/Super Sonic.bin"
 	even

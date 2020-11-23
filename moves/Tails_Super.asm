@@ -4,8 +4,8 @@
 	bne.w	Tails_Super_Return
 	cmpi.b	#1,(Super_Sonic_palette).w	; is Super Sonic's transformation sequence finished?
 	beq.w	Tails_Super_Return			; if not, branch
-;	tst.b	(Update_HUD_timer).w ; is the hud being updated (is the level over?)
-;	beq.s	Tails_RevertToNormal ; if not, gtfo
+	tst.b	(Update_HUD_timer).w ; is the hud being updated (is the level over?)
+	beq.s	Tails_RevertToNormal ; if not, gtfo
 	subq.w	#1,(Super_Sonic_frame_count).w
 	bhi.w	Tails_Super_Return
 	move.w	#60,(Super_Sonic_frame_count).w	; Reset frame counter to 60
