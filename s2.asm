@@ -21557,7 +21557,7 @@ Obj34_MapUnc_147BA:	offsetTable
 	offsetTableEntry.w TC_EHZ
 	offsetTableEntry.w TC_GHZ
 	offsetTableEntry.w TC_WZ
-	offsetTableEntry.w TC_Test
+	offsetTableEntry.w TC_TTZ
 	offsetTableEntry.w TC_MTZ
 	offsetTableEntry.w TC_MTZ
 	offsetTableEntry.w TC_WFZ
@@ -21609,10 +21609,17 @@ TC_WZ:		dc.w $4				; WOOD
 		dc.w $0005, $8588, $82C4, $0050	; O
 		dc.w $0005, $8588, $82C4, $0060	; O
 		dc.w $0005, $85E4, $82F2, $0070	; D
-TC_Test:	dc.w $4				; TEST
+TC_TTZ:	dc.w $A				; TECHNO TEST
+		dc.w $0005, $85DE, $82EF, $FFD0	; T
+		dc.w $0005, $8580, $82C0, $FFE0	; E
+		dc.w $0005, $85E2, $82F1, $FFF0	; C
+		dc.w $0005, $85E6, $82F3, $0000	; H
+		dc.w $0005, $8584, $82C2, $0010	; N
+		dc.w $0005, $8588, $82C4, $0020	; O
+
 		dc.w $0005, $85DE, $82EF, $0040	; T
 		dc.w $0005, $8580, $82C0, $0050	; E
-		dc.w $0005, $85E2, $82F1, $0060	; S
+		dc.w $0005, $85EA, $82F5, $0060	; S
 		dc.w $0005, $85DE, $82EF, $0070	; T
 TC_MTZ:	dc.w $A
 	dc.w 9,	$85DE, $82EF, $FFE0
@@ -22206,7 +22213,7 @@ Off_TitleCardLetters:
 	dc.b TitleCardLetters_EHZ - TitleCardLetters	; 0 ; Lavender Valley
 	dc.b TitleCardLetters_GHZ - TitleCardLetters	; 1 ; Green Hill
 	dc.b TitleCardLetters_WZ  - TitleCardLetters	; 2 ; Wood (temp. name)
-	dc.b TitleCardLetters_Test - TitleCardLetters	; 3 ; Zone 3
+	dc.b TitleCardLetters_TTZ - TitleCardLetters	; 3 ; Zone 3
 	dc.b TitleCardLetters_MTZ - TitleCardLetters	; 4 ; Metropolis 1 & 2
 	dc.b TitleCardLetters_MTZ - TitleCardLetters	; 5 ; Metropolis 3
 	dc.b TitleCardLetters_WFZ - TitleCardLetters	; 6 ; Wing Fortress
@@ -22243,8 +22250,8 @@ TitleCardLetters_GHZ:
 	titleLetters	"GREEN HILL"
 TitleCardLetters_WZ:
 	titleLetters	"WOOD"
-TitleCardLetters_Test:
-	titleLetters	"TEST"
+TitleCardLetters_TTZ:
+	titleLetters	"TECHNO TEST"
 TitleCardLetters_MTZ:
 	titleLetters	"METROPOLIS"
 TitleCardLetters_HTZ:
