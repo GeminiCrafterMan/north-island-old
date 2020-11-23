@@ -22976,7 +22976,7 @@ ObjPtr_MCZBoss:				dc.l Obj57		; MCZ boss
 ObjPtr_BossExplosion:		dc.l Obj58		; Boss explosion
 ObjPtr_RobotMasters:		dc.l Obj59		; Zone-specific decorations
 							dc.l ObjNull	; Obj5A - Used to be Messages/checkpoint from Special Stage
-ObjPtr_PushBlock:			dc.l ObjNull		; Obj5B - Used to be Ring spray/spill in Special Stage
+ObjPtr_PushBlock:			dc.l Obj5B		; Obj5B - Used to be Ring spray/spill in Special Stage
 ObjPtr_Masher:				dc.l Obj5C		; Masher (jumping piranha fish badnik) from EHZ
 ObjPtr_CPZBoss:				dc.l Obj5D		; CPZ boss
 							dc.l ObjNull		; Obj5E - Used to be HUD from Special Stage
@@ -29962,20 +29962,20 @@ SuperSonic_Cont: ; known as Sonic_Transform: in S3K
 	move.b	#1,(Super_Sonic_flag).w
 	cmpi.w	#-1,(Player_option).w
 	bne.w	.done
-	move.l	#MapUnc_SuperKnuckles,mappings(a1)
+	move.l	#MapUnc_SuperKnuckles,mappings(a0)
 	bra.w	.done
 .soniccheck:
 	cmpi.w	#1,(Player_mode).w
 	bgt.s	.tailscheck
-	move.l	#MapUnc_SuperSonic,mappings(a1)
+	move.l	#MapUnc_SuperSonic,mappings(a0)
 .tailscheck:
 	cmpi.w	#2,(Player_mode).w
 	bne.s	.knuxcheck
-	move.l	#MapUnc_SuperTails,mappings(a1)
+	move.l	#MapUnc_SuperTails,mappings(a0)
 .knuxcheck:
 	cmpi.w	#3,(Player_mode).w
 	blt.s	.done
-	move.l	#MapUnc_SuperKnuckles,mappings(a1)
+	move.l	#MapUnc_SuperKnuckles,mappings(a0)
 .done:
 	move.b	#$81,obj_control(a0)
 	cmpi.w	#2,(Player_option).w
@@ -30059,17 +30059,32 @@ Sonic_Super:
 	ori.b	#$80,(Update_HUD_rings).w
 +
 	subq.w	#1,(Ring_count).w
-	bne.s	return_1AC3C
+	bne.w	return_1AC3C
 ; loc_1ABF2:
 Sonic_RevertToNormal:
 	jsr		Unc_NormalIcons_Reload
-	move.l	#MapUnc_Sonic,mappings(a0)
-	move.w	#make_art_tile(ArtTile_ArtUnc_Sonic,0,0),art_tile(a0)
 	move.b	#0,(MainCharacter+obj_control).w	; restore Sonic's movement
 	move.b	#2,(Super_Sonic_palette).w	; Remove rotating palette
 	move.w	#$28,(Palette_frame).w
 	move.b	#0,(Super_Sonic_flag).w
+	;revert mappings
+	cmpi.w	#-1,(Player_option).w
+	bne.w	.done
+	move.l	#MapUnc_Knuckles,mappings(a0)
+	bra.w	.done
+.soniccheck:
+	cmpi.w	#1,(Player_mode).w
+	bgt.s	.tailscheck
 	move.l	#MapUnc_Sonic,mappings(a0)
+.tailscheck:
+	cmpi.w	#2,(Player_mode).w
+	bne.s	.knuxcheck
+	move.l	#MapUnc_Tails,mappings(a0)
+.knuxcheck:
+	cmpi.w	#3,(Player_mode).w
+	blt.s	.done
+	move.l	#MapUnc_Knuckles,mappings(a0)
+.done:
 	move.b	#1,prev_anim(a0)	; Change animation back to normal ?
 	move.w	#1,invincibility_time(a0)	; Remove invincibility
 	move.w	#$600,(Sonic_top_speed).w
@@ -31622,7 +31637,7 @@ Obj02_ExitChk:
 
 ; loc_1ABA6:
 Tails_Super:
-	include	"moves/Tails_Super.asm"
+	jmp	Sonic_Super
 
 ; ---------------------------------------------------------------------------
 ; Tails' AI code for the Sonic and Tails mode 1-player game
@@ -55113,7 +55128,7 @@ JmpTo59_Adjust2PArtPointer
     endif
 
 	include	"Robot Masters.asm"
-;Obj5B: include "Pushable Block.asm"
+Obj5B: include "Pushable Block.asm"
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 ; ---------------------------------------------------------------------------
 ; Object 33 - pushable blocks (MZ, LZ)
 ; ---------------------------------------------------------------------------
-
+rts
 PushBlock:					; XREF: Obj_Index
 		moveq	#0,d0
 		move.b	routine(a0),d0
@@ -9,33 +9,24 @@ PushBlock:					; XREF: Obj_Index
 		jsr	PushBlock_Index(pc,d1.w)
 		jmp	(MarkObjGone).l
 ; ===========================================================================
-PushBlock_Index:	dc.w PushBlock_Main-PushBlock_Index
-		dc.w loc_BF6E-PushBlock_Index
-		dc.w loc_C02C-PushBlock_Index
-
-PushBlock_Var:	dc.b $10, 0	; object width,	frame number
-		dc.b $40, 1
+PushBlock_Index:	offsetTable
+		offsetTableEntry.w PushBlock_Main
+		offsetTableEntry.w loc_BF6E
+		offsetTableEntry.w loc_C02C
 ; ===========================================================================
 
 PushBlock_Main:				; XREF: PushBlock_Index
 		addq.b	#2,routine(a0)
-		move.b	#$F,y_radius(a0)
-		move.b	#$F,x_radius(a0)
 		move.l	#Map_PushBlock,mappings(a0)
 		move.w	#make_art_tile(ArtTile_ArtNem_Coconuts,0,0),art_tile(a0)
+		ori.b	#4,render_flags(a0)
+		move.b	#$10,width_pixels(a0)
+		move.b	#4,priority(a0)
 
 loc_BF16:
-		move.b	#4,render_flags(a0)
-		move.b	#3,priority(a0)
 		move.w	x_pos(a0),$34(a0)
 		move.w	y_pos(a0),$36(a0)
 		moveq	#0,d0
-		move.b	subtype(a0),d0
-		add.w	d0,d0
-		andi.w	#$E,d0
-		lea	PushBlock_Var(pc,d0.w),a2
-		move.b	(a2)+,width_pixels(a0)
-		move.b	(a2)+,mapping_frame(a0)
 
 loc_BF6E:				; XREF: PushBlock_Index
 		tst.b	$32(a0)
