@@ -7146,14 +7146,14 @@ LevSelControls_SwitchSide:	; not in soundtest, not up/down pressed
 	addq.w	#1,(Player_option).w	; select next character
 	cmpi.w	#4,(Player_option).w	; did we go over the limit?
 	bls.s	++	; if not, branch
-	clr.w	(Player_option).w	; reset to 0
+	move.w	#-1,(Player_option).w	; reset to -1 (blue knux)
 +
 	btst	#button_B,(Ctrl_1_Press).w	; is C pressed?
 	beq.s	+	; if not, branch
 	subq.w	#1,(Player_option).w	; select next character
-	cmpi.w	#$FF,(Player_option).w	; did we go under the limit?
-	bls.s	+	; if not, branch
-	move.w	#4,(Player_option).w	; reset to 0
+	cmpi.w	#-2,(Player_option).w	; did we go under the limit?
+	bgt.s	+	; if not, branch
+	move.w	#4,(Player_option).w	; reset to 4
 +
 	rts
 ; ===========================================================================
@@ -19351,6 +19351,7 @@ shield_monitor:
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Whirlwind Shield monitor
+; gives the player a Whirlwind Shield, with gravity reduction when you hold Up.
 ; ---------------------------------------------------------------------------
 whirlwind_monitor:
 	tst.b	(Shield+id).w
@@ -19371,7 +19372,7 @@ whirlwind_monitor:
 ; ---------------------------------------------------------------------------
 invincible_monitor:
 	tst.b	(Super_Sonic_flag).w	; is Sonic super?
-	bne.s	+++	; rts		; if yes, branch
+	bne.s	++	; rts		; if yes, branch
 	bset	#status_sec_isInvincible,status_secondary(a1)	; give invincibility status
 	move.w	#20*60,invincibility_time(a1) ; 20 seconds
 	tst.b	(Current_Boss_ID).w	; don't change music during boss battles
@@ -19383,11 +19384,12 @@ invincible_monitor:
 +
 	move.b	#ObjID_InvStars,(Sonic_InvincibilityStars+id).w ; load Obj35 (invincibility stars) at $FFFFD200
 	move.w	a1,(Sonic_InvincibilityStars+parent).w
++
 	rts
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
-; Teleport Monitor
-; swaps both players around
+; Super Monitor
+; Turns the character that hit it Super.
 ; ---------------------------------------------------------------------------
 ;loc_12AA6:
 super_monitor:
@@ -19395,18 +19397,23 @@ super_monitor:
 	move.b	#1,(Super_Sonic_palette).w
 	move.b	#$F,(Palette_timer).w
 	move.b	#1,(Super_Sonic_flag).w
-	cmpi.w	#1,(Player_mode).w
-	bgt.s	+
-	move.l	#MapUnc_SuperSonic,mappings(a1)
-+
-	cmpi.w	#2,(Player_mode).w
-	bne.s	+
-	move.l	#MapUnc_SuperTails,mappings(a1)
-+
-	cmpi.w	#3,(Player_mode).w
-	blt.s	+
+	cmpi.w	#-1,(Player_option).w
+	bne.w	.done
 	move.l	#MapUnc_SuperKnuckles,mappings(a1)
-+
+	bra.w	.done
+.soniccheck:
+	cmpi.w	#1,(Player_mode).w
+	bgt.s	.tailscheck
+	move.l	#MapUnc_SuperSonic,mappings(a1)
+.tailscheck:
+	cmpi.w	#2,(Player_mode).w
+	bne.s	.knuxcheck
+	move.l	#MapUnc_SuperTails,mappings(a1)
+.knuxcheck:
+	cmpi.w	#3,(Player_mode).w
+	blt.s	.done
+	move.l	#MapUnc_SuperKnuckles,mappings(a1)
+.done:
 	move.b	#$81,obj_control(a1)
 	cmpi.w	#2,(Player_option).w
 	bne.s	+
@@ -29953,18 +29960,23 @@ SuperSonic_Cont: ; known as Sonic_Transform: in S3K
 	move.b	#1,(Super_Sonic_palette).w
 	move.b	#$F,(Palette_timer).w
 	move.b	#1,(Super_Sonic_flag).w
+	cmpi.w	#-1,(Player_option).w
+	bne.w	.done
+	move.l	#MapUnc_SuperKnuckles,mappings(a1)
+	bra.w	.done
+.soniccheck:
 	cmpi.w	#1,(Player_mode).w
-	bgt.s	+
-	move.l	#MapUnc_SuperSonic,mappings(a0)
-+
+	bgt.s	.tailscheck
+	move.l	#MapUnc_SuperSonic,mappings(a1)
+.tailscheck:
 	cmpi.w	#2,(Player_mode).w
-	bne.s	+
-	move.l	#MapUnc_SuperTails,mappings(a0)
-+
+	bne.s	.knuxcheck
+	move.l	#MapUnc_SuperTails,mappings(a1)
+.knuxcheck:
 	cmpi.w	#3,(Player_mode).w
-	blt.s	+
-	move.l	#MapUnc_SuperKnuckles,mappings(a0)
-+
+	blt.s	.done
+	move.l	#MapUnc_SuperKnuckles,mappings(a1)
+.done:
 	move.b	#$81,obj_control(a0)
 	cmpi.w	#2,(Player_option).w
 	bne.s	+
@@ -31024,8 +31036,15 @@ SAnim_WalkRun:
 ;	tst.b	(Super_Sonic_flag).w
 ;	bne.s	SAnim_Super
 	lea (SonAni_HaulAss).l,a1; use figure-8 animation
+	tst.b	(Super_Sonic_flag).w
+	beq.s	+	; nah? go to normal speeds...
+	cmpi.w	#$C00,d2		; is Sonic at like, insane speed??
+	bhs.s	+++				; if yes, branch
+	bra.s	++
++
 	cmpi.w	#$A00,d2		; is Sonic at Peel-Out speed?
-	bhs.s	+				; if yes, branch
+	bhs.s	++				; if yes, branch
++
 	lea	(SonAni_Run).l,a1	; use running animation
 	cmpi.w	#$600,d2		; is Sonic at running speed?
 	bhs.s	+			; use running animation
@@ -78334,33 +78353,43 @@ Debug_ExitDebugMode:
 	move.b	#1,(Update_HUD_timer).w
 	move.b	#1,(Update_HUD_timer_2P).w
 	lea	(MainCharacter).w,a1 ; a1=character
-	cmpi.w	#1,(Player_option).w
-	bgt.s	+
-	move.l	#MapUnc_Sonic,mappings(a1)
-	tst.b	(Super_Sonic_flag).w
-	beq.s	+
-	move.l	#MapUnc_SuperSonic,mappings(a1)
-+
-	cmpi.w	#2,(Player_option).w
-	bne.s	+
-	move.l	#MapUnc_Tails,mappings(a1)
-	tst.b	(Super_Sonic_flag).w
-	beq.s	+
-	move.l	#MapUnc_SuperTails,mappings(a1)
-+
-	cmpi.w	#3,(Player_option).w
-	blt.s	+
+.blueknuxcheck:
+	cmpi.w	#-1,(Player_option).w
+	bne.s	.soniccheck
 	move.l	#MapUnc_Knuckles,mappings(a1)
 	tst.b	(Super_Sonic_flag).w
-	beq.s	+
+	beq.w	.notTails
 	move.l	#MapUnc_SuperKnuckles,mappings(a1)
-	bra.s	++
-+
+	bra.w	.notTails
+
+.soniccheck:
+	cmpi.w	#1,(Player_option).w
+	bgt.s	.tailscheck
+	move.l	#MapUnc_Sonic,mappings(a1)
+	tst.b	(Super_Sonic_flag).w
+	beq.s	.tailscheck
+	move.l	#MapUnc_SuperSonic,mappings(a1)
+.tailscheck:
 	cmpi.w	#2,(Player_option).w
-	bne.s	+
+	bne.s	.knuxcheck
+	move.l	#MapUnc_Tails,mappings(a1)
+	tst.b	(Super_Sonic_flag).w
+	beq.s	.knuxcheck
+	move.l	#MapUnc_SuperTails,mappings(a1)
+.knuxcheck:
+	cmpi.w	#3,(Player_option).w
+	blt.s	.tailscheck2
+	move.l	#MapUnc_Knuckles,mappings(a1)
+	tst.b	(Super_Sonic_flag).w
+	beq.s	.tailscheck2
+	move.l	#MapUnc_SuperKnuckles,mappings(a1)
+	bra.s	.notTails
+.tailscheck2:
+	cmpi.w	#2,(Player_option).w
+	bne.s	.notTails
 	move.w	#make_art_tile(ArtTile_ArtUnc_Tails,0,0),art_tile(a1)
-	bra.s	++
-+
+	bra.s	.notTwoPlayerMode
+.notTails:
 	move.w	#make_art_tile(ArtTile_ArtUnc_Sonic,0,0),art_tile(a1)
 	tst.w	(Two_player_mode).w
 	beq.s	.notTwoPlayerMode

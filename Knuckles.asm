@@ -1872,60 +1872,10 @@ return_3165D2:					  ; ...
 ; ---------------------------------------------------------------------------
 
 Knuckles_TurnSuper:				  ; ...
-	jsr	Sonic_CheckGoSuper
-; End of function Knuckles_JumpHeight
-
-; ---------------------------------------------------------------------------
-		rts
-
-; =============== S U B	R O U T	I N E =======================================
-
-
+	jmp	Sonic_CheckGoSuper
 Knuckles_Super:					  ; ...
-		tst.b	(Super_Sonic_flag).w
-		beq.w	return_3166C8
-;		tst.b	(Update_HUD_timer).w
-;		beq.s	loc_31667E
-		subq.w	#1,($FFFFF670).w
-		bpl.w	return_3166C8
-		move.w	#60,($FFFFF670).w
-		tst.w	($FFFFFE20).w
-		beq.s	loc_31667E
-		or.b	#1,($FFFFFE1D).w
-		cmp.w	#1,($FFFFFE20).w
-		beq.s	loc_316672
-		cmp.w	#10,($FFFFFE20).w
-		beq.s	loc_316672
-		cmp.w	#100,($FFFFFE20).w
-		bne.s	loc_316678
-
-loc_316672:					  ; ...
-		or.b	#%10000000,($FFFFFE1D).w
-
-loc_316678:					  ; ...
-		subq.w	#1,($FFFFFE20).w
-		bne.s	return_3166C8
-
-loc_31667E:					  ; ...
-		move.b	#0,(MainCharacter+obj_control).w	; restore Sonic's movement
-		move.b	#2,($FFFFF65F).w
-		move.w	#40,($FFFFF65C).w
-		move.b	#0,(Super_Sonic_flag).w
-	move.l	#MapUnc_Knuckles,mappings(a0)
-		move.b	#1,prev_anim(a0)
-		move.w	#1,$32(a0)
-		move.w	#$600,(Sonic_top_speed).w
-		move.w	#$C,(Sonic_acceleration).w
-		move.w	#$80,(Sonic_deceleration).w
-		btst	#6,status(a0)
-		beq.s	return_3166C8
-		move.w	#$300,(Sonic_top_speed).w
-		move.w	#6,(Sonic_acceleration).w
-		move.w	#$40,(Sonic_deceleration).w
-
-return_3166C8:					  ; ...
-		rts
-; End of function Knuckles_Super
+	jmp	Sonic_Super
+; End of function Knuckles_JumpHeight
 
 
 ; =============== S U B	R O U T	I N E =======================================

@@ -2,8 +2,8 @@
 	bne.s	Sonic_DashLaunch
 	cmpi.b	#AniIDSonAni_LookUp,anim(a0) ;check to see if your looking up
 	bne.s	+
-	move.b	($FFFFF603).w,d0
-	andi.b	#%01110000,d0
+	move.b	(Ctrl_1_Press_Logical).w,d0
+	andi.b	#button_B_mask|button_C_mask|button_A_mask,d0
 	beq.w	+
 	move.b	#AniIDSonAni_Run,anim(a0)
 	move.w	#0,$3A(a0)
@@ -42,7 +42,7 @@ Peel_Cont:
 	andi.w	#$1F00,d0
 	neg.w	d0
 	addi.w	#$2000,d0
-	;move.w	d0,(v_cameralag).w
+	move.w	d0,(Horiz_scroll_delay_val).w
 	btst	#0,$22(a0)
 	beq.s	+
 	neg.w	$14(a0)
