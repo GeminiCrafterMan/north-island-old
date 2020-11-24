@@ -19398,7 +19398,7 @@ super_monitor:
 	move.b	#$F,(Palette_timer).w
 	move.b	#1,(Super_Sonic_flag).w
 	cmpi.w	#-1,(Player_option).w
-	bne.w	.done
+	bne.w	.soniccheck
 	move.l	#MapUnc_SuperKnuckles,mappings(a1)
 	bra.w	.done
 .soniccheck:
@@ -22672,26 +22672,26 @@ Obj3C_Main:     ; loc_15D8A:
 	move.w	x_pos(a0),d4
 	bsr.w	SolidObject
 	btst	#5,status(a0)
-	bne.s	+
+	bne.s	Obj3C_ChkRoll
 
 -
 	rts
 ; ===========================================================================
 
-+
+Obj3C_ChkRoll:
 	tst.b   (Super_Sonic_flag).w     ; super?
 	bne.s   +
 	cmpi.b	#ObjID_Knuckles,(MainCharacter+id).w       ; knuckles?
 	beq.s	+
 	lea	(MainCharacter).w,a1 ; a1=character
-	cmpi.b	#2,anim(a1) ; spinning?
+	cmpi.b	#AniIDSonAni_Roll,anim(a1) ; spinning?
 	bne.s	-	; rts
-	mvabs.w	objoff_30(a0),d0      ; move.w $30(a0),d0
+	move.w	objoff_30(a0),d0      ; move.w $30(a0),d0
 		bpl.s	Obj3C_ChkSpeed
 		neg.w	d0
 
 Obj3C_ChkSpeed:
-	cmpi.w	#$480,d0
+	cmpi.w	#$480,d0	; is player's speed 480 or higher?
 	blo.s	-	; rts
 +
 	move.w	objoff_30(a0),x_vel(a1)
@@ -29961,7 +29961,7 @@ SuperSonic_Cont: ; known as Sonic_Transform: in S3K
 	move.b	#$F,(Palette_timer).w
 	move.b	#1,(Super_Sonic_flag).w
 	cmpi.w	#-1,(Player_option).w
-	bne.w	.done
+	bne.w	.soniccheck
 	move.l	#MapUnc_SuperKnuckles,mappings(a0)
 	bra.w	.done
 .soniccheck:
