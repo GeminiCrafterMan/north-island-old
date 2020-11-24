@@ -194,6 +194,10 @@
                 {
                     "path": "art\\palettes\\Mighty.bin",
                     "length": 1
+                },
+                {
+                    "path": "art\\palettes\\Mighty underwater.bin",
+                    "length": 1
                 }
             ],
             "art": {

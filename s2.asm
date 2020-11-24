@@ -3358,9 +3358,9 @@ PalPtr_HPZ_T_U: palptr Pal_HPZ_T_U, 0
 PalPtr_S1SS:	palptr Pal_S1SS,0
 PalPtr_Test:	palptr Pal_Test,1
 PalPtr_Mighty:	palptr Pal_Mighty,0
-PalPtr_CPZ_M_U:	palptr Pal_Mighty,0
-PalPtr_ARZ_M_U:	palptr Pal_Mighty,0
-PalPtr_HPZ_M_U:	palptr Pal_Mighty,0
+PalPtr_CPZ_M_U:	palptr Pal_CPZ_M_U,0
+PalPtr_ARZ_M_U:	palptr Pal_ARZ_M_U,0
+PalPtr_HPZ_M_U:	palptr Pal_HPZ_M_U,0
 
 ; ----------------------------------------------------------------------------
 ; This macro defines Pal_ABC and Pal_ABC_End, so palptr can compute the size of
@@ -3423,6 +3423,9 @@ Pal_GHZ:	palette	GHZ.bin
 Pal_S1SS:	palette s1ss/special.bin
 Pal_Test:	palette Test.bin
 Pal_Mighty:  palette Mighty.bin,SonicAndTails2.bin ; "Sonic and Miles" background palette (also usually the primary palette line)
+Pal_CPZ_M_U: palette Mighty underwater.bin,CPZ underwater.bin
+Pal_ARZ_M_U: palette Mighty underwater.bin,ARZ underwater.bin
+Pal_HPZ_M_U: palette Mighty underwater.bin,HPZ underwater.bin
 ; ===========================================================================
 
     if gameRevision<2
@@ -4193,13 +4196,15 @@ Level:
 	bsr.w	LoadPLC
 
 Level_NoTails:
-	cmpi.w	#3,(Player_mode).w
-	blt.s	Level_ClrRam
-	moveq	#PLCID_KnucklesLife,d0
 	cmpi.w	#5,(Player_mode).w
-	blt.s	+
+	blt.s	.notmighty
 	moveq	#PLCID_MightyLife,d0
-+
+	bra.s	.loadplc
+.notmighty:
+	cmpi.w	#3,(Player_mode).w
+	blt.s	.loadplc
+	moveq	#PLCID_KnucklesLife,d0
+.loadplc:
 	bsr.w	LoadPLC
 ; loc_3F48:
 Level_ClrRam:
@@ -5896,7 +5901,7 @@ SpecialStage_ResultsLetters:
 ; ----------------------------------------------------------------------------
 ; loc_7870:
 ContinueScreen:
-	bsr.w	Pal_FadeToBlack
+	jsr	Pal_FadeToBlack
 	move	#$2700,sr
 	move.w	(VDP_Reg1_val).w,d0
 	andi.b	#$BF,d0
@@ -30121,15 +30126,16 @@ Sonic_RevertToNormal:
 	move.l	#MapUnc_Sonic,mappings(a0)
 .tailscheck:
 	cmpi.w	#2,(Player_mode).w
-	bne.s	.knuxcheck
+	bne.s	.mightycheck
 	move.l	#MapUnc_Tails,mappings(a0)
+.mightycheck:
+	cmpi.w	#5,(Player_mode).w
+	blt.s	.knuxcheck
+	move.l	#MapUnc_Mighty,mappings(a0)
 .knuxcheck:
 	cmpi.w	#3,(Player_mode).w
 	blt.s	.done
 	move.l	#MapUnc_Knuckles,mappings(a0)
-	cmpi.w	#5,(Player_mode).w
-	blt.s	.done
-	move.l	#MapUnc_Mighty,mappings(a0)
 .done:
 	move.b	#1,prev_anim(a0)	; Change animation back to normal ?
 	move.w	#1,invincibility_time(a0)	; Remove invincibility

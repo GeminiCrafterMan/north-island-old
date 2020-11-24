@@ -2255,19 +2255,19 @@ MtyAni_Balance2:dc.b   $1F, $7B, $7C, $FF
 	rev02even
 MtyAni_Stop:	dc.b   7, $65, $66, $67, $FD,   0
 	rev02even
-MtyAni_Float:	dc.b   7, $C8, $FF
+MtyAni_Float:	dc.b   7, $80, $FF
 	rev02even
-MtyAni_Float2:	dc.b   7, $C8, $C9, $CA, $CB, $CC, $CD, $CE, $CF, $FF
+MtyAni_Float2:	dc.b   7, $80, $81, $82, $83, $84, $85, $86, $87, $FF ; start facing right, rotate left
 	rev02even
 MtyAni_Spring:	dc.b $2F, $6E, $FD,   0
 	rev02even
-MtyAni_Hang:	dc.b   1, $AA, $AB, $FF
+MtyAni_Hang:	dc.b   1, $61, $62, $FF
 	rev02even
 MtyAni_Dash2:	dc.b  $F, $43, $43, $43, $FE,   1
 	rev02even
 MtyAni_Victory:	dc.b	7, $7D, $7E, $7F, $FE,   1
 	rev02even
-MtyAni_Hang2:	dc.b $13, $91, $FF
+MtyAni_Hang2:	dc.b $13, $51, $FF
 	rev02even
 MtyAni_Bubble:	dc.b	$B, $6F, $6F,   $17,   $18, $FD,   0 ; breathe
 	rev02even
@@ -2298,7 +2298,7 @@ MtyAni_PeelChrg:dc.b 	0,  $7, $7, $7, $7, $7, $7, $7, $7
 	rev02even
 MtyAni_HaulAss:	dc.b $FF, $DA, $DB, $DC, $DD, $FF, $FF,	$FF
 	rev02even
-MtyAni_WallJump:	dc.b	$77,$68,$FF
+MtyAni_WallJump:	dc.b	5,$68,$69,$FE,1
 	rev02even
 MtyAni_Transform:dc.b   2, $73, $73, $74, $74, $75, $76, $76, $76, $76, $76, $76, $76, $76, $FD,   0
 	even
