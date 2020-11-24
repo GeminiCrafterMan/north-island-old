@@ -3357,6 +3357,10 @@ PalPtr_ARZ_T_U: palptr Pal_ARZ_T_U, 0
 PalPtr_HPZ_T_U: palptr Pal_HPZ_T_U, 0
 PalPtr_S1SS:	palptr Pal_S1SS,0
 PalPtr_Test:	palptr Pal_Test,1
+PalPtr_Mighty:	palptr Pal_Mighty,0
+PalPtr_CPZ_M_U:	palptr Pal_Mighty,0
+PalPtr_ARZ_M_U:	palptr Pal_Mighty,0
+PalPtr_HPZ_M_U:	palptr Pal_Mighty,0
 
 ; ----------------------------------------------------------------------------
 ; This macro defines Pal_ABC and Pal_ABC_End, so palptr can compute the size of
@@ -3418,6 +3422,7 @@ Pal_HPZ_T_U: palette Tails underwater.bin,HPZ underwater.bin ; Hidden Palace Zon
 Pal_GHZ:	palette	GHZ.bin
 Pal_S1SS:	palette s1ss/special.bin
 Pal_Test:	palette Test.bin
+Pal_Mighty:  palette Mighty.bin,SonicAndTails2.bin ; "Sonic and Miles" background palette (also usually the primary palette line)
 ; ===========================================================================
 
     if gameRevision<2
@@ -4142,7 +4147,7 @@ Level:
 	bsr.w	ClearPLC
 	bsr.w	Pal_FadeToBlack
 	tst.w	(Demo_mode_flag).w
-	bmi.s	Level_ClrRam
+	bmi.w	Level_ClrRam
 	move	#$2700,sr
 	bsr.w	ClearScreen
 	jsr	(LoadTitleCard).l ; load title card patterns
@@ -4191,6 +4196,10 @@ Level_NoTails:
 	cmpi.w	#3,(Player_mode).w
 	blt.s	Level_ClrRam
 	moveq	#PLCID_KnucklesLife,d0
+	cmpi.w	#5,(Player_mode).w
+	blt.s	+
+	moveq	#PLCID_MightyLife,d0
++
 	bsr.w	LoadPLC
 ; loc_3F48:
 Level_ClrRam:
@@ -4231,12 +4240,6 @@ Level_InitNormal:
 	move.w	#$8720,(a6)		; Background palette/color: 2/0
 	move.w	#$8C81,(a6)		; H res 40 cells, no interlace
 
-	cmpi.b	#zone_9,(Current_Zone).w
-	bne.s	.normalzone
-	move.w	#$8C89,(a6)	; H res 40 cells, no interlace, S/H enabled
-	bra.s	+
-
-.normalzone:
 	tst.b	(Debug_options_flag).w
 	beq.s	++
 	btst	#button_C,(Ctrl_1_Held).w
@@ -4279,27 +4282,40 @@ Level_InitNormal:
 ; loc_407C:
 Level_LoadPal:
 	moveq	#PalID_BGND,d0
+	cmpi.w	#5,(Player_mode).w	; Mighty?
+	blt.s	.knuxcheck
+	moveq	#PalID_Mighty,d0	; load Knuckles' palette index
+	bra.s	.cont
+.knuxcheck:
 	cmpi.w	#3,(Player_mode).w	; are you playing as Knuckles?
-	blt.s	+	; if not, branch
+	blt.s	.tailscheck	; if not, branch
 	moveq	#PalID_Knux,d0	; load Knuckles' palette index
-+	cmpi.w	#2,(Player_mode).w	; are you playing as Tails?
-	bne.s	+	; if not, branch
+.tailscheck:
+	cmpi.w	#2,(Player_mode).w	; are you playing as Tails?
+	bne.s	.cont	; if not, branch
 	moveq	#PalID_P1Tails,d0	; load Tails' palette index
-+	bsr.w	PalLoad_Now	; load Sonic's palette line
+.cont:
+	bsr.w	PalLoad_Now	; load Sonic's palette line
 	tst.b	(Water_flag).w	; does level have water?
-	beq.s	Level_GetBgm	; if not, branch
+	beq.w	Level_GetBgm	; if not, branch
 	moveq	#PalID_HPZ_U,d0	; palette number $15
 	cmpi.b	#hidden_palace_zone,(Current_Zone).w
 	beq.s	Level_PalHPZ ; branch if level is not HPZ
 	moveq	#PalID_CPZ_U,d0	; palette number $16
+.tailscheckCPZ:
 	cmpi.b	#chemical_plant_zone,(Current_Zone).w
 	bne.s	Level_PalNotCPZ ; branch if level is not CPZ
 	cmpi.w	#2,(Player_mode).w	; are you playing as Tails?
 	blt.s	Level_WaterPal	; if not, branch
 	moveq	#PalID_CPZ_T_U,d0
+.knuxcheckCPZ:
 	cmpi.w	#3,(Player_mode).w	; are you playing as Knuckles?
 	blt.s	Level_WaterPal	; if not, branch
 	moveq	#PalID_CPZ_K_U,d0
+.mightycheckCPZ:
+	cmpi.w	#5,(Player_mode).w
+	blt.s	Level_WaterPal
+	moveq	#PalID_CPZ_M_U,d0
 	bra.s	Level_WaterPal	; branch
 
 Level_PalHPZ:
@@ -4310,6 +4326,9 @@ Level_PalHPZ:
 	cmpi.w	#3,(Player_mode).w	; are you playing as Knuckles?
 	blt.s	Level_WaterPal	; if not, branch
 	moveq	#PalID_HPZ_K_U,d0
+	cmpi.w	#5,(Player_mode).w	; are you playing as Mighty?
+	blt.s	Level_WaterPal	; if not, branch
+	moveq	#PalID_HPZ_M_U,d0
 	bra.s	Level_WaterPal
 
 Level_PalNotCPZ:
@@ -4320,6 +4339,9 @@ Level_PalNotCPZ:
 	cmpi.w	#3,(Player_mode).w	; are you playing as Knuckles?
 	blt.s	Level_WaterPal	; if not, branch
 	moveq	#PalID_ARZ_K_U,d0
+	cmpi.w	#5,(Player_mode).w	; are you playing as Mighty?
+	blt.s	Level_WaterPal	; if not, branch
+	moveq	#PalID_ARZ_M_U,d0
 ; loc_409E:
 Level_WaterPal:
 	bsr.w	PalLoad_Water_Now	; load underwater palette (with d0)
@@ -4335,9 +4357,6 @@ Level_GetBgm:
 	ror.b	#1,d0
 	lsr.w	#7,d0				 
 	lea_	MusicList,a1
-;	tst.w	(Two_player_mode).w
-;	beq.s	Level_PlayBgm
-;	lea_	MusicList2,a1
 ; loc_40C8:
 Level_PlayBgm:
 	move.b	(a1,d0.w),d0		; load from music playlist
@@ -4589,6 +4608,15 @@ Level_SetPlayerMode:
 
 ; sub_446E:
 InitPlayers:
+
+	cmpi.w	#6,(Player_mode).w
+	bne.s	.ktcheck
+	move.b	#ObjID_Mighty,(MainCharacter+id).w ; load Obj62 Knuckles object at $FFFFB000
+	move.b	#ObjID_SpindashDust,(Sonic_Dust+id).w ; load Obj08 Sonic's spindash dust/splash object at $FFFFD100
+	move.b	#$13,(MainCharacter+y_radius).w		; Set Sonic's y-radius
+	bra.w	+
+
+.ktcheck:
 	cmpi.w	#4,(Player_mode).w
 	bne.s	InitPlayers_SonicAndTails
 	move.b	#ObjID_Knuckles,(MainCharacter+id).w ; load Obj62 Knuckles object at $FFFFB000
@@ -4644,9 +4672,15 @@ InitPlayers_TailsAlone:
 	rts
 ; ===========================================================================
 InitPlayers_KnucklesAlone:
+	subq.w	#1,d0
+	bne.s	InitPlayers_MightyAlone ; branch if this is a Knuckles alone game
 	move.b	#ObjID_Knuckles,(MainCharacter+id).w ; load Obj62 Knuckles object at $FFFFB000
 	move.b	#ObjID_SpindashDust,(Sonic_Dust+id).w ; load Obj08 Knuckles' spindash dust/splash object at $FFFFD100
 ;	move.b	#$13,(MainCharacter+y_radius).w		; Set Sonic's y-radius
+	rts
+InitPlayers_MightyAlone:
+	move.b	#ObjID_Mighty,(MainCharacter+id).w
+	move.b	#ObjID_SpindashDust,(Sonic_Dust+id).w
 	rts
 ; End of function InitPlayers
 
@@ -5887,6 +5921,10 @@ ContinueScreen:
 	blt.s	+
 	lea	(ArtNem_MiniKnuckles).l,a0
 +
+	cmpi.w	#5,(Player_mode).w
+	blt.s	+
+	lea	(ArtNem_MiniMighty).l,a0
++
 	jsr	NemDec
 	moveq	#$A,d1
 	jsr	(ContScrCounter).l
@@ -6548,7 +6586,7 @@ OptionScreen_Controls:
 ; ===========================================================================
 ; word_917A:
 OptionScreen_Choices:
-	dc.l (5-1)<<24|(Player_option&$FFFFFF)
+	dc.l (7-1)<<24|(Player_option&$FFFFFF)
 	dc.l (1-1)<<24|(Two_player_items&$FFFFFF)
 	dc.l $FF<<24|(Sound_test_sound&$FFFFFF)
 
@@ -6747,12 +6785,16 @@ off_92D2:
 	dc.l TextOptScr_MilesAlone
 	dc.l TextOptScr_KnuxAlone
 	dc.l TextOptScr_KnuxAndMiles
+	dc.l TextOptScr_MightyAlone
+	dc.l TextOptScr_MightyAndMiles
 off_92DE:
 	dc.l TextOptScr_SonicAndTails
 	dc.l TextOptScr_SonicAlone
 	dc.l TextOptScr_TailsAlone
 	dc.l TextOptScr_KnuxAlone
 	dc.l TextOptScr_KnuxAndTails
+	dc.l TextOptScr_MightyAlone
+	dc.l TextOptScr_MightyAndTails
 off_92EA:
 	dc.l TextOptScr_NothingHere
 off_92F2:
@@ -7144,7 +7186,7 @@ LevSelControls_SwitchSide:	; not in soundtest, not up/down pressed
 	btst	#button_C,(Ctrl_1_Press).w	; is C pressed?
 	beq.s	+	; if not, branch
 	addq.w	#1,(Player_option).w	; select next character
-	cmpi.w	#4,(Player_option).w	; did we go over the limit?
+	cmpi.w	#6,(Player_option).w	; did we go over the limit?
 	bls.s	++	; if not, branch
 	move.w	#-1,(Player_option).w	; reset to -1 (blue knux)
 +
@@ -7153,7 +7195,7 @@ LevSelControls_SwitchSide:	; not in soundtest, not up/down pressed
 	subq.w	#1,(Player_option).w	; select next character
 	cmpi.w	#-2,(Player_option).w	; did we go under the limit?
 	bgt.s	+	; if not, branch
-	move.w	#4,(Player_option).w	; reset to 4
+	move.w	#6,(Player_option).w	; reset to 6
 +
 	rts
 ; ===========================================================================
@@ -7533,6 +7575,9 @@ TextOptScr_TailsAlone:		menutxt	"TAILS ALONE    "	; byte_981C:
 TextOptScr_KnuxAlone:		menutxt "K.T.E ALONE    "
 TextOptScr_KnuxAndMiles:	menutxt	"K.T.E AND MILES"
 TextOptScr_KnuxAndTails:	menutxt	"K.T.E AND TAILS"
+TextOptScr_MightyAlone:		menutxt "M.T.A ALONE    "
+TextOptScr_MightyAndMiles:	menutxt	"M.T.A AND MILES"
+TextOptScr_MightyAndTails:	menutxt	"M.T.A AND TAILS"
 TextOptScr_DisabledTitle:	menutxt	"DISABLED         "	; byte_982C:
 TextOptScr_NothingHere:		menutxt	"NOTHING HERE   "	; byte_984E:
 TextOptScr_SoundTest:		menutxt	"*  SOUND TEST   *"	; byte_985E:
@@ -22151,18 +22196,24 @@ LoadTitleCardSS:
 LoadTitleCard0:
 	move.l	#vdpComm(tiles_to_bytes(ArtTile_ArtNem_TitleCard),VRAM,WRITE),(VDP_control_port).l
 ; beginning of special title card code
+
+	cmpi.w	#5,(Player_option).w
+	blt.s	.notmighty
+	lea	(ArtNem_TitleCardMighty).l,a0
+	bra.w	LoadTitleCard_Art2
+.notmighty:
 	cmpi.w	#3,(Player_option).w
-	blt.s	LoadTitleCard_NotKnux
+	blt.s	.notknux
 	lea	(ArtNem_TitleCardKnux).l,a0
 	bra.w	LoadTitleCard_Art2
 
-LoadTitleCard_NotKnux:
+.notknux:
 	cmpi.w	#2,(Player_option).w
-	bne.s	LoadTitleCard_NotTails
+	bne.s	.nottails
 	lea	(ArtNem_TitleCardTails).l,a0
 	bra.w	LoadTitleCard_Art2
 
-LoadTitleCard_NotTails:
+.nottails:
 	lea	(ArtNem_TitleCard).l,a0
 ;	cmpi.w	#3,(Player_option).w
 ;	blt.s	LoadTitleCard_Art2
@@ -22975,7 +23026,7 @@ ObjPtr_EHZBoss:				dc.l Obj56		; EHZ boss
 ObjPtr_MCZBoss:				dc.l Obj57		; MCZ boss
 ObjPtr_BossExplosion:		dc.l Obj58		; Boss explosion
 ObjPtr_RobotMasters:		dc.l Obj59		; Zone-specific decorations
-							dc.l ObjNull	; Obj5A - Used to be Messages/checkpoint from Special Stage
+ObjPtr_Mighty:				dc.l Obj5A	; Obj5A - Used to be Messages/checkpoint from Special Stage
 ObjPtr_PushBlock:			dc.l Obj5B		; Obj5B - Used to be Ring spray/spill in Special Stage
 ObjPtr_Masher:				dc.l Obj5C		; Masher (jumping piranha fish badnik) from EHZ
 ObjPtr_CPZBoss:				dc.l Obj5D		; CPZ boss
@@ -27495,15 +27546,22 @@ Ani_obj0D:	offsetTable
 		offsetTableEntry.w .Sonic	; 3
 		offsetTableEntry.w .Tails	; 4
 		offsetTableEntry.w .Knuckles; 5
+		offsetTableEntry.w .Mighty	; 6
 .Eggman:	dc.b	$0F, $00, $FF
 	rev02even
-.Spin:	dc.b	$01, $04, $05, $06, $01, $04, $05, $06, $02, $04, $05, $06, $03, $04, $05, $06, $00, $FF
+.Spin:	dc.b	$01, $05, $06, $07, $01
+		dc.b		 $05, $06, $07, $02
+		dc.b		 $05, $06, $07, $03
+		dc.b		 $05, $06, $07, $04
+		dc.b		 $05, $06, $07, $00, $FF
 	rev02even
 .Sonic:	dc.b	$0F, $01, $FF
 	rev02even
 .Tails:	dc.b	$0F, $02, $FF
 	rev02even
 .Knuckles:	dc.b $0F, $03, $FF
+	rev02even
+.Mighty:	dc.b $0F, $04, $FF
 	even
 ; -------------------------------------------------------------------------------
 ; sprite mappings - Primary sprite table for object 0D (signpost)
@@ -27980,7 +28038,7 @@ loc_19AB6:	; Solid_SideAir:
 
 		move.l	a0,-(sp)
 		movea.l	a1,a0
-		bsr.w	WallJump
+		jsr	WallJump
 		movea.l	(sp)+,a0
 
 Solid_SideAir2:
@@ -30069,7 +30127,7 @@ Sonic_RevertToNormal:
 	move.b	#0,(Super_Sonic_flag).w
 	;revert mappings
 	cmpi.w	#-1,(Player_option).w
-	bne.w	.done
+	bne.w	.soniccheck
 	move.l	#MapUnc_Knuckles,mappings(a0)
 	bra.w	.done
 .soniccheck:
@@ -30084,6 +30142,9 @@ Sonic_RevertToNormal:
 	cmpi.w	#3,(Player_mode).w
 	blt.s	.done
 	move.l	#MapUnc_Knuckles,mappings(a0)
+	cmpi.w	#5,(Player_mode).w
+	blt.s	.done
+	move.l	#MapUnc_Mighty,mappings(a0)
 .done:
 	move.b	#1,prev_anim(a0)	; Change animation back to normal ?
 	move.w	#1,invincibility_time(a0)	; Remove invincibility
@@ -30103,7 +30164,7 @@ return_1AC3C:
 	rts
 ; End of subroutine Sonic_Super
 
-; Air Roll for all 3
+; Air Roll for all 4*
 	include	"moves/airroll.asm"
 
 ; ---------------------------------------------------------------------------
@@ -30470,7 +30531,7 @@ Sonic_DoLevelCollision:
 	move.w	#0,x_vel(a0) ; stop Sonic since he hit a wall
 
 		move.b	#button_left_mask,d1
-		bsr.w	WallJump
+		jsr	WallJump
 
 +
 	bsr.w	CheckRightWallDist
@@ -30480,7 +30541,7 @@ Sonic_DoLevelCollision:
 	move.w	#0,x_vel(a0) ; stop Sonic since he hit a wall
 
 		move.b	#button_right_mask,d1
-		bsr.w	WallJump
+		jsr	WallJump
 
 +
 	bsr.w	Sonic_CheckFloor
@@ -30578,7 +30639,7 @@ Sonic_HitCeilingAndWalls:
 	move.w	#0,x_vel(a0)	; stop Sonic since he hit a wall
 
 		move.b	#button_left_mask,d1
-		bsr.w	WallJump
+		jsr	WallJump
 
 +
 	bsr.w	CheckRightWallDist
@@ -30588,7 +30649,7 @@ Sonic_HitCeilingAndWalls:
 	move.w	#0,x_vel(a0)	; stop Sonic since he hit a wall
 
 		move.b	#button_right_mask,d1
-		bsr.w	WallJump
+		jsr	WallJump
 
 +
 	bsr.w	Sonic_CheckCeiling
@@ -30655,30 +30716,6 @@ Sonic_HitFloor2:
 return_1B09E:
 	rts
 ; End of function Sonic_DoLevelCollision
-
-WallJump:
-		cmpi.b	#ObjID_Sonic,id(a0)
-		bgt.s	.return
-		tst.b	jumping(a0)	;Mercury Constants
-		beq.s	.return
-		tst.b	y_vel(a0)
-		bmi.s	.return
-		move.b	(Ctrl_1_Held_Logical).w,d0	; get jpad
-		andi.b	#(button_left_mask|button_right_mask),d0	; keep just L and R state
-		beq.s	.return			; fail if neither are pressed
-		cmpi.b	#(button_left_mask|button_right_mask),d0	; fail if both are pressed
-		beq.s	.return
-		and.b	d1,d0			; keep only L or R depending on d1
-		beq.s	.return			; fail if not pressed
-		move.b	d0,double_jump_flag+1(a0)	; remember them
-		move.w	#0,y_vel(a0)
-		move.b	#$18,double_jump_flag(a0)	;Mercury Constants
-		clr.b	jumping(a0)
-		move.b	#AniIDSonAni_WallJump,anim(a0)
-		move.w	#SndID_KnuxGrab,d0
-		jsr	(PlaySound).l
-	.return:
-		rts
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to reset Sonic's mode when he lands on the floor
@@ -35281,7 +35318,12 @@ Unc_NormalIcons_Reload:
 	move.l	#ArtUnc_TailsLife,d1
 	bra.s	.cont
 .knux:
+	cmpi.w	#4,(Player_mode).w
+	bgt.s	.mighty
 	move.l	#ArtUnc_KnucklesLife,d1
+	bra.s	.cont
+.mighty:
+	move.l	#ArtUnc_MightyLife,d1
 .cont:
 	move.w	#tiles_to_bytes(ArtTile_ArtNem_life_counter),d2
 	move.w	#$40,d3
@@ -54992,7 +55034,7 @@ AnimateBoss:
 	bra.s	++
 ; ----------------------------------------------------------------------------
 +
-	bsr.w	AnimateBoss_Loop
+	jsr	AnimateBoss_Loop
 
 +
 	moveq	#0,d6
@@ -55128,6 +55170,23 @@ JmpTo59_Adjust2PArtPointer
     endif
 
 	include	"Robot Masters.asm"
+; ----------------------------------------------------------------------------
+; Object 5A - Mighty the Armadillo... and *all* of his associated code
+; ----------------------------------------------------------------------------
+	include	"Mighty.asm"
+
+;--------------------------------------------------------------------------------------
+; Mighty's art stuff
+;--------------------------------------------------------------------------------------
+	align $20
+ArtUnc_Mighty:		BINCLUDE	"art/uncompressed/Mighty's art.bin"
+	even
+MapUnc_Mighty:	BINCLUDE	"mappings/sprite/Mighty.bin"
+	even
+MapRUnc_Mighty:	BINCLUDE	"mappings/spriteDPLC/Mighty.bin"
+	even
+
+
 Obj5B: include "Pushable Block.asm"
 
 ; ===========================================================================
@@ -57105,7 +57164,7 @@ loc_2F304:	; Obj56_VehicleMain_Sub4:
 loc_2F336:	; Obj56_VehicleMain_Sub6:
 	subq.w	#1,objoff_3C(a0)	; timer set after defeat
 	bmi.s	loc_2F35C	; if countdown finished
-	bsr.w	Boss_LoadExplosion
+	jsr	Boss_LoadExplosion
 	jsrto	(ObjectMoveAndFall).l, JmpTo4_ObjectMoveAndFall
 	jsrto	(ObjCheckFloorDist).l, JmpTo3_ObjCheckFloorDist
 	tst.w	d1
@@ -57834,7 +57893,7 @@ off_2FD0E:	offsetTable
 ; loc_2FD18:
 Obj52_Mobile_Raise:
 	move.b	#0,(Boss_CollisionRoutine).w
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	tst.b	objoff_2C(a0)
 	bne.s	loc_2FD32
 	cmpi.w	#$518,(Boss_Y_pos).w
@@ -57885,7 +57944,7 @@ loc_2FDAA:
 	bsr.w	loc_300A4
 	bsr.w	loc_2FEDE
 	lea	(Ani_obj52).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	jmpto	(DisplaySprite).l, JmpTo36_DisplaySprite
 ; ===========================================================================
 
@@ -57916,7 +57975,7 @@ Obj52_Mobile_BeginLower:
 
 ; loc_2FE0E:
 Obj52_Mobile_Lower:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	tst.b	objoff_2C(a0)
 	bne.s	loc_2FE22
 	cmpi.w	#$538,(Boss_Y_pos).w
@@ -58196,7 +58255,7 @@ Obj52_Mobile_Defeated:
 	cmpi.w	#$1E,(Boss_Countdown).w
 	bgt.s	Obj52_Mobile_UpdateExplosion
 	move.b	#$10,mainspr_mapframe(a0)
-	bsr.w	Boss_LoadExplosion
+	jsr	Boss_LoadExplosion
 	move.b	(Vint_runcount+3).w,d0
 	andi.b	#$1F,d0
 	bne.w	JmpTo36_DisplaySprite
@@ -58206,7 +58265,7 @@ Obj52_Mobile_Defeated:
 
 ; loc_3013A:
 Obj52_Mobile_UpdateExplosion:
-	bsr.w	Boss_LoadExplosion
+	jsr	Boss_LoadExplosion
 	jmpto	(DisplaySprite).l, JmpTo36_DisplaySprite
 ; ===========================================================================
 
@@ -58544,7 +58603,7 @@ Obj89_Main_Index:	offsetTable			; main boss object
 ; ===========================================================================
 ; loc_3063C:
 Obj89_Main_Sub0:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	bsr.w	Obj89_Main_HandleFace
 	bsr.w	Obj89_Main_AlignParts
 	cmpi.w	#$430,(Boss_Y_pos).w		; has boss reached its target?
@@ -58558,12 +58617,12 @@ Obj89_Main_Sub0:
 ; loc_3066C:
 Obj89_Main_Sub0_Standard:
 	lea	(Ani_obj89_b).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	jmpto	(DisplaySprite).l, JmpTo37_DisplaySprite
 ; ===========================================================================
 ; loc_3067A:
 Obj89_Main_Sub2:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	bsr.w	Obj89_Main_HandleFace
 	bsr.w	Obj89_Main_AlignParts
 	tst.b	obj89_target(a0)		; is boss going left?
@@ -58585,12 +58644,12 @@ Obj89_Main_Sub2_AtTarget:
 ; loc_306AA:
 Obj89_Main_Sub2_Standard:
 	lea	(Ani_obj89_b).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	jmpto	(DisplaySprite).l, JmpTo37_DisplaySprite
 ; ===========================================================================
 ; loc_306B8:
 Obj89_Main_Sub4:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	bsr.w	Obj89_Main_HandleFace
 	bsr.w	Obj89_Main_AlignParts
 	cmpi.b	#-$40,boss_sine_count(a0)	; has boss reached the right height in its hovering animation?
@@ -58608,7 +58667,7 @@ Obj89_Main_Sub4:
 ; loc_306F8:
 Obj89_Main_Sub4_Standard:
 	lea	(Ani_obj89_b).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	jmpto	(DisplaySprite).l, JmpTo37_DisplaySprite
 ; ===========================================================================
 ; loc_30706:
@@ -58633,11 +58692,11 @@ Obj89_Main_Sub6_MoveRight:
 
 ; loc_30742:
 Obj89_Main_Sub6_Standard:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	bsr.w	Obj89_Main_HandleFace
 	bsr.w	Obj89_Main_AlignParts
 	lea	(Ani_obj89_b).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	jmpto	(DisplaySprite).l, JmpTo37_DisplaySprite
 ; ===========================================================================
 ; loc_3075C:
@@ -58765,7 +58824,7 @@ Obj89_Main_Sub8:
 	st	boss_defeated(a0)
 	subq.w	#1,(Boss_Countdown).w
 	bmi.s	Obj89_Main_SetupEscapeAnim
-	bsr.w	Boss_LoadExplosion
+	jsr	Boss_LoadExplosion
 	bra.s	Obj89_Main_Sub8_Standard
 ; ===========================================================================
 ; loc_3089C:
@@ -58787,7 +58846,7 @@ Obj89_Main_Sub8_Standard:
 	move.w	(Boss_Y_pos).w,y_pos(a0)
 	move.w	(Boss_X_pos).w,x_pos(a0)
 	lea	(Ani_obj89_b).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	bsr.w	Obj89_Main_AlignParts
 	jmpto	(DisplaySprite).l, JmpTo37_DisplaySprite
 ; ===========================================================================
@@ -58827,12 +58886,12 @@ Obj89_Main_SubA_StopAscent:
 
 ; loc_30936:
 Obj89_Main_SubA_Standard:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	bsr.w	Obj89_Main_HandleHoveringAndHits
 	move.w	(Boss_Y_pos).w,y_pos(a0)
 	move.w	(Boss_X_pos).w,x_pos(a0)
 	lea	(Ani_obj89_b).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	bsr.w	Obj89_Main_AlignParts
 	jmpto	(DisplaySprite).l, JmpTo37_DisplaySprite
 ; ===========================================================================
@@ -58852,12 +58911,12 @@ Obj89_Main_SubC_ChkDelete:
 
 ; loc_3097C:
 Obj89_Main_SubC_Standard:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	bsr.w	Obj89_Main_HandleHoveringAndHits
 	move.w	(Boss_Y_pos).w,y_pos(a0)
 	move.w	(Boss_X_pos).w,x_pos(a0)
 	lea	(Ani_obj89_b).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	bsr.w	Obj89_Main_AlignParts
 	jmpto	(DisplaySprite).l, JmpTo37_DisplaySprite
 ; ===========================================================================
@@ -59422,7 +59481,7 @@ Obj57_Main_Sub0: ; boss just moving up
 	subi_.w	#1,(Boss_Countdown).w		; countdown
 	bpl.s	Obj57_Main_Sub0_Continue
 	move.b	#0,(Boss_AnimationArray+5).w	; reset anim main vehicle
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	cmpi.w	#$560,(Boss_Y_pos).w		; a little above top screen boundary
 	bgt.s	Obj57_Main_Sub0_Continue	; if below that, branch
 	move.w	#$100,(Boss_Y_vel).w
@@ -59458,13 +59517,13 @@ Obj57_Main_Sub0_Standard:
 	move.w	(Boss_X_pos).w,x_pos(a0)
 	bsr.w	Obj57_HandleHits
 	lea	(Ani_obj57).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	bsr.w	Obj57_TransferPositions
 	jmpto	(DisplaySprite).l, JmpTo38_DisplaySprite
 ; ===========================================================================
 ;loc_3116E:
 Obj57_Main_Sub2: ; boss moving down, stuff falling down
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	bsr.w	Obj57_SpawnStoneSpike
 	cmpi.w	#$620,(Boss_Y_pos).w	; if below...
 	blt.s	Obj57_Main_Sub2_Standard
@@ -59476,13 +59535,13 @@ Obj57_Main_Sub2_Standard:
 	move.w	(Boss_X_pos).w,x_pos(a0)
 	bsr.w	Obj57_HandleHits
 	lea	(Ani_obj57).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	bsr.w	Obj57_TransferPositions
 	jmpto	(DisplaySprite).l, JmpTo38_DisplaySprite
 ; ===========================================================================
 ;loc_311AA:
 Obj57_Main_Sub4: ; moving down, stop stuff falling down
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	cmpi.w	#$660,(Boss_Y_pos).w
 	blt.s	Obj57_Main_Sub4_Standard	; if above, keep moving down
 	move.w	#$660,(Boss_Y_pos).w	; if below, routine 6 + new anim
@@ -59514,7 +59573,7 @@ Obj57_Main_Sub4_Standard:
 	move.w	(Boss_X_pos).w,x_pos(a0)
 	bsr.w	Obj57_HandleHits
 	lea	(Ani_obj57).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	bsr.w	Obj57_TransferPositions
 	jmpto	(DisplaySprite).l, JmpTo38_DisplaySprite
 ; ===========================================================================
@@ -59532,7 +59591,7 @@ Obj57_Main_Sub6: ; digger transition (rotation), moving back and forth
 	bra.s	Obj57_Main_Sub6_ReAscend1
 ; ===========================================================================
 +
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	cmpi.w	#$2120,(Boss_X_pos).w
 	bgt.s	+
 	move.w	#$2120,(Boss_X_pos).w
@@ -59568,7 +59627,7 @@ Obj57_Main_Sub6_Standard:
 	move.w	(Boss_X_pos).w,x_pos(a0)
 	bsr.w	Obj57_HandleHits
 	lea	(Ani_obj57).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	bsr.w	Obj57_TransferPositions
 	jmpto	(DisplaySprite).l, JmpTo38_DisplaySprite
 ; ===========================================================================
@@ -59740,7 +59799,7 @@ Obj57_Main_Sub8: ; boss defeated, standing still, exploding
 	bmi.s	+			; branch if countdown finished
 	move.b	#$13,sub4_mapframe(a0)	; burnt face
 	move.b	#7,mainspr_mapframe(a0)
-	bsr.w	Boss_LoadExplosion
+	jsr	Boss_LoadExplosion
 	bra.s	Obj57_Main_Sub8_Standard
 ; ===========================================================================
 +
@@ -59796,7 +59855,7 @@ Obj57_Main_SubA: ; slowly hovering down, no explosions
 	jsrto	(LoadPLC_AnimalExplosion).l, JmpTo5_LoadPLC_AnimalExplosion
 ;loc_3158A:
 Obj57_Main_SubA_Standard:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	bsr.w	Obj57_AddSinusOffset
 	move.w	(Boss_Y_pos).w,y_pos(a0)
 	move.w	(Boss_X_pos).w,x_pos(a0)
@@ -59817,12 +59876,12 @@ Obj57_Main_SubC: ; moving away fast
 	bpl.s	JmpTo56_DeleteObject	; if off screen
 ;loc_315C6:
 Obj57_Main_SubC_Standard:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	bsr.w	Obj57_AddSinusOffset
 	move.w	(Boss_Y_pos).w,y_pos(a0)
 	move.w	(Boss_X_pos).w,x_pos(a0)
 	lea	(Ani_obj57).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	bsr.w	Obj57_TransferPositions
 	jmpto	(DisplaySprite).l, JmpTo38_DisplaySprite
 ; ===========================================================================
@@ -60056,7 +60115,7 @@ loc_31A78:
 	move.b	#0,objoff_2D(a0)
 
 loc_31AA4:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	tst.b	objoff_3F(a0)
 	beq.s	loc_31AB6
 	subq.b	#1,objoff_3F(a0)
@@ -60160,7 +60219,7 @@ loc_31C08:
 	bsr.w	loc_31E76
 	bsr.w	loc_31C92
 	lea	(Ani_obj51).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 
     if removeJmpTos
 JmpTo39_DisplaySprite
@@ -60170,7 +60229,7 @@ JmpTo39_DisplaySprite
 ; ===========================================================================
 
 loc_31C22:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	tst.b	objoff_3E(a0)
 	bne.s	loc_31C60
 	cmpi.w	#$680,y_pos(a0)
@@ -60282,7 +60341,7 @@ loc_31D5C:
 	move.b	#0,(Boss_CollisionRoutine).w
 	move.b	#0,mainspr_mapframe(a0)
 	move.b	#$B,collision_property(a0)
-	bsr.w	Boss_LoadExplosion
+	jsr	Boss_LoadExplosion
 	bra.s	loc_31DB8
 ; ===========================================================================
 
@@ -60340,7 +60399,7 @@ loc_31E02:
 	jsrto	(LoadPLC_AnimalExplosion).l, JmpTo6_LoadPLC_AnimalExplosion
 
 loc_31E0E:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	bsr.w	loc_31CDC
 	move.w	(Boss_Y_pos).w,y_pos(a0)
 	move.w	(Boss_X_pos).w,x_pos(a0)
@@ -60362,13 +60421,13 @@ loc_31E44:
 	bpl.s	JmpTo58_DeleteObject
 
 loc_31E4A:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	bsr.w	loc_31CDC
 	move.w	(Boss_Y_pos).w,y_pos(a0)
 	move.w	(Boss_X_pos).w,x_pos(a0)
 	bsr.w	loc_31E76
 	lea	(Ani_obj51).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	jmpto	(DisplaySprite).l, JmpTo39_DisplaySprite
 ; ===========================================================================
 
@@ -60722,7 +60781,7 @@ Obj54_MainSubStates:	offsetTable
 ; ===========================================================================
 ;loc_323DC
 Obj54_MainSub0:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	move.w	(Boss_Y_pos).w,y_pos(a0)
 	cmpi.w	#$4A0,(Boss_Y_pos).w
 	blo.s	+
@@ -60740,7 +60799,7 @@ Obj54_MainSub0:
 +
 	bsr.w	Obj54_AnimateFace
 	lea	(Ani_obj53).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	bsr.w	Obj54_AlignSprites
 	jmpto	(DisplaySprite).l, JmpTo40_DisplaySprite
 ; ===========================================================================
@@ -60756,7 +60815,7 @@ Obj54_Float:
 ; ===========================================================================
 ;loc_32456
 Obj54_MainSub2:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	btst	#7,objoff_2B(a0)
 	bne.s	+
 	cmpi.w	#$2AD0,(Boss_X_pos).w
@@ -60788,13 +60847,13 @@ Obj54_MoveAndShow:
 Obj54_Display:
 	bsr.w	Obj54_AnimateFace
 	lea	(Ani_obj53).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	bsr.w	Obj54_AlignSprites
 	jmpto	(DisplaySprite).l, JmpTo40_DisplaySprite
 ; ===========================================================================
 ;loc_324DC
 Obj54_MainSub4:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	cmpi.w	#$470,(Boss_Y_pos).w
 	bhs.s	+
 	move.w	#0,(Boss_Y_vel).w
@@ -60867,7 +60926,7 @@ Obj54_MainSubA:
 	blo.s	+
 	subq.b	#1,objoff_33(a0)
 +
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	cmpi.w	#$420,(Boss_Y_pos).w
 	bhs.s	+
 	move.w	#0,(Boss_Y_vel).w
@@ -60937,7 +60996,7 @@ off_3264A:	offsetTable
 ; ===========================================================================
 
 loc_32650:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	cmpi.w	#$420,(Boss_Y_pos).w
 	bhs.s	+
 	move.w	#0,(Boss_Y_vel).w
@@ -60967,7 +61026,7 @@ BranchTo6_Obj54_MoveAndShow
 ; ===========================================================================
 
 loc_326B8:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	cmpi.w	#$4A0,(Boss_Y_pos).w
 	blo.s	+
 	move.w	#-$180,(Boss_Y_vel).w
@@ -60993,7 +61052,7 @@ loc_326B8:
 ; ===========================================================================
 
 loc_32704:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	cmpi.w	#$470,(Boss_Y_pos).w
 	bhs.s	+
 	move.w	#$100,(Boss_X_vel).w
@@ -61077,7 +61136,7 @@ Obj54_MainSub10:
 	cmpi.w	#$3C,(Boss_Countdown).w
 	blo.s	++
 	bmi.s	+
-	bsr.w	Boss_LoadExplosion
+	jsr	Boss_LoadExplosion
 	lea	(Boss_AnimationArray).w,a1
 	move.b	#7,2(a1)
 	bra.s	++
@@ -61095,7 +61154,7 @@ Obj54_MainSub10:
 	move.w	(Boss_Y_pos).w,y_pos(a0)
 	move.w	(Boss_X_pos).w,x_pos(a0)
 	lea	(Ani_obj53).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	bsr.w	Obj54_AlignSprites
 	jmpto	(DisplaySprite).l, JmpTo40_DisplaySprite
 ; ===========================================================================
@@ -61117,12 +61176,12 @@ Obj54_MainSub12:
 	move.b	#1,(Boss_defeated_flag).w
 	jsrto	(LoadPLC_AnimalExplosion).l, JmpTo7_LoadPLC_AnimalExplosion
 +
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	bsr.w	loc_328C0
 	move.w	(Boss_Y_pos).w,y_pos(a0)
 	move.w	(Boss_X_pos).w,x_pos(a0)
 	lea	(Ani_obj53).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	bsr.w	Obj54_AlignSprites
 	jmpto	(DisplaySprite).l, JmpTo40_DisplaySprite
 ; ===========================================================================
@@ -61716,7 +61775,7 @@ Obj55_Main_Init:
 ; ===========================================================================
 ; loc_33078:
 Obj55_Main_Surface:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	move.w	(Boss_X_pos).w,x_pos(a0)
 	bsr.w	Obj55_HoverPos
 	cmpi.w	#$290,(Boss_Y_pos).w	; has boss reached its target position?
@@ -61759,7 +61818,7 @@ Obj55_HoverPos:
 ; ===========================================================================
 ; loc_33104:
 Obj55_Main_Dive:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	move.w	(Boss_Y_pos).w,y_pos(a0)
 	move.w	(Boss_X_pos).w,x_pos(a0)
 	btst	#6,Obj55_status(a0)	; is boss done rising?
@@ -61786,13 +61845,13 @@ Obj55_Main_Dive_Part2:
 Obj55_Main_End:
 	bsr.w	Obj55_HandleHits
 	lea	(Ani_obj55).l,a1
-	bsr.w	AnimateBoss
+	jsr	AnimateBoss
 	bsr.w	Obj55_AlignSprites
 	jmpto	(DisplaySprite).l, JmpTo41_DisplaySprite
 ; ===========================================================================
 ; loc_33174:
 Obj55_HandleHits:
-	bsr.w	Boss_HandleHits
+	jsr	Boss_HandleHits
 	cmpi.b	#$1F,boss_invulnerable_time(a0)
 	bne.s	return_33192
 	lea	(Boss_AnimationArray).w,a1
@@ -61823,7 +61882,7 @@ Obj55_Main_Defeated:
 ; ===========================================================================
 ; loc_331C2:
 Obj55_Explode:
-	bsr.w	Boss_LoadExplosion
+	jsr	Boss_LoadExplosion
 	jmpto	(DisplaySprite).l, JmpTo41_DisplaySprite
 ; ===========================================================================
 ; loc_331CA:
@@ -61910,7 +61969,7 @@ Obj55_LaserShooter_Init:
 ; ===========================================================================
 ; loc_33296:
 Obj55_LaserShooter_Rise:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	cmpi.w	#$240,(Boss_Y_pos).w	; has laser shooter reached its destination?
 	bhs.w	Obj55_LaserShooter_End	; if not, branch
 	move.w	#$240,(Boss_Y_pos).w
@@ -61960,7 +62019,7 @@ Obj55_LaserTargets:
 ; ===========================================================================
 ; loc_33324:
 Obj55_LaserShooter_Aim:
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	move.w	(Boss_Countdown).w,d0
 	tst.w	(Boss_Y_vel).w			; is laser shooter moving up?
 	bmi.s	Obj55_LaserShooter_Aim_MovingUp	; if yes, branch
@@ -61996,7 +62055,7 @@ Obj55_LaserShooter_Lower:
 	bne.s	+					; if not, branch
 	move.b	#5,mainspr_mapframe(a0)	; reset animation frame to not firing
 +
-	bsr.w	Boss_MoveObject
+	jsr	Boss_MoveObject
 	cmpi.w	#$2B0,(Boss_Y_pos).w	; has laser shooter reached its destination?
 	blo.s	Obj55_LaserShooter_End	; if not, branch
 	move.w	#$2B0,(Boss_Y_pos).w
@@ -78398,6 +78457,9 @@ Debug_ExitDebugMode:
 	tst.b	(Super_Sonic_flag).w
 	beq.s	.tailscheck2
 	move.l	#MapUnc_SuperKnuckles,mappings(a1)
+	cmpi.w	#5,(Player_option).w
+	blt.s	.notTails
+	move.l	#MapUnc_Mighty,mappings(a1)
 	bra.s	.notTails
 .tailscheck2:
 	cmpi.w	#2,(Player_option).w
@@ -79219,6 +79281,7 @@ PLCptr_Ghz2:		offsetTableEntry.w PlrList_Ghz2			; 69
 PLCptr_Wz1:			offsetTableEntry.w PlrList_Wz1			; 70
 PLCptr_Wz2:			offsetTableEntry.w PlrList_Wz2			; 71
 PLCptr_Std2_Ice:		offsetTableEntry.w PlrList_Std2_Ice			; 72
+PLCptr_MightyLife:	offsetTableEntry.w	PlrList_MightyLifeCounter	; 73
 
 ; macro for a pattern load request list header
 ; must be on the same line as a label that has a corresponding _End label later
@@ -79324,6 +79387,13 @@ PlrList_Tails1up_End
 PlrList_TailsLifeCounter: plrlistheader
 	plreq ArtTile_ArtNem_life_counter, ArtNem_TailsLife
 PlrList_TailsLifeCounter_End
+;---------------------------------------------------------------------------------------
+; Pattern load queue
+; Tails life counter
+;---------------------------------------------------------------------------------------
+PlrList_MightyLifeCounter: plrlistheader
+	plreq ArtTile_ArtNem_life_counter, ArtNem_MightyLife
+PlrList_MightyLifeCounter_End
 ;---------------------------------------------------------------------------------------
 ; PATTERN LOAD REQUEST LIST
 ; Metropolis Zone primary
@@ -80401,6 +80471,8 @@ ArtUnc_TailsLife:	BINCLUDE	"art/uncompressed/Tails lives counter.bin"
 	even
 ArtUnc_KnucklesLife:	BINCLUDE	"art/uncompressed/Knuckles lives counter.bin"
 	even
+ArtUnc_MightyLife:		BINCLUDE	"art/uncompressed/Mighty lives counter.bin"
+	even
 ArtUnc_SuperSonicLife:	BINCLUDE	"art/uncompressed/Super Sonic lives counter.bin"
 	even
 ArtUnc_SuperTailsLife:	BINCLUDE	"art/uncompressed/Super Tails lives counter.bin"
@@ -80519,6 +80591,10 @@ ArtNem_MiniKnuckles: BINCLUDE "art/nemesis/Knuckles continue.bin"
 ; Knuckles life counter
 	even
 ArtNem_KTELife:	BINCLUDE "art/nemesis/Knuckles lives counter.bin"
+	even
+ArtNem_MiniMighty:	BINCLUDE	"art/nemesis/Mighty continue.bin"
+	even
+ArtNem_MightyLife:	BINCLUDE	"art/nemesis/Mighty lives counter.bin"
 ;---------------------------------------------------------------------------------------
 ; Nemesis compressed art (88 blocks)
 ; Standard font		; ArtNem_7C43A:
@@ -80543,6 +80619,8 @@ ArtNem_TitleCard:	BINCLUDE	"art/nemesis/Title card.bin"
 ArtNem_TitleCardTails:	BINCLUDE	"art/nemesis/Title card Tails.bin"
 	even
 ArtNem_TitleCardKnux:	BINCLUDE	"art/nemesis/Title card Knuckles.bin"
+	even
+ArtNem_TitleCardMighty:	BINCLUDE	"art/nemesis/Title card Mighty.bin"
 ;--------------------------------------------------------------------------------------
 ; Nemesis compressed art (92 blocks)
 ; Alphabet for font using large broken letters	; ArtNem_7D58A:

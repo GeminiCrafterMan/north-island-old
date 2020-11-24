@@ -81,32 +81,6 @@
             }
         },
         {
-            "name": "Super Tails",
-            "palettes": [
-                {
-                    "path": "art\\palettes\\Tails.bin",
-                    "length": 1
-                }
-            ],
-            "art": {
-                "path": "art\\uncompressed\\Super Tails's art.bin",
-                "compression": "Uncompressed"
-            },
-            "mappings": {
-                "path": "mappings\\sprite\\Super Tails.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": true,
-                "path": "mappings\\spriteDPLC\\Super Tails.bin",
-                "format": "Sonic 2/3&K",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
             "name": "P2 Tails",
             "palettes": [
                 {
@@ -127,6 +101,32 @@
             "dplcs": {
                 "enabled": true,
                 "path": "mappings\\spriteDPLC\\Tails.bin",
+                "format": "Sonic 2/3&K",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Super Tails",
+            "palettes": [
+                {
+                    "path": "art\\palettes\\Tails.bin",
+                    "length": 1
+                }
+            ],
+            "art": {
+                "path": "art\\uncompressed\\Super Tails's art.bin",
+                "compression": "Uncompressed"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\Super Tails.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": true,
+                "path": "mappings\\spriteDPLC\\Super Tails.bin",
                 "format": "Sonic 2/3&K",
                 "customDefinition": "",
                 "label": ""
@@ -185,6 +185,36 @@
             }
         },
         {
+            "name": "Mighty",
+            "palettes": [
+                {
+                    "path": "art\\palettes\\SonicAndTails.bin",
+                    "length": 1
+                },
+                {
+                    "path": "art\\palettes\\Mighty.bin",
+                    "length": 1
+                }
+            ],
+            "art": {
+                "path": "art\\uncompressed\\Mighty's art.bin",
+                "compression": "Uncompressed"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\Mighty.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": true,
+                "path": "mappings\\spriteDPLC\\Mighty.bin",
+                "format": "Sonic 2/3&K",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
             "name": "Signposts",
             "palettes": [
                 {
@@ -197,6 +227,10 @@
                 },
                 {
                     "path": "art\\palettes\\Knuckles.bin",
+                    "length": 1
+                },
+                {
+                    "path": "art\\palettes\\Mighty.bin",
                     "length": 1
                 }
             ],
@@ -283,6 +317,32 @@
             ],
             "art": {
                 "path": "art\\nemesis\\Knuckles continue.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "mappings\\Continue.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Continue (Mighty)",
+            "palettes": [
+                {
+                    "path": "art\\palettes\\Mighty.bin",
+                    "length": 1
+                }
+            ],
+            "art": {
+                "path": "art\\nemesis\\Mighty continue.bin",
                 "compression": "Nemesis"
             },
             "mappings": {
@@ -420,6 +480,234 @@
             }
         },
         {
+            "name": "Life Icon (Mighty)",
+            "palettes": [
+                {
+                    "path": "art\\palettes\\Mighty.bin",
+                    "length": 1
+                },
+                {
+                    "path": "art\\palettes\\EHZ.bin",
+                    "length": 3
+                }
+            ],
+            "art": {
+                "path": "art\\nemesis\\Mighty lives counter.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "mappings\\Life counters.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Title Card Background (Sonic)",
+            "palettes": [
+                {
+                    "path": "art\\palettes\\SonicAndTails.bin",
+                    "length": 1
+                },
+                {
+                    "path": "art\\palettes\\SonicAndTails2.bin",
+                    "length": 1
+                }
+            ],
+            "art": {
+                "path": "art\\nemesis\\Title card.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Title Card Background (Tails)",
+            "palettes": [
+                {
+                    "path": "art\\palettes\\Tails.bin",
+                    "length": 1
+                },
+                {
+                    "path": "art\\palettes\\SonicAndTails2.bin",
+                    "length": 1
+                }
+            ],
+            "art": {
+                "path": "art\\nemesis\\Title card Tails.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Title Card Background (Knuckles)",
+            "palettes": [
+                {
+                    "path": "art\\palettes\\Knuckles.bin",
+                    "length": 1
+                },
+                {
+                    "path": "art\\palettes\\SonicAndTails2.bin",
+                    "length": 1
+                }
+            ],
+            "art": {
+                "path": "art\\nemesis\\Title card Knuckles.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Title Card Background (Mighty)",
+            "palettes": [
+                {
+                    "path": "art\\palettes\\Mighty.bin",
+                    "length": 1
+                },
+                {
+                    "path": "art\\palettes\\SonicAndTails2.bin",
+                    "length": 1
+                }
+            ],
+            "art": {
+                "path": "art\\nemesis\\Title card Mighty.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Super Sonic Slot",
+            "palettes": [
+                {
+                    "path": "art\\palettes\\SonicAndTails.bin",
+                    "length": 1
+                }
+            ],
+            "art": {
+                "path": "art\\uncompressed\\Super Sonic Slot picture.bin",
+                "compression": "Uncompressed"
+            },
+            "mappings": {
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Knuckles Slot",
+            "palettes": [
+                {
+                    "path": "art\\palettes\\Knuckles.bin",
+                    "length": 1
+                }
+            ],
+            "art": {
+                "path": "art\\uncompressed\\Knuckles Slot Picture.bin",
+                "compression": "Uncompressed"
+            },
+            "mappings": {
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Mighty Slot",
+            "palettes": [
+                {
+                    "path": "art\\palettes\\Mighty.bin",
+                    "length": 1
+                }
+            ],
+            "art": {
+                "path": "art\\uncompressed\\Mighty Slot Picture.bin",
+                "compression": "Uncompressed"
+            },
+            "mappings": {
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
             "name": "Monitors",
             "palettes": [
                 {
@@ -473,6 +761,27 @@
             }
         },
         {
+            "name": "Whirlwind Shield",
+            "palettes": [],
+            "art": {
+                "path": "art\\uncompressed\\Whirlwind Shield.bin",
+                "compression": "Uncompressed"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\obj21.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": true,
+                "path": "mappings\\spriteDPLC\\obj21.bin",
+                "format": "Sonic 2/3&K",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
             "name": "Invincibility Stars",
             "palettes": [],
             "art": {
@@ -506,6 +815,78 @@
                 "customDefinition": "",
                 "label": "",
                 "accessor": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Crabmeat",
+            "palettes": [],
+            "art": {
+                "path": "art\\nemesis\\Enemy Crabmeat.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\obj1F_s1.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Newtron (Unused)",
+            "palettes": [
+                {
+                    "path": "art\\palettes\\SonicAndTails.bin",
+                    "length": 1
+                },
+                {
+                    "path": "art\\palettes\\GHZ.bin",
+                    "length": 3
+                }
+            ],
+            "art": {
+                "path": "art\\nemesis\\Newtron.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\Obj42_Newtron.asm",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Motobug",
+            "palettes": [],
+            "art": {
+                "path": "art\\nemesis\\motobug.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\motobug.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
             },
             "dplcs": {
                 "enabled": false,
@@ -642,96 +1023,6 @@
             }
         },
         {
-            "name": "Title Card Background (Sonic)",
-            "palettes": [
-                {
-                    "path": "art\\palettes\\SonicAndTails.bin",
-                    "length": 1
-                },
-                {
-                    "path": "art\\palettes\\SonicAndTails2.bin",
-                    "length": 1
-                }
-            ],
-            "art": {
-                "path": "art\\nemesis\\Title card.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Title Card Background (Tails)",
-            "palettes": [
-                {
-                    "path": "art\\palettes\\Tails.bin",
-                    "length": 1
-                },
-                {
-                    "path": "art\\palettes\\SonicAndTails2.bin",
-                    "length": 1
-                }
-            ],
-            "art": {
-                "path": "art\\nemesis\\Title card Tails.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Title Card Background (Knuckles)",
-            "palettes": [
-                {
-                    "path": "art\\palettes\\Knuckles.bin",
-                    "length": 1
-                },
-                {
-                    "path": "art\\palettes\\SonicAndTails2.bin",
-                    "length": 1
-                }
-            ],
-            "art": {
-                "path": "art\\nemesis\\Title card Knuckles.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
             "name": "Checkpoint",
             "palettes": [],
             "art": {
@@ -740,27 +1031,6 @@
             },
             "mappings": {
                 "path": "mappings\\sprite\\obj79_a.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Crabmeat",
-            "palettes": [],
-            "art": {
-                "path": "art\\nemesis\\Enemy Crabmeat.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "mappings\\sprite\\obj1F_s1.bin",
                 "format": "Sonic 2",
                 "customDefinition": "",
                 "label": ""
@@ -799,58 +1069,6 @@
                 "enabled": true,
                 "path": "mappings\\spriteDPLC\\Metal Cirno.bin",
                 "format": "Sonic 2/3&K",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Knuckles Slot",
-            "palettes": [
-                {
-                    "path": "art\\palettes\\Knuckles.bin",
-                    "length": 1
-                }
-            ],
-            "art": {
-                "path": "art\\uncompressed\\Knuckles Slot Picture.bin",
-                "compression": "Uncompressed"
-            },
-            "mappings": {
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Super Slot",
-            "palettes": [
-                {
-                    "path": "art\\palettes\\SonicAndTails.bin",
-                    "length": 1
-                }
-            ],
-            "art": {
-                "path": "art\\uncompressed\\Super Sonic Slot picture.bin",
-                "compression": "Uncompressed"
-            },
-            "mappings": {
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
             }
@@ -1137,27 +1355,6 @@
             }
         },
         {
-            "name": "Hyper Stars",
-            "palettes": [],
-            "art": {
-                "path": "art\\nemesis\\Hyper Sonic stars.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "mappings\\sprite\\Hyper Sonic Stars.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
             "name": "Super Stars",
             "palettes": [],
             "art": {
@@ -1166,78 +1363,6 @@
             },
             "mappings": {
                 "path": "mappings\\sprite\\obj7E.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Whirlwind Shield",
-            "palettes": [],
-            "art": {
-                "path": "art\\uncompressed\\Whirlwind Shield.bin",
-                "compression": "Uncompressed"
-            },
-            "mappings": {
-                "path": "mappings\\sprite\\obj21.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": true,
-                "path": "mappings\\spriteDPLC\\obj21.bin",
-                "format": "Sonic 2/3&K",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Newtron (Unused)",
-            "palettes": [
-                {
-                    "path": "art\\palettes\\SonicAndTails.bin",
-                    "length": 1
-                },
-                {
-                    "path": "art\\palettes\\GHZ.bin",
-                    "length": 3
-                }
-            ],
-            "art": {
-                "path": "art\\nemesis\\Newtron.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "mappings\\sprite\\Obj42_Newtron.asm",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Motobug",
-            "palettes": [],
-            "art": {
-                "path": "art\\nemesis\\motobug.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "mappings\\sprite\\motobug.bin",
                 "format": "Sonic 2",
                 "customDefinition": "",
                 "label": ""
