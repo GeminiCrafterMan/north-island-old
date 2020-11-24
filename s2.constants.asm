@@ -487,6 +487,7 @@ PLCID_Wz1 =			id(PLCptr_Wz1) ; 45
 PLCID_Wz2 =			id(PLCptr_Wz2) ; 46
 PLCID_Std2_Ice =			id(PLCptr_Std2_Ice) ; 1
 PLCID_MightyLife =			id(PLCptr_MightyLife)
+PLCID_ResultsMighty =	id(PLCptr_ResultsMighty)
 
 ; Object IDs
 offset :=	Obj_Index
@@ -588,7 +589,7 @@ ObjID_EHZBoss =				id(ObjPtr_EHZBoss)		; 56
 ObjID_MCZBoss =				id(ObjPtr_MCZBoss)		; 57
 ObjID_BossExplosion =		id(ObjPtr_BossExplosion)	; 58
 ObjID_RobotMasters =		id(ObjPtr_RobotMasters)		; 59
-ObjID_Mighty =				id(ObjPtr_Mighty)
+ObjID_Mighty =				id(ObjPtr_Mighty)			; 5A
 ObjID_Masher =				id(ObjPtr_Masher)			; 5C
 ObjID_CPZBoss =				id(ObjPtr_CPZBoss)		; 5D
 ObjID_Knuckles =			id(ObjPtr_Knuckles)		; 62

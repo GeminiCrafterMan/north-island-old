@@ -404,72 +404,55 @@ Obj5A_NotRight:
 	bge.s	Mighty_BalanceOnObjRight
 	bra.w	Mighty_Lookup
 ; ---------------------------------------------------------------------------
-; balancing checks for when you're on the right edge of an object
-; loc2_1A410:
-Mighty_BalanceOnObjRight:
-		move.b	#AniIDSonAni_Balance,anim(a0)	; Balance animation 1
-		addq.w	#6,d2		; extend balance range
-		cmp.w	d2,d1		; is Mighty within (two units before and) four units past the right edge?
-		blt.w	Obj5A_ResetScr	; if so branch
-		move.b	#AniIDSonAni_Balance2,anim(a0)	; if REALLY close to the edge, use different animation (Balance animation 2)
-		bra.w	Obj5A_ResetScr
-; ---------------------------------------------------------------------------
-; balancing checks for when you're on the left edge of an object
-; loc2_1A44E:
-Mighty_BalanceOnObjLeft:
-		move.b	#AniIDSonAni_Balance,anim(a0)	; Balance animation 1
-		cmpi.w	#-4,d1		; is Mighty within (two units before and) four units past the left edge?
-		bge.w	Obj5A_ResetScr	; if so branch (instruction signed to match)
-		move.b	#AniIDSonAni_Balance2,anim(a0)	; if REALLY close to the edge, use different animation (Balance animation 2)
-		bra.w	Obj5A_ResetScr
-; ---------------------------------------------------------------------------
 ; balancing checks for when you're on the edge of part of the level
 ; loc2_1A48C:
 Mighty_Balance:
-		move.w	x_pos(a0),d3
-		jsr	(ChkFloorEdge_Part2).l
+		jsr	(ChkFloorEdge).l
 		cmpi.w	#$C,d1
 		blt.w	Mighty_Lookup
-;		cmpi.b	#3,next_tilt(a0)
-;		bne.s	+
-		move.b	#AniIDSonAni_Balance,anim(a0)
-		move.w	x_pos(a0),d3
-		subq.w	#6,d3
-		jsr	(ChkFloorEdge_Part2).l
-		cmpi.w	#$C,d1
-		blt.w	Obj5A_ResetScr
-		move.b	#AniIDSonAni_Balance2,anim(a0)
-		bra.w	Obj5A_ResetScr
-; ---------------------------------------------------------------------------
-Mighty_BalanceLeft:
-	cmpi.b	#3,tilt(a0)
-	bne.s	Mighty_Lookup
-;	btst	#0,status(a0)
-;	beq.s	+
+		cmpi.b	#3,next_tilt(a0)
+		bne.s	Mighty_BalanceLeft
+Mighty_BalanceOnObjRight:
+	btst	#0,status(a0)
+	bne.s	+
 	move.b	#AniIDSonAni_Balance,anim(a0)
-	move.w	x_pos(a0),d3
-	addq.w	#6,d3
-	jsr	(ChkFloorEdge_Part2).l
-	cmpi.w	#$C,d1
+	addq.w	#6,d2
+	cmp.w	d2,d1
 	blt.w	Obj5A_ResetScr
 	move.b	#AniIDSonAni_Balance,anim(a0)
 	bra.w	Obj5A_ResetScr
-;	; on left edge but facing right:
-;+	move.b	#AniIDSonAni_Balance2,anim(a0)
-;	move.w	x_pos(a0),d3
-;	addq.w	#6,d3
-;	jsr	(ChkFloorEdge_Part2).l
-;	cmpi.w	#$C,d1
-;	blt.w	Obj5A_ResetScr
-;	move.b	#AniIDSonAni_Balance2,anim(a0)
-;	bset	#0,status(a0)
-;	bra.w	Obj5A_ResetScr
+	; on right edge of object but facing left:
++	move.b	#AniIDSonAni_Balance2,anim(a0)
+	addq.w	#6,d2
+	cmp.w	d2,d1
+	blt.w	Obj5A_ResetScr
+	move.b	#AniIDSonAni_Balance2,anim(a0)
+	bclr	#0,status(a0)
+	bra.w	Obj5A_ResetScr
 ; ---------------------------------------------------------------------------
-loc2_1A56E:
+
+Mighty_BalanceLeft:
 	cmpi.b	#3,tilt(a0)
 	bne.s	Mighty_Lookup
 
-loc2_1A57C:
+Mighty_BalanceOnObjLeft:
+	btst	#0,status(a0)
+	beq.s	+
+	move.b	#AniIDSonAni_Balance,anim(a0)
+	cmpi.w	#-4,d1
+	bge.w	Obj5A_ResetScr
+	move.b	#AniIDSonAni_Balance,anim(a0)
+	bra.w	Obj5A_ResetScr
+	; on left edge but facing right:
++	move.b	#AniIDSonAni_Balance2,anim(a0)
+	move.w	x_pos(a0),d3
+	cmpi.w	#-4,d1
+	bge.w	Obj5A_ResetScr
+	move.b	#AniIDSonAni_Balance2,anim(a0)
+	bset	#0,status(a0)
+	bra.w	Obj5A_ResetScr
+
+Mighty_BalanceDone:
 	move.b	#AniIDSonAni_Balance,anim(a0)
 	bra.s	Obj5A_ResetScr
 ; ---------------------------------------------------------------------------
@@ -1775,13 +1758,17 @@ Mighty_ResetOnFloor:
 	move.b	#AniIDSonAni_Walk,anim(a0)
 ; loc_1B0AC:
 Mighty_ResetOnFloor_Part2:
+	move.b  y_radius(a0),d0
+	move.b	#$13,y_radius(a0)
+	move.b	#9,x_radius(a0)
 	btst	#2,status(a0)
 	beq.s	Mighty_ResetOnFloor_Part3
 	bclr	#2,status(a0)
-	move.b	#$13,y_radius(a0) ; this increases Sonic's collision height to standing
-	move.b	#9,x_radius(a0)
 	move.b	#AniIDSonAni_Walk,anim(a0)	; use running/walking/standing animation
-	subq.w	#5,y_pos(a0)	; move Sonic up 5 pixels so the increased height doesn't push him into the ground
+	sub.b	#$13,d0	; move Sonic up 5 pixels so the increased height doesn't push him into the ground
+	ext.w	d0
+	add.w	d0,y_pos(a0)
+
 ; loc_1B0DA:
 Mighty_ResetOnFloor_Part3:
 	bclr	#1,status(a0)
@@ -1794,6 +1781,7 @@ Mighty_ResetOnFloor_Part3:
 	move.b	#0,flip_turned(a0)
 	move.b	#0,flips_remaining(a0)
 	move.w	#0,(Sonic_Look_delay_counter).w
+		move.b	#0,collision_property(a0)
 	cmpi.b	#AniIDSonAni_Hang2,anim(a0)
 	bne.s	return2_1B11E
 	move.b	#AniIDSonAni_Walk,anim(a0)
@@ -2240,10 +2228,17 @@ MtyAni_Push:	dc.b $FD, $46, $47, $48, $49, $FF, $FF, $FF, $FF, $FF
 MtyAni_Wait:
 		dc.b   7,  1,  1,  1,  1,  1,  1,  1,  1,  1,  2,  3,  2,  1,  1,  1
 		dc.b   1,  1,  1,  1,  2,  3,  2,  1,  1,  1,  1,  1,  1,  1,  1,  1
-		dc.b   5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5,  5
-		dc.b   6,  7,  8,  7,  8,  7,  8,  7,  8,  7,  8,  6,$FE,$1C
+		dc.b   2,  3,  4,  5,  5,  5,  5,  5,  6,  5,  6,  5,  6,  5,  6,  5
+		dc.b   4,  3,  2,  1,  1,  1,  1,  1,  1,  1,  2,  3,  2,  1,  1,  1
+		dc.b   1,  1,  1,  1,  2,  3,  2,  1,  1,  1,  1,  1,  1,  1,  1,  1
+		dc.b   2,  3,  4,  5,  5,  5,  5,  7,  8,  9,  8,  9,  8,  9,  8,  9
+		dc.b   8,  9,  8,  9,  8,  9,  8,  9,  8,  9,  8,  7,  5,  4,  3,  2
+		dc.b   1,  1,  1,  1,  1,  1,  1,  1,  1,  2,  3,  2,  1,  1,  1,  1
+		dc.b   1,  1,  1,  1,  2,  3,  2,  1,  1,  1,  1,  1,  1,  1,  1,  1
+		dc.b   2,  3,  4,  5, $A, $B, $C, $B, $C, $B, $C, $B, $C, $B, $C, $B
+		dc.b  $A,  5,  4,  3,  2,  1,  1,  1,  1,  1,  2,  3,  2,  1,  1,$FF
 	rev02even
-MtyAni_Balance:	dc.b   7, $A4, $A5, $A6, $FF
+MtyAni_Balance:	dc.b   $1F, $79, $7A, $FF
 	rev02even
 MtyAni_LookUp:	dc.b   5, $D, $E, $FE,   1
 	rev02even
@@ -2256,9 +2251,9 @@ MtyAni_Blink:	dc.b   9, 1, $C5, $C6, $C6, $C6, $C6, $C6, $C6, $C7, $C7, $C7, $C7
 	rev02even
 MtyAni_GetUp:	dc.b   $F, $8F, $FF
 	rev02even
-MtyAni_Balance2:dc.b   5, $A1, $A2, $A3, $FF
+MtyAni_Balance2:dc.b   $1F, $7B, $7C, $FF
 	rev02even
-MtyAni_Stop:	dc.b   7, $65, $66, $67, $FD,   0 ; shid n fard
+MtyAni_Stop:	dc.b   7, $65, $66, $67, $FD,   0
 	rev02even
 MtyAni_Float:	dc.b   7, $C8, $FF
 	rev02even

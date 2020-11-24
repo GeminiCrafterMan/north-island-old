@@ -4681,6 +4681,7 @@ InitPlayers_KnucklesAlone:
 InitPlayers_MightyAlone:
 	move.b	#ObjID_Mighty,(MainCharacter+id).w
 	move.b	#ObjID_SpindashDust,(Sonic_Dust+id).w
+	move.b	#$13,(MainCharacter+y_radius).w		; Set Sonic's y-radius
 	rts
 ; End of function InitPlayers
 
@@ -20935,6 +20936,10 @@ loc_140AC:
 +
 	movea.l	a0,a1
 	lea	byte_14380(pc),a2
+	cmpi.w	#5,(Player_mode).w
+	blt.s	+
+	bra.s	++
++
 	cmpi.w	#3,(Player_mode).w
 	blt.s	+
 	lea	byte_14380_K(pc),a2
@@ -20959,19 +20964,24 @@ loc_140CE:
 	move.b	(a2)+,routine(a1)
 	move.b	(a2)+,mapping_frame(a1)
 	move.l	#Obj3A_MapUnc_14CBC,mappings(a1)
+	cmpi.w  #5,(Player_mode).w
+	blt.s	.notmighty
+	move.l  #Map_Obj3A_Mighty,mappings(a1)
+	bra.s	.notknux
+.notmighty:
 	cmpi.w	#3,(Player_mode).w
-	blt.s	+
+	blt.s	.notknux
 	move.l	#Map_Obj3A_Knuckles,mappings(a1)
-+
+.notknux:
 	bsr.w	Adjust2PArtPointer2
 	move.b	#0,render_flags(a1)
 	lea	next_object(a1),a1 ; a1=object
 	dbf	d1,loc_140BC
 
 loc_14102:
-	moveq	#0,d0
-	cmpi.w	#2,(Player_mode).w
-	bne.s	loc_14118
+	moveq	#0,d0	; move 0 to...
+	cmpi.w	#2,(Player_mode).w	; if not tails
+	bne.s	loc_14118 ; go ahead
 	addq.w	#1,d0
 	btst	#7,(Graphics_Flags).w
 	beq.s	loc_14118
@@ -21934,17 +21944,50 @@ Map_Obj3A_Knuckles:	offsetTable
 	offsetTableEntry.w word_14E8C
 	offsetTableEntry.w word_14E96
 word_311BF6:	dc.w $B
-	dc.w 5, $85C6, $82E3, $FF88
-	dc.w 5, $8584, $82C2, $FF98
-	dc.w 5, $85D8, $82EC, $FFA8
-	dc.w 5, $85B4, $82DA, $FFB8
-	dc.w 5, $85C6, $82E3, $FFC8
-	dc.w 5, $85C2, $82E1, $FFD8
-	dc.w 5, $8580, $82C0, $FFE8
-	dc.w 5, $85D0, $82E8, $FFF8
+	dc.w 5, $85C6, $82E3, $FF88	; K
+	dc.w 5, $8584, $82C2, $FF98	; N
+	dc.w 5, $85D8, $82EC, $FFA8	; U
+	dc.w 5, $85B4, $82DA, $FFB8	; C
+	dc.w 5, $85C6, $82E3, $FFC8	; K
+	dc.w 5, $85C2, $82E1, $FFD8	; L
+	dc.w 5, $8580, $82C0, $FFE8	; E
+	dc.w 5, $85D0, $82E8, $FFF8	; S
 	dc.w 5, $85B8, $82DC, $10
 	dc.w 5, $8588, $82C4, $20
 	dc.w 5, $85D4, $82EA, $2F
+
+; -------------------------------------------------------------------------------
+; sprite mappings
+; -------------------------------------------------------------------------------
+Map_Obj3A_Mighty:	offsetTable
+	offsetTableEntry.w .mighty
+	offsetTableEntry.w word_14D1C
+	offsetTableEntry.w word_14D5E
+	offsetTableEntry.w word_14DA0
+	offsetTableEntry.w word_14DDA
+	offsetTableEntry.w TC_ZONE
+	offsetTableEntry.w word_14BEA
+	offsetTableEntry.w word_14BF4
+	offsetTableEntry.w word_14BFE
+	offsetTableEntry.w word_14DF4
+	offsetTableEntry.w word_14E1E
+	offsetTableEntry.w word_14E50
+	offsetTableEntry.w word_14E82
+	offsetTableEntry.w word_14E8C
+	offsetTableEntry.w word_14E96
+			; ???, letter, ???, ???
+			; letter, as in 85D0 = A, 85D4 = C...
+.mighty:	dc.w $9				; MIGHTS GOT
+		dc.w $0009, $85C6, $82E3, $FFB4	; M
+		dc.w $0001, $85C0, $82E0, $FFCC	; I
+		dc.w $0005, $85B8, $82DC, $FFD4	; G
+		dc.w $0005, $85BC, $82DE, $FFE4	; H
+		dc.w $0005, $85D4, $82EA, $FFF4	; T
+		dc.w $0005, $85D0, $82E8, $0004	; S
+
+		dc.w $0005, $85B8, $82DC, $001C	; G
+		dc.w $0005, $8588, $82C4, $002C	; O
+		dc.w $0005, $85D4, $82EA, $003C	; T
 
 Obj6F_MapUnc_14ED0:	BINCLUDE "mappings/sprite/obj6F.bin"
 ; ===========================================================================
@@ -27271,13 +27314,13 @@ loc_1922C:
 ; loc_1924C: Obj_0D_sub_2:
 Obj0D_Main:
 	tst.b	(Update_HUD_timer).w
-	beq.w	loc_192D6
+	beq.w	loc_19350
 	lea	(MainCharacter).w,a1 ; a1=character
 	move.w	x_pos(a1),d0
 	sub.w	x_pos(a0),d0
-	bcs.w	loc_192D6
+	bcs.w	loc_19350
 	cmpi.w	#$20,d0
-	bhs.w	loc_192D6
+	bhs.w	loc_19350
 	move.w	#SndID_Signpost,d0
 	jsr	(PlayMusic).l	; play spinning sound
 ; MM: play voice sample on act clear
@@ -27302,57 +27345,19 @@ loc_192A0:
 	bne.w	loc_19350
 	move.b	#3,obj0D_finalanim(a0) ; Sonic
 	cmpi.w	#2,(Player_mode).w ; are we tails?
-	bne.w	+ ; nah? go to +
+	bne.w	.nottails ; nah? go to .nottails
 	move.b	#4,obj0D_finalanim(a0) ; Tails
-+
+.nottails:
+	cmpi.w	#5,(Player_mode).w ; are we Mighty?
+	blt.s	.notmighty ; nah? go to .notmighty
+	move.b	#6,obj0D_finalanim(a0) ; Mighty
+	bra.s	loc_19350
+.notmighty:
 	cmpi.w	#3,(Player_mode).w ; are we knux?
-	blt.s	loc_192BC ; nah? go to loc_192BC
+	blt.s	loc_19350
 	move.b	#5,obj0D_finalanim(a0) ; Knuckles
 
-loc_192BC:
-	tst.w	(Two_player_mode).w
-	beq.w	loc_19350
-	move.w	#$3C3C,(Loser_Time_Left).w
-	move.w	#SndID_Signpost2P,d0	; play different spinning sound
-	jsr	(PlaySound).l
-	bra.w	loc_19350
 ; ---------------------------------------------------------------------------
-
-loc_192D6:
-	tst.w	(Two_player_mode).w
-	beq.w	loc_19350
-	tst.b	(Update_HUD_timer_2P).w
-	beq.w	loc_19350
-	lea	(Sidekick).w,a1 ; a1=character
-	move.w	x_pos(a1),d0
-	sub.w	x_pos(a0),d0
-	bcs.s	loc_19350
-	cmpi.w	#$20,d0
-	bhs.s	loc_19350
-	move.w	#SndID_Signpost,d0
-	jsr	(PlayMusic).l
-; MM: play voice sample on act clear
-;	move.w	#DACSFXID_TailsGoal,d0
-;	jsr	(PlaySound).w
-	clr.b	(Update_HUD_timer_2P).w
-	move.w	#1,anim(a0)
-	move.w	#0,obj0D_spinframe(a0)
-	move.w	(Tails_Max_X_pos).w,(Tails_Min_X_pos).w
-	move.b	#2,routine_secondary(a0) ; => Obj0D_Main_State2
-	cmpi.b	#$C,(Loser_Time_Left).w
-	bhi.s	loc_1932E
-	move.w	(Level_Music).w,d0
-	jsr	(PlayMusic).l
-
-loc_1932E:
-	tst.b	obj0D_finalanim(a0)
-	bne.s	loc_19350
-	move.b	#4,obj0D_finalanim(a0)
-	tst.w	(Two_player_mode).w
-	beq.s	loc_19350
-	move.w	#$3C3C,(Loser_Time_Left).w
-	move.w	#SndID_Signpost2P,d0
-	jsr	(PlaySound).l
 
 loc_19350:
 	moveq	#0,d0
@@ -27461,6 +27466,10 @@ Load_EndOfAct:
 	cmpi.w	#3,(Player_mode).w
 	blt.s	+
 	moveq	#PLCID_ResultsKnuckles,d0
++
+	cmpi.w	#5,(Player_mode).w
+	blt.s	+
+	moveq	#PLCID_ResultsMighty,d0
 +
 	jsr	(LoadPLC2).l
 	move.b	#1,(Update_Bonus_score).w
@@ -28981,18 +28990,6 @@ Obj01_MdAir:
 	subi.w	#$28,y_vel(a0)	; reduce gravity by $28 ($38-$28=$10)
 
 .nowind:
-		tst.b	double_jump_flag(a0)
-		beq.s	.nowalljump
-		subi.w	#$30,y_vel(a0)
-		bra.s	.done
-		
-	.nowalljump:
-	btst	#6,status(a0)	; is Sonic underwater?
-	beq.s	.done		; if not, branch	; I'm STUPID
-	subi.w	#$28,y_vel(a0)	; reduce gravity by $28 ($38-$28=$10)
-
-	.done:
-
 	bsr.w	Sonic_JumpAngle
 	bsr.w	Sonic_DoLevelCollision
 	rts
@@ -29034,18 +29031,6 @@ Obj01_MdJump:
 	subi.w	#$28,y_vel(a0)	; reduce gravity by $28 ($38-$28=$10)
 
 .nowind:
-		tst.b	double_jump_flag(a0)
-		beq.s	.nowalljump
-		subi.w	#$30,y_vel(a0)
-		bra.s	.done
-		
-	.nowalljump:
-	btst	#6,status(a0)	; is Sonic underwater?
-	beq.s	.done		; if not, branch
-	subi.w	#$28,y_vel(a0)	; reduce gravity by $28 ($38-$28=$10)
-
-	.done:
-
 	bsr.w	Sonic_JumpAngle
 	bsr.w	Sonic_DoLevelCollision
 	rts
@@ -30529,20 +30514,12 @@ Sonic_DoLevelCollision:
 	bpl.s	+
 	sub.w	d1,x_pos(a0)
 	move.w	#0,x_vel(a0) ; stop Sonic since he hit a wall
-
-		move.b	#button_left_mask,d1
-		jsr	WallJump
-
 +
 	bsr.w	CheckRightWallDist
 	tst.w	d1
 	bpl.s	+
 	add.w	d1,x_pos(a0)
 	move.w	#0,x_vel(a0) ; stop Sonic since he hit a wall
-
-		move.b	#button_right_mask,d1
-		jsr	WallJump
-
 +
 	bsr.w	Sonic_CheckFloor
 	tst.w	d1
@@ -30637,20 +30614,12 @@ Sonic_HitCeilingAndWalls:
 	bpl.s	+
 	sub.w	d1,x_pos(a0)
 	move.w	#0,x_vel(a0)	; stop Sonic since he hit a wall
-
-		move.b	#button_left_mask,d1
-		jsr	WallJump
-
 +
 	bsr.w	CheckRightWallDist
 	tst.w	d1
 	bpl.s	+
 	add.w	d1,x_pos(a0)
 	move.w	#0,x_vel(a0)	; stop Sonic since he hit a wall
-
-		move.b	#button_right_mask,d1
-		jsr	WallJump
-
 +
 	bsr.w	Sonic_CheckCeiling
 	tst.w	d1
@@ -30732,9 +30701,11 @@ Sonic_ResetOnFloor:
 Sonic_ResetOnFloor_Part2:
 	cmpi.b	#ObjID_Knuckles,id(a0)	; is this object ID Knuckles?
 	beq.s	JmpTo_Knuckles_ResetOnFloor_Part2	; if it is, branch to the Knuckles version of this code
-	; some routines outside of Tails' code can call Sonic_ResetOnFloor_Part2
-	; when they mean to call Tails_ResetOnFloor_Part2, so fix that here
-	_cmpi.b	#ObjID_Sonic,id(a0)	; is this object ID Sonic (obj01)?
+
+	cmpi.b	#ObjID_Mighty,id(a0)
+	beq.s	JmpTo_Mighty_ResetOnFloor_Part2
+
+	cmpi.b	#ObjID_Sonic,id(a0)	; is this object ID Sonic (obj01)?
 	bne.w	Tails_ResetOnFloor_Part2	; if not, branch to the Tails version of this code
 
 	btst	#2,status(a0)
@@ -30765,6 +30736,9 @@ return_1B11E:
 
 JmpTo_Knuckles_ResetOnFloor_Part2:
 	jmp	Knuckles_ResetOnFloor_Part2
+
+JmpTo_Mighty_ResetOnFloor_Part2:
+	jmp	Mighty_ResetOnFloor_Part2
 
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
@@ -33215,8 +33189,8 @@ Tails_Jump:
 	move.w	#SndID_Jump,d0
 +
 	jsr	(PlaySound).l	; play jumping sound
-	move.b	#$F,y_radius(a0)
-	move.b	#9,x_radius(a0)
+;	move.b	#$F,y_radius(a0)
+;	move.b	#9,x_radius(a0)
 	btst	#2,status(a0)
 	bne.s	Tails_RollJump
 	move.b	#$E,y_radius(a0)
@@ -35753,7 +35727,7 @@ Obj08_CheckSkid:
 	cmpi.b	#3,$21(a2)	; check for sliding
 	beq.s	Obj08_SkidDust
 +
-	cmpi.b	#ObjID_Sonic,id(a2)
+	cmpi.b	#ObjID_Mighty,id(a2)
 	bne.s	+
 	cmpi.b	#AniIDSonAni_WallJump,anim(a2)
 	beq.s	Obj08_SkidDust
@@ -78453,13 +78427,16 @@ Debug_ExitDebugMode:
 .knuxcheck:
 	cmpi.w	#3,(Player_option).w
 	blt.s	.tailscheck2
+.mightycheck:
+	cmpi.w	#5,(Player_option).w
+	blt.s	.knuxcont
+	move.l	#MapUnc_Mighty,mappings(a1)
+	bra.s	.notTails
+.knuxcont:
 	move.l	#MapUnc_Knuckles,mappings(a1)
 	tst.b	(Super_Sonic_flag).w
 	beq.s	.tailscheck2
 	move.l	#MapUnc_SuperKnuckles,mappings(a1)
-	cmpi.w	#5,(Player_option).w
-	blt.s	.notTails
-	move.l	#MapUnc_Mighty,mappings(a1)
 	bra.s	.notTails
 .tailscheck2:
 	cmpi.w	#2,(Player_option).w
@@ -79282,6 +79259,7 @@ PLCptr_Wz1:			offsetTableEntry.w PlrList_Wz1			; 70
 PLCptr_Wz2:			offsetTableEntry.w PlrList_Wz2			; 71
 PLCptr_Std2_Ice:		offsetTableEntry.w PlrList_Std2_Ice			; 72
 PLCptr_MightyLife:	offsetTableEntry.w	PlrList_MightyLifeCounter	; 73
+PLCptr_ResultsMighty:	offsetTableEntry.w PlrList_ResultsMighty ; 74
 
 ; macro for a pattern load request list header
 ; must be on the same line as a label that has a corresponding _End label later
@@ -79394,6 +79372,17 @@ PlrList_TailsLifeCounter_End
 PlrList_MightyLifeCounter: plrlistheader
 	plreq ArtTile_ArtNem_life_counter, ArtNem_MightyLife
 PlrList_MightyLifeCounter_End
+;---------------------------------------------------------------------------------------
+; Pattern load queue
+; Mighty end of level results screen
+;---------------------------------------------------------------------------------------
+PlrList_ResultsMighty: plrlistheader
+	plreq ArtTile_ArtNem_TitleCard, ArtNem_TitleCard
+	plreq ArtTile_ArtNem_ResultsText, ArtNem_ResultsText
+	plreq ArtTile_ArtNem_MiniCharacter, ArtNem_MiniMighty
+	plreq ArtTile_ArtNem_Perfect, ArtNem_Perfect
+	plreq ArtTile_ArtNem_ResultsText+$20, ArtNem_MightyY
+PlrList_ResultsMighty_End
 ;---------------------------------------------------------------------------------------
 ; PATTERN LOAD REQUEST LIST
 ; Metropolis Zone primary
@@ -80631,6 +80620,8 @@ ArtNem_TitleCard2:	BINCLUDE	"art/nemesis/Font using large broken letters.bin"
 ; Alphabet for font using large broken letters	; ArtNem_7D58A:
 	even
 ArtNem_KnucklesK:	BINCLUDE	"art/nemesis/S2KnuxK.bin"
+	even
+ArtNem_MightyY:		BINCLUDE	"art/nemesis/S2MightyY.bin"
 ;---------------------------------------------------------------------------------------
 ; Nemesis compressed art (21 blocks)
 ; A menu box with a shadow	; ArtNem_7D990:
