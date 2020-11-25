@@ -1,3 +1,7 @@
+	btst	#status_sec_hasShield,status_secondary(a0)
+	beq.s	+
+	jmp		DeleteObject
++ 
     moveq   #0,d0
     move.b  routine(a0),d0
     move.w  Obj5B_Index(pc,d0.w),d1
@@ -9,10 +13,6 @@ Obj5B_Index:	offsetTable
 		offsetTableEntry.w Obj_Insta_Shield_Main	; 2
 ; ===========================================================================
 Obj5B_Init:
-	btst	#status_sec_hasShield,status_secondary(a0)
-	beq.s	+
-	jmp		DeleteObject
-+
         addq.b  #2,routine(a0)
 		move.l	#Map_InstaShield,mappings(a0)
 		move.b	#4,render_flags(a0)

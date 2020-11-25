@@ -19181,8 +19181,6 @@ Obj26_SpawnSmoke:
 ; Object 2E - Monitor contents (code for power-up behavior and rising image)
 ; ----------------------------------------------------------------------------
 
-shield_change_timer = objoff_32
-
 Obj2E:
 	moveq	#0,d0
 	move.b	routine(a0),d0
@@ -74744,7 +74742,7 @@ TouchResponse:
 	bne.s	Touch_NoInstaShield
 		move.b	status_secondary(a0),d0			; Get status_secondary...
 		move.w	d0,-(sp)				; ...and save it
-	move.w	#0,invincibility_time(a0)
+	move.w	#$999,invincibility_time(a0)	; ?
 	bset	#status_sec_isInvincible,status_secondary(a0)	; make the player invincible
 	move.w	x_pos(a0),d2 ; load Sonic's position into d2,d3
 	move.w	y_pos(a0),d3
