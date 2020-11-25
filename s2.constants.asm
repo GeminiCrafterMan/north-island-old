@@ -926,7 +926,7 @@ TitleCard_Left:			; level title card: red part on the left
 				ds.b	object_size
 
 				; Reserved object RAM, free slots
-				ds.b	object_size
+InstaShield:	ds.b	object_size
 				ds.b	object_size
 				ds.b	object_size
 				ds.b	object_size
@@ -962,8 +962,8 @@ Tails_Dust:			; Tails' spin dash dust
 				ds.b	object_size
 Shield:
 				ds.b	object_size
-InstaShield:
-				ds.b	object_size
+; used to be Tails_Shield...
+				ds.b	$40
 InvincibilityStars:
 				ds.b	object_size
 				ds.b	object_size

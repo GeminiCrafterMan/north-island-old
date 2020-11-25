@@ -4184,18 +4184,18 @@ Level:
 	bsr.w	Level_SetPlayerMode
 	moveq	#PLCID_Miles1up,d0
 	tst.w	(Two_player_mode).w
-	bne.s	+
+	bne.s	.2pmode
 	cmpi.w	#2,(Player_mode).w
-	bne.s	Level_NoTails
+	bne.s	.notails
 	addq.w	#PLCID_MilesLife-PLCID_Miles1up,d0
-+
+.2pmode:
 	tst.b	(Graphics_Flags).w
-	bpl.s	+
+	bpl.s	.miles
 	addq.w	#PLCID_Tails1up-PLCID_Miles1up,d0
-+
-	bsr.w	LoadPLC
+.miles:
+	bra.s	.loadplc
 
-Level_NoTails:
+.notails:
 	cmpi.w	#5,(Player_mode).w
 	blt.s	.notmighty
 	moveq	#PLCID_MightyLife,d0
@@ -4644,8 +4644,6 @@ InitPlayers_SonicAndTails:
 	beq.s	+ ; skip loading Tails if this is DEZ
 	cmpi.b	#sky_chase_zone,(Current_Zone).w
 	beq.s	+ ; skip loading Tails if this is SCZ
-	cmpi.b	#zone_9,(Current_Zone).w
-	beq.s	+ ; skip loading Tails if this is Zone 9 (gonna be using shadow/highlight here...)
 
 	move.b	#ObjID_Tails,(Sidekick+id).w ; load Obj02 Tails object at $FFFFB040
 	move.w	(MainCharacter+x_pos).w,(Sidekick+x_pos).w
@@ -29001,7 +28999,6 @@ Obj01_MdRoll:
 ;        Why they gave it a separate copy of the code, I don't know.
 ; loc_1A330: Obj01_MdJump2:
 Obj01_MdJump:
-	bsr.w	Sonic_Thok
 	bsr.w	Sonic_JumpHeight
 	bsr.w	Sonic_ChgJumpDir
 	bsr.w	Sonic_LevelBound
@@ -29841,12 +29838,14 @@ Sonic_RollJump:
 ; End of function Sonic_Jump
 
 Sonic_Thok:
+	cmpi.b	#ObjID_Sonic,id(a0)
+	bne.w	return_Thok
 	cmpi.b	#AniIDSonAni_WallJump,anim(a0)
 	beq.s	return_Thok
 	cmpi.b	#0,(AirMove_Performed).w
 	bne.s	return_Thok
     move.b    (Ctrl_1_Press_Logical).w,d0
-    andi.b    #button_C_mask,d0 ; is C pressed?
+	andi.b	#button_B_mask|button_C_mask|button_A_mask,d0 ; is a jump button pressed?
     beq.w    return_Thok    ; if not, return
 	cmpi.b	#ObjID_WhirlwindShield,(Shield+id).w
 	beq.w	WindShieldAbility
@@ -29937,13 +29936,13 @@ return_1AB36:
 ; loc_1AB38: test_set_SS:
 Sonic_CheckGoSuper:
 	tst.b	(Update_HUD_timer).w	; has Sonic reached the end of the act?
-	beq.w	return_1ABA4		; if yes, branch
+	beq.w	Sonic_Thok		; if yes, branch
 	tst.b	(Super_Sonic_flag).w	; is Sonic already Super?
-	bne.w	return_1ABA4		; if yes, branch
+	bne.w	Sonic_Thok		; if yes, branch
 	cmpi.b	#7,(Emerald_count).w	; does Sonic have exactly 7 emeralds?
-	bne.w	return_1ABA4		; if not, branch
+	bne.w	Sonic_Thok		; if not, branch
 	cmpi.w	#50,(Ring_count).w	; does Sonic have at least 50 rings?
-	blo.w	return_1ABA4		; if not, branch
+	blo.w	Sonic_Thok		; if not, branch
 
 SuperSonic_Cont: ; known as Sonic_Transform: in S3K
 	jsr		Unc_SuperIcons_Load
@@ -29955,14 +29954,11 @@ SuperSonic_Cont: ; known as Sonic_Transform: in S3K
 	move.l	#MapUnc_SuperSonic,mappings(a0)
 .tailscheck:
 	cmpi.w	#2,(Player_mode).w
-	bne.s	.mightycheck
+	bne.s	.knuxcheck
 	move.l	#MapUnc_SuperTails,mappings(a0)
-.mightycheck:
-	cmpi.w  #5,(Player_mode).w
-	blt.s	.knuxcheck
-	move.l	#MapUnc_Mighty,mappings(a0)
-	bra.s	.done
 .knuxcheck:
+	cmpi.w	#3,(Player_mode).w
+	blt.s	.done
 	move.l	#MapUnc_SuperKnuckles,mappings(a0)
 .done:
 	move.b	#$81,obj_control(a0)
@@ -31448,7 +31444,6 @@ Obj02_Init_Continued:
 	move.w	top_solid_bit(a0),(Saved_Solid_bits_2P).w
 	move.b	#0,flips_remaining(a0)
 	move.b	#4,flip_speed(a0)
-	move.b	#0,(Super_Sonic_flag).w
 	move.b	#$1E,air_left(a0)
 	move.w	#0,(Tails_CPU_routine).w	; set AI state to TailsCPU_Init
 	move.w	#0,(Tails_control_counter).w
@@ -31461,8 +31456,8 @@ Obj02_Init_Continued:
 ; ---------------------------------------------------------------------------
 ; loc_1B9B4:
 Obj02_Control:
-        cmpi.b  #ObjID_Tails,(Sidekick+id).w
-        beq.s   +
+        cmpi.w  #2,(Player_mode).w
+        bne.s   +
 	tst.w	(Debug_mode_flag).w	; is debug cheat enabled?
 	beq.s	+			; if not, branch
 	btst	#button_B,(Ctrl_1_Press).w	; is button B pressed?
@@ -53137,7 +53132,7 @@ SlotMachine_GetPixelRow:
 	move.b	(a3,d0.w),d0			; Get slot pic id
 	andi.w	#7,d0					; Get only lower 3 bits; leaves space for 2 more images
 	bne.s	+
-	cmpi.b	#2,(Player_mode).w
+	cmpi.w	#2,(Player_mode).w
 	bge.s	+
 	tst.b	(Super_Sonic_flag).w
 	beq.s	+
@@ -79965,9 +79960,6 @@ PlrList_Wz2: plrlistheader
 	plreq ArtTile_ArtNem_MtzSpike, ArtNem_LeavesWZ
 PlrList_Wz2_End
 
-ArtUnc_P1Tails:	BINCLUDE	"art/uncompressed/P1 Tails.bin"
-	even
-
 ;---------------------------------------------------------------------------------------
 ; Curve and resistance mapping
 ;---------------------------------------------------------------------------------------
@@ -81930,6 +81922,7 @@ DACSample	macro	pPtr,pDelay,pFlags
 ;---------------------------------------------------------------------------------------
 ; Sonic's art stuff
 ;---------------------------------------------------------------------------------------
+	even
 ArtUnc_SuperSonic:	BINCLUDE	"art/uncompressed/Super Sonic's art.bin"
 	even
 MapUnc_Sonic:	BINCLUDE	"mappings/sprite/Sonic.bin"
@@ -81939,6 +81932,8 @@ MapUnc_SuperSonic:	BINCLUDE	"mappings/sprite/Super Sonic.bin"
 MapRUnc_Sonic:	BINCLUDE	"mappings/spriteDPLC/Sonic.bin"
 	even
 MapRUnc_SuperSonic:	BINCLUDE	"mappings/spriteDPLC/Super Sonic.bin"
+	even
+ArtUnc_P1Tails:	BINCLUDE	"art/uncompressed/P1 Tails.bin"
 	even
 ; -------------------------------------------------------------------------------
 ; Sega Intro Sound
