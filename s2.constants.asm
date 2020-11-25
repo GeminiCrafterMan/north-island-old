@@ -45,7 +45,7 @@ collision_property =	$21
 respawn_index =		$23
 subtype =		$28
 ; ---------------------------------------------------------------------------
-; conventions specific to sonic/tails/knuckles (Obj01, Obj02, and ObjDB):
+; conventions specific to sonic/tails/knuckles/mighty (Obj01, Obj02, ObjDB, and Obj5A):
 inertia =		$14 ; and $15 ; directionless representation of speed... not updated in the air
 double_jump_property =  $1F
 double_jump_flag =      $20 ; and $21
@@ -590,6 +590,7 @@ ObjID_MCZBoss =				id(ObjPtr_MCZBoss)		; 57
 ObjID_BossExplosion =		id(ObjPtr_BossExplosion)	; 58
 ObjID_RobotMasters =		id(ObjPtr_RobotMasters)		; 59
 ObjID_Mighty =				id(ObjPtr_Mighty)			; 5A
+ObjID_Insta_Shield =		id(ObjPtr_InstaShield)		; 5B
 ObjID_Masher =				id(ObjPtr_Masher)			; 5C
 ObjID_CPZBoss =				id(ObjPtr_CPZBoss)		; 5D
 ObjID_Knuckles =			id(ObjPtr_Knuckles)		; 62
@@ -963,16 +964,13 @@ Shield:
 				ds.b	object_size
 ; used to be Tails_Shield
 				ds.b	$40
-Sonic_InvincibilityStars:
+InvincibilityStars:
 				ds.b	object_size
 				ds.b	object_size
 				ds.b	object_size
 				ds.b	object_size
-Tails_InvincibilityStars:
-				ds.b	object_size
-				ds.b	object_size
-				ds.b	object_size
-				ds.b	object_size
+; used to be Tails_InvincibilityStars
+				ds.b	$100
 LevelOnly_Object_RAM_End:
 
 Object_RAM_End:
@@ -980,7 +978,8 @@ LevSel_Page:		ds.b	1
 MCirno_LastLoadedDPLC:	ds.b	1
 Shield_LastLoadedDPLC:	ds.b	1
 WhirlSh_LastLoadedDPLC:	ds.b	1
-				ds.b	$1FC	; unused
+InstaShield_LastLoadedDPLC:	ds.b 1
+				ds.b	$1FB	; unused
 
 Primary_Collision:		ds.b	$300
 Secondary_Collision:		ds.b	$300
@@ -1522,7 +1521,7 @@ LevSel_HoldTimer:		ds.w	1
 Level_select_zone:		ds.w	1
 Sound_test_sound:		ds.w	1
 Title_screen_option:		ds.b	1
-				ds.b	1	; $FFFFFF87	; not used
+Insta_Attacking:		ds.b	1	; $FFFFFF87
 Current_Zone_2P:		ds.b	1
 Current_Act_2P:			ds.b	1
 Two_player_mode_copy:		ds.w	1

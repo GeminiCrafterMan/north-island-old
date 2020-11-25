@@ -127,7 +127,7 @@ Obj5A_Control:
 	andi.w	#$7FF,y_pos(a0) 		; perform wrapping of Mighty's y position
 +
 	jsr	    Sonic_Display
-	jsr 	Sonic_Super
+	jsr 	Mighty_Super
 	jsr     Sonic_RecordPos
 	jsr     Sonic_Water
 	move.b	(Primary_Angle).w,next_tilt(a0)
@@ -1165,7 +1165,7 @@ Mighty_JumpHeight:
 	.skip:;end Wall Jump
 
 	tst.b	jumping(a0)	; is Mighty jumping?
-	beq.s	Mighty_UpVelCap	; if not, branch
+	beq.w	Mighty_UpVelCap	; if not, branch
 
 	move.w	#-$400,d1
 	btst	#6,status(a0)	; is Mighty underwater?
@@ -1180,14 +1180,71 @@ Mighty_JumpHeight:
 	move.w	d1,y_vel(a0)	; immediately reduce Mighty's upward speed to d1
 +
 	tst.b   (Control_Locked).w      ; Are Controls locked?
-	bne.s   return2_1AB36            ; If so, branch, and do not bother with Super code
+	bne.w   return2_1AB36            ; If so, branch, and do not bother with Super code
 	move.b  (Ctrl_1_Press_Logical).w,d0
-	andi.b  #button_A_mask,d0 ; is A pressed?
+	andi.b	#button_B_mask|button_C_mask|button_A_mask,d0 ; is a jump button pressed?
 	bne.s   Mighty_CheckGoSuper      ; if yes, test for turning into Super Mighty
 	rts
 
 Mighty_CheckGoSuper:
-    jmp     Sonic_CheckGoSuper
+	tst.b	(Update_HUD_timer).w	; has Sonic reached the end of the act?
+	beq.w	Mighty_InstaShield		; if yes, branch
+	tst.b	(Super_Sonic_flag).w	; is Sonic already Super?
+	bne.w	.return		; if yes, branch
+	cmpi.b	#7,(Emerald_count).w	; does Sonic have exactly 7 emeralds?
+	bne.w	Mighty_InstaShield		; if not, branch
+	cmpi.w	#50,(Ring_count).w	; does Sonic have at least 50 rings?
+	blo.w	Mighty_InstaShield		; if not, branch
+	bra.s	SuperMighty_Cont
+
+.return:
+	rts
+
+SuperMighty_Cont: ; known as Sonic_Transform: in S3K
+	move.b	#1,(Super_Sonic_palette).w
+	move.b	#$F,(Palette_timer).w
+	move.b	#1,(Super_Sonic_flag).w
+	move.b	#$81,obj_control(a0)
+	move.b	#AniIDSupSonAni_Transform,anim(a0)			; use transformation animation
+	move.b	#ObjID_SuperSonicStars,(SuperSonicStars+id).w ; load Obj7E (super sonic stars object) at $FFFFD040
+	move.b	#ObjID_WaiInvinc,(InvincibilityStars+id).w ; load Obj35 (invincibility stars) at $FFFFD200
+	move.w	a0,(InvincibilityStars+parent).w
+	move.w	#$A00,(Sonic_top_speed).w
+	move.w	#$30,(Sonic_acceleration).w
+	move.w	#$100,(Sonic_deceleration).w
+	btst	#6,status(a0)	; Check if underwater, return if not
+	beq.s	+
+	move.w	#$500,(Sonic_top_speed).w
+	move.w	#$18,(Sonic_acceleration).w
+	move.w	#$80,(Sonic_deceleration).w
++
+	move.w	#0,invincibility_time(a0)
+	bset	#status_sec_isInvincible,status_secondary(a0)	; make Sonic invincible
+	tst.b	(Current_Boss_ID).w	; Don't change music if in a boss fight
+	bne.s	++
+	jsr	(PlayLevelMusic).l
++
+	move.w	#MusID_SPASpecStag,d0
+	jsr	(PlayMusic).l	; load the Super Sonic song and return
++
+	move.w	#SndID_S3KSuperTransform,d0
+	jmp	(PlaySound).l	; Play transformation sound effect.
+; ---------------------------------------------------------------------------
+
+Mighty_InstaShield:
+	tst.b	(AirMove_Performed).w
+	bne.s	InstaShield_Return
+	btst	#status_sec_hasShield,status_secondary(a0)
+	bne.s	InstaShield_Return
+	move.b	#1,(Shield+anim).w
+		move.b	#1,(AirMove_Performed).w
+		move.b	#1,(Insta_Attacking).w
+		move.w	#SndID_InstaShield,d0
+		jmp	(PlaySound).l
+
+InstaShield_Return:
+	rts
+; End of subroutine Sonic_CheckGoSuper
 ; ---------------------------------------------------------------------------
 ; loc2_1AB22:
 Mighty_UpVelCap:
@@ -1200,7 +1257,53 @@ Mighty_UpVelCap:
 return2_1AB36:
 	rts
 ; End of subroutine Mighty_JumpHeight
+Mighty_Super:
+	tst.b	(Super_Sonic_flag).w	; Ignore all this code if not Super Sonic
+	beq.w	MtySuperRet
+	cmpi.b	#1,(Super_Sonic_palette).w	; is Super Sonic's transformation sequence finished?
+	beq.w	MtySuperRet			; if not, branch
+	tst.b	(Update_HUD_timer).w
+	beq.s	Mighty_RevertToNormal ; ?
+	subq.w	#1,(Super_Sonic_frame_count).w
+	bhi.w	MtySuperRet
+	move.w	#60,(Super_Sonic_frame_count).w	; Reset frame counter to 60
+	tst.w	(Ring_count).w
+	beq.s	Mighty_RevertToNormal
+	ori.b	#1,(Update_HUD_rings).w
+	cmpi.w	#1,(Ring_count).w
+	beq.s	+
+	cmpi.w	#10,(Ring_count).w
+	beq.s	+
+	cmpi.w	#100,(Ring_count).w
+	bne.s	++
++
+	ori.b	#$80,(Update_HUD_rings).w
++
+	subq.w	#1,(Ring_count).w
+	bne.w	MtySuperRet
+; loc_1ABF2:
+Mighty_RevertToNormal:
+	move.b	#0,(MainCharacter+obj_control).w	; restore Sonic's movement
+	move.b	#2,(Super_Sonic_palette).w	; Remove rotating palette
+	move.w	#$28,(Palette_frame).w
+	move.b	#0,(Super_Sonic_flag).w
+	move.b	#1,prev_anim(a0)	; Change animation back to normal ?
+	move.w	#1,invincibility_time(a0)	; Remove invincibility
+	move.w	#$600,(Sonic_top_speed).w
+	move.w	#$C,(Sonic_acceleration).w
+	move.w	#$80,(Sonic_deceleration).w
+	btst	#6,status(a0)	; Check if underwater, return if not
+	beq.s	MtySuperRet
+	move.w	#$300,(Sonic_top_speed).w
+	move.w	#6,(Sonic_acceleration).w
+	move.w	#$40,(Sonic_deceleration).w
+	tst.b	(Current_Boss_ID).w	; Don't change music if in a boss fight
+	bne.s	MtySuperRet
+	jsr	(PlayLevelMusic).l
 
+MtySuperRet:
+	rts
+; End of subroutine Mighty_Super
 ; ---------------------------------------------------------------------------
 ; Subroutine to check for starting to charge a spindash
 ; ---------------------------------------------------------------------------
@@ -1791,7 +1894,7 @@ return2_1B11E:
 
 WallJump:
 		cmpi.b	#ObjID_Mighty,id(a0)
-		bgt.s	.return
+		bne.s	.return
 		tst.b	jumping(a0)	;Mercury Constants
 		beq.s	.return
 		tst.b	y_vel(a0)

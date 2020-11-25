@@ -92,6 +92,7 @@ SndNames:	offsetTable
 	offsetTableEntry.w	SndNam_SSExit
 	offsetTableEntry.w	SndNam_SSDiamond
 	offsetTableEntry.w	SndNam_WhirlwindShield
+	offsetTableEntry.w	SndNam_InstaShield
 
 SndNam_Jump:	songtext	"JUMP"
 SndNam_Checkpoint:	songtext	"CHECKPOINT"
@@ -186,4 +187,5 @@ SndNam_CDSkidding:	songtext	"CD SKIDDING"
 SndNam_SSExit:	songtext	"SS GOAL"
 SndNam_SSDiamond:	songtext	"SS DIAMOND"
 SndNam_WhirlwindShield:	songtext	"WHIRLWIND SHIELD"
+SndNam_InstaShield:	songtext	"TWIN SPIN"
 	even

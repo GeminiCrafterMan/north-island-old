@@ -4618,6 +4618,8 @@ InitPlayers:
 	bne.s	.ktcheck
 	move.b	#ObjID_Mighty,(MainCharacter+id).w ; load Obj62 Knuckles object at $FFFFB000
 	move.b	#ObjID_SpindashDust,(Sonic_Dust+id).w ; load Obj08 Sonic's spindash dust/splash object at $FFFFD100
+	move.b	#ObjID_Insta_Shield,(Shield+id).w
+	move.w	#MainCharacter,(Shield+parent).w
 	move.b	#$13,(MainCharacter+y_radius).w		; Set Sonic's y-radius
 	bra.w	+
 
@@ -4686,6 +4688,8 @@ InitPlayers_KnucklesAlone:
 InitPlayers_MightyAlone:
 	move.b	#ObjID_Mighty,(MainCharacter+id).w
 	move.b	#ObjID_SpindashDust,(Sonic_Dust+id).w
+	move.b	#ObjID_Insta_Shield,(Shield+id).w
+	move.w	#MainCharacter,(Shield+parent).w
 	move.b	#$13,(MainCharacter+y_radius).w		; Set Sonic's y-radius
 	rts
 ; End of function InitPlayers
@@ -19390,7 +19394,7 @@ super_shoes_Tails:
 ; gives the player a shield that absorbs one hit
 ; ---------------------------------------------------------------------------
 shield_monitor:
-	tst.b	(Shield+id).w
+	btst	#status_sec_hasShield,status_secondary(a1)	; give shield status
 	bne.w	super_ring
 	bset	#status_sec_hasShield,status_secondary(a1)	; give shield status
 	move.w	#SndID_Shield,d0
@@ -19405,7 +19409,7 @@ shield_monitor:
 ; gives the player a Whirlwind Shield, with gravity reduction when you hold Up.
 ; ---------------------------------------------------------------------------
 whirlwind_monitor:
-	tst.b	(Shield+id).w
+	btst	#status_sec_hasShield,status_secondary(a1)	; give shield status
 	bne.w	super_ring
 	bset	#status_sec_hasShield,status_secondary(a1)	; give shield status
 	move.w	#SndID_WhirlwindShield,d0
@@ -19433,8 +19437,8 @@ invincible_monitor:
 	move.w	#MusID_S3DBInvincible,d0
 	jsr	(PlayMusic).l
 +
-	move.b	#ObjID_InvStars,(Sonic_InvincibilityStars+id).w ; load Obj35 (invincibility stars) at $FFFFD200
-	move.w	a1,(Sonic_InvincibilityStars+parent).w
+	move.b	#ObjID_InvStars,(InvincibilityStars+id).w ; load Obj35 (invincibility stars) at $FFFFD200
+	move.w	a1,(InvincibilityStars+parent).w
 +
 	rts
 ; ===========================================================================
@@ -19474,8 +19478,8 @@ super_monitor:
 	move.b	#AniIDSupSonAni_Transform,anim(a1)			; use transformation animation
 +
 	move.b	#ObjID_SuperSonicStars,(SuperSonicStars+id).w ; load Obj7E (super sonic stars object) at $FFFFD040
-	move.b	#ObjID_WaiInvinc,(Sonic_InvincibilityStars+id).w ; load Obj35 (invincibility stars) at $FFFFD200
-	move.w	a1,(Sonic_InvincibilityStars+parent).w
+	move.b	#ObjID_WaiInvinc,(InvincibilityStars+id).w ; load Obj35 (invincibility stars) at $FFFFD200
+	move.w	a1,(InvincibilityStars+parent).w
 	cmpi.w	#2,(Player_mode).w
 	bne.s	+
 	move.w	#$A00,(Tails_top_speed).w
@@ -23075,7 +23079,7 @@ ObjPtr_MCZBoss:				dc.l Obj57		; MCZ boss
 ObjPtr_BossExplosion:		dc.l Obj58		; Boss explosion
 ObjPtr_RobotMasters:		dc.l Obj59		; Zone-specific decorations
 ObjPtr_Mighty:				dc.l Obj5A	; Obj5A - Used to be Messages/checkpoint from Special Stage
-ObjPtr_PushBlock:			dc.l Obj5B		; Obj5B - Used to be Ring spray/spill in Special Stage
+ObjPtr_InstaShield:			dc.l Obj5B		; Obj5B - Used to be Ring spray/spill in Special Stage
 ObjPtr_Masher:				dc.l Obj5C		; Masher (jumping piranha fish badnik) from EHZ
 ObjPtr_CPZBoss:				dc.l Obj5D		; CPZ boss
 							dc.l ObjNull		; Obj5E - Used to be HUD from Special Stage
@@ -28687,39 +28691,6 @@ Obj01_Init_Continued:
 ; ---------------------------------------------------------------------------
 ; loc_1A030: Obj_01_Sub_2:
 Obj01_Control:
-
-		tst.b	double_jump_flag(a0)
-		beq.s	.nodec
-		subq.b	#1,double_jump_flag(a0)
-		bne.s	.chkLR
-		move.b	#AniIDSonAni_Roll,anim(a0) ; use "jumping" animation
-		
-.chkLR:
-		move.b	(Ctrl_1_Logical).w,d0	; get jpad
-		and.b	double_jump_flag+1(a0),d0	; compare jpad to stored L,R button states
-		bne.s	.skip		; if still held, branch
-		move.w	#0,double_jump_flag(a0)	; clear wall jump flag and button states
-		move.b	#AniIDSonAni_Roll,anim(a0) ; use "jumping" animation
-	
-.skip:
-		;Mercury Wall Jump Smoke Puff
-		;USES Smoke Puff
-	;	move.b	(Timer_frames+1).w,d0
-	;	andi.b	#7,d0
-	;	cmpi.b	#7,d0
-	;	bne.s	.nodec
-	;create puff
-	;	bsr.w	SingleObjLoad
-	;	bne.s	.nodec
-	;	move.b	#id_SmokePuff,0(a1) ; load missile object
-	;	move.w	x_pos(a0),x_pos(a1)
-	;	move.w	y_pos(a0),y_pos(a1)
-	;	addi.w	#$1C,y_pos(a1)
-	;	move.b	#1,subtype(a1)
-		;end Wall Jump Smoke Puff
-		
-	.nodec:
-
 	tst.w	(Debug_mode_flag).w	; is debug cheat enabled?
 	beq.s	+			; if not, branch
 	btst	#button_B,(Ctrl_1_Press).w	; is button B pressed?
@@ -29915,42 +29886,6 @@ WindShieldAbility:
 ; ===========================================================================
 ; loc_1AAF0:
 Sonic_JumpHeight:
-
-		tst.b	double_jump_flag(a0)	; on wall?
-		beq.s	.skip
-		move.b	(Ctrl_1_Press_Logical).w,d0
-	andi.b	#button_B_mask|button_C_mask|button_A_mask,d0 ; is a jump button pressed?
-		beq.s	.skip	; if yes, branch
-		move.w	#0,double_jump_flag(a0)	; clear Wall Jump data
-		move.b	#1,jumping(a0)	;Mercury Constants
-		move.b	#AniIDSonAni_Roll,anim(a0) ; use "jumping" animation
-		move.w	#-$600,d0
-		btst	#button_up,(Ctrl_1_Held_Logical).w
-		bne.s	.uponly
-		move.w	#-$580,d0
-		move.w	#-$400,x_vel(a0)
-		btst	#0,status(a0)	;Mercury Constants
-		beq.s	.uponly
-		neg.w	x_vel(a0)
-		
-	.uponly:
-		btst	#6,status(a0)	;Mercury Constants
-		beq.s	.nowtr
-		addi.w	#$280,d0
-		
-	.nowtr:
-		move.w	d0,y_vel(a0)
-	tst.b	(CD_Sounds_flag).w
-	beq.s	.normalsnd
-	move.w	#SndID_CDJump,d0
-	bra.s	.playsnd
-.normalsnd:
-	move.w	#SndID_Jump,d0
-.playsnd:
-	jsr	(PlaySound).l	; play jumping sound
-		
-	.skip:;end Wall Jump
-
 	tst.b	jumping(a0)	; is Sonic jumping?
 	beq.s	Sonic_UpVelCap	; if not, branch
 
@@ -29969,7 +29904,7 @@ Sonic_JumpHeight:
 	tst.b   (Control_Locked).w      ; Are Controls locked?
 	bne.s   return_1AB36            ; If so, branch, and do not bother with Super code
 	move.b  (Ctrl_1_Press_Logical).w,d0
-	andi.b  #button_A_mask,d0 ; is A pressed?
+	andi.b	#button_B_mask|button_C_mask|button_A_mask,d0 ; is a jump button pressed?
 	bne.s   Sonic_CheckGoSuper      ; if yes, test for turning into Super Sonic
 	rts
 ; ---------------------------------------------------------------------------
@@ -30018,11 +29953,14 @@ SuperSonic_Cont: ; known as Sonic_Transform: in S3K
 	move.l	#MapUnc_SuperSonic,mappings(a0)
 .tailscheck:
 	cmpi.w	#2,(Player_mode).w
-	bne.s	.knuxcheck
+	bne.s	.mightycheck
 	move.l	#MapUnc_SuperTails,mappings(a0)
+.mightycheck:
+	cmpi.w  #5,(Player_mode).w
+	blt.s	.knuxcheck
+	move.l	#MapUnc_Mighty,mappings(a0)
+	bra.s	.done
 .knuxcheck:
-	cmpi.w	#3,(Player_mode).w
-	blt.s	.done
 	move.l	#MapUnc_SuperKnuckles,mappings(a0)
 .done:
 	move.b	#$81,obj_control(a0)
@@ -30034,8 +29972,8 @@ SuperSonic_Cont: ; known as Sonic_Transform: in S3K
 	move.b	#AniIDSupSonAni_Transform,anim(a0)			; use transformation animation
 +
 	move.b	#ObjID_SuperSonicStars,(SuperSonicStars+id).w ; load Obj7E (super sonic stars object) at $FFFFD040
-	move.b	#ObjID_WaiInvinc,(Sonic_InvincibilityStars+id).w ; load Obj35 (invincibility stars) at $FFFFD200
-	move.w	a0,(Sonic_InvincibilityStars+parent).w
+	move.b	#ObjID_WaiInvinc,(InvincibilityStars+id).w ; load Obj35 (invincibility stars) at $FFFFD200
+	move.w	a0,(InvincibilityStars+parent).w
 	cmpi.w	#2,(Player_mode).w
 	bne.s	+
 	move.w	#$A00,(Tails_top_speed).w
@@ -30129,9 +30067,10 @@ Sonic_RevertToNormal:
 	bne.s	.mightycheck
 	move.l	#MapUnc_Tails,mappings(a0)
 .mightycheck:
-	cmpi.w	#5,(Player_mode).w
+	cmpi.w  #5,(Player_mode).w
 	blt.s	.knuxcheck
 	move.l	#MapUnc_Mighty,mappings(a0)
+	bra.s	.done
 .knuxcheck:
 	cmpi.w	#3,(Player_mode).w
 	blt.s	.done
@@ -55167,7 +55106,7 @@ MapRUnc_Mighty:	BINCLUDE	"mappings/spriteDPLC/Mighty.bin"
 	even
 
 
-Obj5B: include "Pushable Block.asm"
+Obj5B: include "moves/Insta-Shield.asm"
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -74795,6 +74734,37 @@ TouchResponse:
 +
 	tst.b	(Current_Boss_ID).w
 	bne.w	Touch_Boss
+	cmpi.b	#ObjID_Mighty,(MainCharacter+id).w
+	bne.s	Touch_NoInstaShield
+		move.b	status_secondary(a0),d0
+		andi.b	#$73,d0					; Does the player have any shields or is invincible?
+		bne.s	Touch_NoInstaShield			; If so, branch
+; By this point, we're focusing purely on the Insta-Shield.
+	cmpi.b	#1,(Insta_Attacking).w
+	bne.s	Touch_NoInstaShield
+		move.b	status_secondary(a0),d0			; Get status_secondary...
+		move.w	d0,-(sp)				; ...and save it
+	move.w	#0,invincibility_time(a0)
+	bset	#status_sec_isInvincible,status_secondary(a0)	; make the player invincible
+	move.w	x_pos(a0),d2 ; load Sonic's position into d2,d3
+	move.w	y_pos(a0),d3
+		subi.w	#$18,d2					; Subtract width of Insta-Shield
+		subi.w	#$18,d3					; Subtract height of Insta-Shield
+		move.w	#$30,d4					; Player's width
+		move.w	#$30,d5					; Player's height
+
+	lea	(Dynamic_Object_RAM).w,a1
+	move.w	#(Dynamic_Object_RAM_End-Dynamic_Object_RAM)/object_size-1,d6
+	bsr.s	Touch_Loop
+	move.w	(sp)+,d0
+	bclr	#status_sec_isInvincible,status_secondary(a0)	; make the player vulnerable again
+
+.alreadyInvincible:
+	moveq	#0,d0
+	rts
+; ---------------------------------------------------------------------------
+
+Touch_NoInstaShield:
 	move.w	x_pos(a0),d2 ; load Sonic's position into d2,d3
 	move.w	y_pos(a0),d3
 	subi_.w	#8,d2
@@ -74802,7 +74772,7 @@ TouchResponse:
 	move.b	y_radius(a0),d5
 	subq.b	#3,d5
 	sub.w	d5,d3
-	cmpi.b	#$4D,mapping_frame(a0)	; is Sonic ducking?
+	cmpi.b	#AniIDSonAni_Duck,(MainCharacter+anim).w
 	bne.s	Touch_NoDuck		; if not, branch
 	addi.w	#$C,d3
 	moveq	#$A,d5
@@ -74812,6 +74782,7 @@ Touch_NoDuck:
 	add.w	d5,d5
 	lea	(Dynamic_Object_RAM).w,a1
 	move.w	#(Dynamic_Object_RAM_End-Dynamic_Object_RAM)/object_size-1,d6
+
 ; loc_3F5A0:
 Touch_Loop:
 	move.b	collision_flags(a1),d0
@@ -75214,6 +75185,10 @@ loc_3F88C:
 ; loc_3F8B8:
 Hurt_Shield:
 	bclr	#status_sec_hasShield,status_secondary(a0) ; remove shield
+	cmpi.b	#ObjID_Mighty,(MainCharacter+id).w
+	bne.s	Hurt_Sidekick
+	move.b	#ObjID_Insta_Shield,(Shield+id).w
+	move.w	#MainCharacter,(Shield+parent).w
 
 ; loc_3F8BE:
 Hurt_Sidekick:

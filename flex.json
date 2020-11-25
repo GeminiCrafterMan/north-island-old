@@ -1429,6 +1429,27 @@
                 "customDefinition": "",
                 "label": ""
             }
+        },
+        {
+            "name": "Insta-Shield",
+            "palettes": [],
+            "art": {
+                "path": "art\\uncompressed\\Insta-Shield.bin",
+                "compression": "Uncompressed"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\Insta-Shield.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": true,
+                "path": "mappings\\spriteDPLC\\Insta-Shield.bin",
+                "format": "Sonic 2/3&K",
+                "customDefinition": "",
+                "label": ""
+            }
         }
     ]
 }
