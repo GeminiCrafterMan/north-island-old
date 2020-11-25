@@ -4618,8 +4618,8 @@ InitPlayers:
 	bne.s	.ktcheck
 	move.b	#ObjID_Mighty,(MainCharacter+id).w ; load Obj62 Knuckles object at $FFFFB000
 	move.b	#ObjID_SpindashDust,(Sonic_Dust+id).w ; load Obj08 Sonic's spindash dust/splash object at $FFFFD100
-	move.b	#ObjID_Insta_Shield,(Shield+id).w
-	move.w	#MainCharacter,(Shield+parent).w
+	move.b	#ObjID_Insta_Shield,(InstaShield+id).w
+	move.w	#MainCharacter,(InstaShield+parent).w
 	move.b	#$13,(MainCharacter+y_radius).w		; Set Sonic's y-radius
 	bra.w	+
 
@@ -4688,8 +4688,8 @@ InitPlayers_KnucklesAlone:
 InitPlayers_MightyAlone:
 	move.b	#ObjID_Mighty,(MainCharacter+id).w
 	move.b	#ObjID_SpindashDust,(Sonic_Dust+id).w
-	move.b	#ObjID_Insta_Shield,(Shield+id).w
-	move.w	#MainCharacter,(Shield+parent).w
+	move.b	#ObjID_Insta_Shield,(InstaShield+id).w
+	move.w	#MainCharacter,(InstaShield+parent).w
 	move.b	#$13,(MainCharacter+y_radius).w		; Set Sonic's y-radius
 	rts
 ; End of function InitPlayers
@@ -6336,13 +6336,15 @@ Text2P_Blank:		menutxt	"    "		; byte_87C1:
 ;word_87C6:
 Anim_SonicMilesBG:	zoneanimstart
 	; Sonic/Miles animated background
-	zoneanimdecl  -1, ArtUnc_MenuBack,    1,  6, $A
+	zoneanimdecl  -1, ArtUnc_MenuBack,    1,  8, 1
 	dc.b   0,$C7
-	dc.b  $A,  5
-	dc.b $14,  5
-	dc.b $1E,$C7
-	dc.b $14,  5
-	dc.b  $A,  5
+	dc.b   1,  5
+	dc.b   2,  5
+	dc.b   3,  5
+	dc.b   4,$C7
+	dc.b   3,  5
+	dc.b   2,  5
+	dc.b   1,  5
 	even
 
 	zoneanimend
@@ -7197,14 +7199,14 @@ LevSelControls_SwitchSide:	; not in soundtest, not up/down pressed
 	beq.s	+	; if not, branch
 	addq.w	#1,(Player_option).w	; select next character
 	cmpi.w	#6,(Player_option).w	; did we go over the limit?
-	bls.s	++	; if not, branch
-	move.w	#-1,(Player_option).w	; reset to -1 (blue knux)
+	ble.s	++	; if not, branch
+	move.w	#0,(Player_option).w	; reset to 0
 +
 	btst	#button_B,(Ctrl_1_Press).w	; is C pressed?
 	beq.s	+	; if not, branch
 	subq.w	#1,(Player_option).w	; select next character
-	cmpi.w	#-2,(Player_option).w	; did we go under the limit?
-	bgt.s	+	; if not, branch
+	cmpi.w	#0,(Player_option).w	; did we go under the limit?
+	bge.s	+	; if not, branch
 	move.w	#6,(Player_option).w	; reset to 6
 +
 	rts
@@ -19450,10 +19452,9 @@ super_monitor:
 	move.b	#1,(Super_Sonic_palette).w
 	move.b	#$F,(Palette_timer).w
 	move.b	#1,(Super_Sonic_flag).w
-	cmpi.w	#-1,(Player_option).w
-	bne.w	.soniccheck
-	move.l	#MapUnc_SuperKnuckles,mappings(a1)
-	bra.w	.done
+	cmpi.w	#5,(Player_mode).w
+	blt.s	.soniccheck
+	bra.s	.done
 .soniccheck:
 	cmpi.w	#1,(Player_mode).w
 	bgt.s	.tailscheck
@@ -21673,11 +21674,19 @@ TC_GHZ:		dc.w $9				; GREEN HILL
 		dc.w $0001, $85EA, $82F5, $0058	; I
 		dc.w $0005, $85EC, $82F6, $0060	; L
 		dc.w $0005, $85EC, $82F6, $0070	; L
-TC_WZ:		dc.w $4				; WOOD
-		dc.w $0009, $85DE, $82EF, $0038	; W
-		dc.w $0005, $8588, $82C4, $0050	; O
-		dc.w $0005, $8588, $82C4, $0060	; O
-		dc.w $0005, $85E4, $82F2, $0070	; D
+TC_WZ:		dc.w $B				; WOODED HILLS
+		dc.w $0009, $85DE, $82EF, $FFC0	; W
+		dc.w $0005, $8588, $82C4, $FFD8	; O
+		dc.w $0005, $8588, $82C4, $FFE8	; O
+		dc.w $0005, $85E4, $82F2, $FFF8	; D
+		dc.w $0005, $8580, $82C0, $0008	; E
+		dc.w $0005, $85E4, $82F2, $0018	; D
+
+		dc.w $0005, $85E8, $82F4, $0038	; H
+		dc.w $0001, $85EC, $82F6, $0048	; I
+		dc.w $0005, $85EE, $82F7, $0050	; L
+		dc.w $0005, $85EE, $82F7, $0060	; L
+		dc.w $0005, $85F2, $82F9, $0070	; S
 TC_TTZ:	dc.w $A				; TECHNO TEST
 		dc.w $0005, $85DE, $82EF, $FFD0	; T
 		dc.w $0005, $8580, $82C0, $FFE0	; E
@@ -22357,7 +22366,7 @@ TitleCardLetters_EHZ:
 TitleCardLetters_GHZ:
 	titleLetters	"GREEN HILL"
 TitleCardLetters_WZ:
-	titleLetters	"WOOD"
+	titleLetters	"WOODED HILLS"
 TitleCardLetters_TTZ:
 	titleLetters	"TECHNO TEST"
 TitleCardLetters_MTZ:
@@ -29941,11 +29950,6 @@ SuperSonic_Cont: ; known as Sonic_Transform: in S3K
 	move.b	#1,(Super_Sonic_palette).w
 	move.b	#$F,(Palette_timer).w
 	move.b	#1,(Super_Sonic_flag).w
-	cmpi.w	#-1,(Player_option).w
-	bne.w	.soniccheck
-	move.l	#MapUnc_SuperKnuckles,mappings(a0)
-	bra.w	.done
-.soniccheck:
 	cmpi.w	#1,(Player_mode).w
 	bgt.s	.tailscheck
 	move.l	#MapUnc_SuperSonic,mappings(a0)
@@ -30052,11 +30056,6 @@ Sonic_RevertToNormal:
 	move.w	#$28,(Palette_frame).w
 	move.b	#0,(Super_Sonic_flag).w
 	;revert mappings
-	cmpi.w	#-1,(Player_option).w
-	bne.w	.soniccheck
-	move.l	#MapUnc_Knuckles,mappings(a0)
-	bra.w	.done
-.soniccheck:
 	cmpi.w	#1,(Player_mode).w
 	bgt.s	.tailscheck
 	move.l	#MapUnc_Sonic,mappings(a0)
@@ -75183,10 +75182,6 @@ loc_3F88C:
 ; loc_3F8B8:
 Hurt_Shield:
 	bclr	#status_sec_hasShield,status_secondary(a0) ; remove shield
-	cmpi.b	#ObjID_Mighty,(MainCharacter+id).w
-	bne.s	Hurt_Sidekick
-	move.b	#ObjID_Insta_Shield,(Shield+id).w
-	move.w	#MainCharacter,(Shield+parent).w
 
 ; loc_3F8BE:
 Hurt_Sidekick:
@@ -78380,16 +78375,6 @@ Debug_ExitDebugMode:
 	move.b	#1,(Update_HUD_timer).w
 	move.b	#1,(Update_HUD_timer_2P).w
 	lea	(MainCharacter).w,a1 ; a1=character
-.blueknuxcheck:
-	cmpi.w	#-1,(Player_option).w
-	bne.s	.soniccheck
-	move.l	#MapUnc_Knuckles,mappings(a1)
-	tst.b	(Super_Sonic_flag).w
-	beq.w	.notTails
-	move.l	#MapUnc_SuperKnuckles,mappings(a1)
-	bra.w	.notTails
-
-.soniccheck:
 	cmpi.w	#1,(Player_option).w
 	bgt.s	.tailscheck
 	move.l	#MapUnc_Sonic,mappings(a1)

@@ -962,8 +962,8 @@ Tails_Dust:			; Tails' spin dash dust
 				ds.b	object_size
 Shield:
 				ds.b	object_size
-; used to be Tails_Shield
-				ds.b	$40
+InstaShield:
+				ds.b	object_size
 InvincibilityStars:
 				ds.b	object_size
 				ds.b	object_size

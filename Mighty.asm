@@ -1234,13 +1234,22 @@ SuperMighty_Cont: ; known as Sonic_Transform: in S3K
 Mighty_InstaShield:
 	tst.b	(AirMove_Performed).w
 	bne.s	InstaShield_Return
-	btst	#status_sec_hasShield,status_secondary(a0)
+	tst.b	double_jump_flag(a0)
 	bne.s	InstaShield_Return
-	move.b	#1,(Shield+anim).w
+	cmpi.b	#ObjID_WhirlwindShield,(Shield+id).w
+	beq.s	.jmptowindabil
+	tst.b	(InvincibilityStars+id).w
+	bne.s	InstaShield_Return
+	tst.b	(Shield+id).w
+	bne.s	InstaShield_Return
+	move.b	#1,(InstaShield+anim).w
 		move.b	#1,(AirMove_Performed).w
 		move.b	#1,(Insta_Attacking).w
 		move.w	#SndID_InstaShield,d0
 		jmp	(PlaySound).l
+
+.jmptowindabil:
+	jmp	WindShieldAbility
 
 InstaShield_Return:
 	rts
