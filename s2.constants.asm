@@ -33,7 +33,7 @@ x_radius =		$17 ; collision width / 2
 anim_frame =		$1B
 anim =			$1C
 prev_anim =		$1D
-anim_frame_duration =	$1E
+anim_frame_duration =	$1E ; also known as anim_frame_timer (i think) in 3k
 status =		$22 ; note: exact meaning depends on the object... for sonic/tails: bit 0: leftfacing. bit 1: inair. bit 2: spinning. bit 3: onobject. bit 4: rolljumping. bit 5: pushing. bit 6: underwater.
 routine =		$24
 routine_secondary =	$25
@@ -1110,8 +1110,8 @@ Underwater_palette_line4:	ds.b palette_line_size
 
 SSAngle:	ds.w	1
 SSRotate:	ds.w	1
-SSRotations:	ds.b	1
-				ds.b	$4FB	; $FFFFF100-$FFFFF5FF ; unused, leftover from the Sonic 1 sound driver (and used by it when you port it to Sonic 2)
+SS_RAM_End:
+				ds.b	$4FC	; $FFFFF104-$FFFFF5FF ; unused, leftover from the Sonic 1 sound driver (and used by it when you port it to Sonic 2)
 
 Game_Mode:			ds.w	1	; 1 byte ; see GameModesArray (master level trigger, Mstr_Lvl_Trigger)
 Ctrl_1_Logical:					; 2 bytes

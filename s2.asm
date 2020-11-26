@@ -20458,6 +20458,8 @@ JmpTo4_PlayMusic
     endif
 
 Obj10:	include	"WaiStars.asm"
+; TODO: maybe try and fix the wai stars to at least play nice
+; with post-wai stuff...  im so sick of trying to port 0517 stars
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -35193,11 +35195,11 @@ Unc_Stars_Load:
 	jsr		(QueueDMATransfer).l
 	rts
 
-Unc_Shield_Load:
-	move.l	#ArtUnc_Shield,d1
+LoadHyperStars:
+	move.l	#ArtUnc_HyperSonicStars,d1
 	move.w	#tiles_to_bytes(ArtTile_ShieldAndStars),d2
 	move.w	#$200,d3
-	jsr		(QueueDMATransfer).l
+	jsr     (QueueDMATransfer).l
 	rts
 
 Unc_SuperIcons_Load:
@@ -53136,7 +53138,7 @@ SlotMachine_GetPixelRow:
 	bge.s	+
 	tst.b	(Super_Sonic_flag).w
 	beq.s	+
-; let's try this.
+; let's try this. it worked--
 		lea	(ArtUnc_SSSlotPic).l,a2
 		move.w	d3,d0
 		and.w	#$F8,d0
@@ -53168,10 +53170,17 @@ sub_325964:					  ; ...
 	lsr.w	#1,d0					; Convert into bytes
 	adda.w	d0,a2					; a2 = pointer to desired pixel row
 		rts
+
 ; ---------------------------------------------------------------------------
 
 loc_32598C:					  ; ...
+		cmpi.w	#5,(Player_mode).w
+		blt.s	+
+		lea	(ArtUnc_MTASlotPic).l,a2
+		bra.s	++
++
 		lea	(ArtUnc_KTESlotPic).l,a2
++
 		move.w	d3,d0
 		and.w	#$F8,d0
 		lsr.w	#1,d0
@@ -80312,6 +80321,7 @@ ArtUnc_CNZFlipTiles:	BINCLUDE	"art/uncompressed/Flipping foreground section (CNZ
 ArtUnc_CNZSlotPics:	BINCLUDE	"art/uncompressed/Slot pictures.bin"
 ArtUnc_KTESlotPic:	BINCLUDE	"art/uncompressed/Knuckles Slot picture.bin"
 ArtUnc_SSSlotPic:	BINCLUDE	"art/uncompressed/Super Sonic Slot picture.bin"
+ArtUnc_MTASlotPic:	BINCLUDE	"art/uncompressed/Mighty Slot picture.bin"
 ;---------------------------------------------------------------------------------------
 ; Uncompressed art
 ; Animated background section in CPZ and DEZ ; ArtUnc_4FAFE:

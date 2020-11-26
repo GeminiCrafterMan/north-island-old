@@ -1,3 +1,5 @@
+		
+	clearRAM SSAngle,SS_RAM_End
 		move.w	#SndID_EnterGiantRing,d0
 		bsr.w	PlaySound ; play special stage entry sound
 		bsr.w	Pal_FadeToWhite

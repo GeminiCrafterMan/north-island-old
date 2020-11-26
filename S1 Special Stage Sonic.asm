@@ -776,6 +776,12 @@ Obj09_Main:				; XREF: Obj09_Index
 		addq.b	#2,routine(a0)
 		move.b	#$E,y_radius(a0)
 		move.b	#7,x_radius(a0)
+		cmpi.w	#5,(Player_option).w
+		blt.s	.knuxcheck
+		move.l	#MapUnc_Mighty,mappings(a0)
+	move.w	#make_art_tile(ArtTile_ArtUnc_Sonic,0,0),art_tile(a0)
+	bra.s	+++
+.knuxcheck:
 		cmpi.w	#3,(Player_option).w
 		blt.s	+
 		move.l	#MapUnc_Knuckles,mappings(a0)
@@ -1455,7 +1461,7 @@ Obj09_UPblock:
 		tst.b	$36(a0)
 		bne.w	Obj09_NoGlass
 		move.b	#$1E,$36(a0)
-		btst	#6,(SSRotations).w
+		btst	#6,(SSRotate+1).w
 		beq.s	Obj09_UPsnd
 		asl	(SSRotate).w	; increase stage rotation speed
 		movea.l	$32(a0),a1
@@ -1473,7 +1479,7 @@ Obj09_DOWNblock:
 		tst.b	$36(a0)
 		bne.w	Obj09_NoGlass
 		move.b	#$1E,$36(a0)
-		btst	#6,(SSRotations).w
+		btst	#6,(SSRotate+1).w
 		bne.s	Obj09_DOWNsnd
 		asr	(SSRotate).w	; reduce stage rotation	speed
 		movea.l	$32(a0),a1
