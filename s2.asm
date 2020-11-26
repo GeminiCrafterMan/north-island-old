@@ -74884,6 +74884,37 @@ Touch_Sizes:
 ; loc_3F666:
 Touch_Boss:
 	lea	Touch_Sizes(pc),a3
+	;from this point...
+	cmpi.b	#ObjID_Mighty,(MainCharacter+id).w
+	bne.s	Touch_Boss_cont
+		move.b	status_secondary(a0),d0
+		andi.b	#$73,d0					; Does the player have any shields or is invincible?
+		bne.s	Touch_Boss_cont			; If so, branch
+; By this point, we're focusing purely on the Insta-Shield.
+	cmpi.b	#1,(Insta_Attacking).w
+	bne.s	Touch_Boss_cont
+		move.b	status_secondary(a0),d0			; Get status_secondary...
+		move.w	d0,-(sp)				; ...and save it
+	move.w	#$999,invincibility_time(a0)	; ?
+	bset	#status_sec_isInvincible,status_secondary(a0)	; make the player invincible
+	move.w	x_pos(a0),d2 ; load Sonic's position into d2,d3
+	move.w	y_pos(a0),d3
+		subi.w	#$18,d2					; Subtract width of Insta-Shield
+		subi.w	#$18,d3					; Subtract height of Insta-Shield
+		move.w	#$30,d4					; Player's width
+		move.w	#$30,d5					; Player's height
+
+	lea	(Dynamic_Object_RAM).w,a1
+	move.w	#(Dynamic_Object_RAM_End-Dynamic_Object_RAM)/object_size-1,d6
+	bsr.s	loc_3F69C
+	move.w	(sp)+,d0
+	bclr	#status_sec_isInvincible,status_secondary(a0)	; make the player vulnerable again
+
+.alreadyInvincible:
+	moveq	#0,d0
+	rts
+
+Touch_Boss_cont:
 	move.w	x_pos(a0),d2
 	move.w	y_pos(a0),d3
 	subi_.w	#8,d2
@@ -74891,26 +74922,26 @@ Touch_Boss:
 	move.b	y_radius(a0),d5
 	subq.b	#3,d5
 	sub.w	d5,d3
-	cmpi.b	#$4D,mapping_frame(a0)
-	bne.s	+
+	cmpi.b	#$4D,mapping_frame(a0) ; i think this is the same as when Touch_NoInstaShield checks for AniIDSonAni_Duck...?
+	bne.s	+ ; Touch_NoDuck clone
 	addi.w	#$C,d3
-	moveq	#$A,d5
-+
+	moveq	#$A,d5 ; it looks like it...
++ ; Touch_NoDuck clone
 	move.w	#$10,d4
 	add.w	d5,d5
 	lea	(Dynamic_Object_RAM).w,a1
 	move.w	#(Dynamic_Object_RAM_End-Dynamic_Object_RAM)/object_size-1,d6
 
-loc_3F69C:
+loc_3F69C: ; Touch_Loop clone
 	move.b	collision_flags(a1),d0
-	bne.s	loc_3F6AE
+	bne.s	loc_3F6AE ; Touch_Width clone? No, it's for bosses, but... wow
 
 loc_3F6A2:
 	lea	next_object(a1),a1 ; a1=object
-	dbf	d6,loc_3F69C
+	dbf	d6,loc_3F69C ; go back to that Touch_Loop clone a few more times lmao
 
 	moveq	#0,d0
-	rts
+	rts ; p much the end of being a clone of Touch_NoInstaShield-- jk most of the next section is too
 ; ===========================================================================
 
 loc_3F6AE:
