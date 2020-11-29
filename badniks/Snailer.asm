@@ -13,6 +13,7 @@ Snailer_Index: offsetTable
 Snailer_Main:
 	move.l  #Snailer_Mappings,mappings(a0) ; loc_1F938
 	move.w	#make_art_tile(ArtTile_ArtNem_Snailer,0,0),art_tile(a0) ; the shell
+	jsr		Adjust2PArtPointer
 	ori.b   #$4, render_flags(a0)
 	move.b  #$A, collision_flags(a0)
 	move.b  #$4, priority(a0)
@@ -29,7 +30,7 @@ Snailer_Main:
 	move.b  #$10, width_pixels(a1)
 	move.b  status(a0), status(a1)
 	move.b  render_flags(a0), render_flags(a1)
-	move.l  a0, $2A(a1)
+	move.l  a0, objoff_2A(a1)
 	move.w  x_pos(a0), x_pos(a1)
 	move.w  y_pos(a0), y_pos(a1)
 	move.b  #$2, mapping_frame(a1)
@@ -51,18 +52,18 @@ Snailer_Move:
 	cmpi.w  #$C,d1
 	bge.s   loc_1F7CC
 	add.w   d1, y_pos(a0)
-	lea	 (loc_1F92C).l,a1
-	bsr	 J_AnimateSprite_0E	  ; loc_1F978
+	lea	 (SnailerAniData).l,a1
+	jsr	AnimateSprite	  ; loc_1F978
 	bra	 loc_D340
 loc_1F7CC:
 	addq.b  #$2, routine(a0)
-	move.w  #$14, $30(a0)
-	st	  speedshoes_time(a0)
-	lea	 (loc_1F92C).l,a1
-	bsr	 J_AnimateSprite_0E	  ; loc_1F978
+	move.w  #$14, objoff_30(a0)
+	st	  objoff_34(a0)
+	lea	 (SnailerAniData).l,a1
+	jsr	AnimateSprite	  ; loc_1F978
 	bra	 loc_D340
 loc_1F7E8:
-	tst.b   speedshoes_time+1(a0)	; is this seriously checking for speed shoes...? it is... but two different bits?
+	tst.b   objoff_35(a0)
 	bne.s   +++
 	move.w  ($FFFFB008).w,d0
 	sub.w   x_pos(a0), d0
@@ -82,7 +83,7 @@ loc_1F7E8:
 	move.w  x_vel(a0), d0
 	asl.w   #$2,d0
 	move.w  d0, x_vel(a0)
-	st	  speedshoes_time+1(a0)
+	st	  objoff_35(a0)
 	bsr	 loc_1F82C
 +
 	rts
@@ -105,7 +106,7 @@ loc_1F82C:
 	move.w	x_pos(a0),x_pos(a1)
 	move.w	y_pos(a0),y_pos(a1)
 	move.w	#$100,Obj4B_move_timer(a0)
-	move.w	#-$100,x_vel(a0)
+	move.w	#-$100,x_vel(a0) ; increase speed: normally $100-- probably added by me.
 	btst	#0,render_flags(a0)
 	beq.s	+	; rts
 	neg.w	x_vel(a0)
@@ -115,10 +116,10 @@ loc_1F82C:
 	rts
 
 Snailer_Flame:
-	move.l  $2A(a0), a1
+	move.l  objoff_2A(a0), a1
 	cmpi.b  #ObjID_Snailer,(a1)
 	bne	 J_DeleteObject_26	   ; loc_1F96C
-	tst.b   speedshoes_time(a1)	; we still goin fast?
+	tst.b   objoff_34(a1)	; we still goin fast?
 	bne	 J_DeleteObject_26	   ; loc_1F96C ; if not, delete that flame
 	move.w  x_pos(a1), x_pos(a0)
 	move.w  y_pos(a1), y_pos(a0)
@@ -130,12 +131,12 @@ Snailer_Flame:
 
 +
 	add.w   d0, x_pos(a0)
-	lea	 (loc_1EAF2).l,a1	; this makes the entire body of the Buzzer not appear...?
-	bsr	 J_AnimateSprite_0E	  ; loc_1F978
+	lea	 (Ani_obj4B).l,a1	; buzzer animations
+	jsr	 AnimateSprite
 	bra	 loc_D340
 
 Snailer_Turn: ; possibly...?
-	subi.w  #$1, $30(a0)
+	subi.w  #$1, objoff_30(a0)
 	bpl	 loc_D340
 	neg.w   x_vel(a0)
 	bsr	 J_ObjectFall_06		 ; loc_1F990
@@ -145,12 +146,12 @@ Snailer_Turn: ; possibly...?
 	bchg	#0, status(a0)
 	bchg	#0, render_flags(a0)
 	subq.b  #$2, routine(a0)
-	sf	  speedshoes_time(a0)
-	sf	  speedshoes_time+1(a0)
+	sf	  objoff_34(a0)
+	sf	  objoff_35(a0)
 	bra	 loc_D340
 
 Snailer_DelHead:
-	move.l  $2A(a0), a1
+	move.l  objoff_2A(a0), a1
 	cmpi.b  #ObjID_Snailer,(a1)
 	bne	 J_DeleteObject_26	   ; loc_1F96C
 	move.w  x_pos(a1), x_pos(a0)
@@ -163,7 +164,7 @@ loc_D340:
 	bne.s   loc_D374
 	move.w  x_pos(a0), d0
 	andi.w  #$FF80,d0
-	sub.w   ($FFFFF7DA).w,d0
+	sub.w   (Camera_X_pos_coarse).w,d0
 	cmpi.w  #$280,d0
 	bhi	 loc_D35E
 	jmp	 DisplaySprite		   ; loc_D3C2
@@ -179,7 +180,7 @@ loc_D374:
 	move.w  x_pos(a0), d0
 	andi.w  #$FF00,d0
 	move.w  d0,d1
-	sub.w   ($FFFFF7DA).w,d0
+	sub.w   (Camera_X_pos_coarse).w,d0
 	cmpi.w  #$300,d0
 	bhi	 loc_D38E
 	jmp	 DisplaySprite		   ; loc_D3C2
@@ -200,32 +201,15 @@ loc_D3B0:
 ; ----------------------------------------------------------------------------
 ; sprite mappings
 ; ----------------------------------------------------------------------------
-Snailer_Mappings:		
-	BINCLUDE	"mappings/sprite/objD0.bin"
+Snailer_Mappings:	BINCLUDE	"mappings/sprite/objD0.bin"
 	even
 
-loc_1EAF2: ;??? not sure
-	dc.w	loc_1EAFA-loc_1EAF2
-	dc.w	loc_1EAFD-loc_1EAF2
-	dc.w	loc_1EB01-loc_1EAF2
-	dc.w	loc_1EB05-loc_1EAF2
-loc_1EAFA:		
-	dc.b	$F, $00, $FF				 
-loc_1EAFD:
-	dc.b	$2, $3, $4, $FF
-loc_1EB01:		
-	dc.b	$3, $5, $6, $FF
-loc_1EB05:		
-	dc.b	$9, $1, $1, $1, $1, $1, $FD, $00, $00
-	even
-
-loc_1F92C:	; also not sure
-	dc.w	loc_1F930-loc_1F92C
-	dc.w	loc_1F934-loc_1F92C
-loc_1F930:
-	dc.b	$5, $00, $1, $FF
-loc_1F934:
-	dc.b	$1, $00, $1, $FF
+SnailerAniData:	offsetTable
+	offsetTableEntry.w	SnailAni_Slow
+	offsetTableEntry.w	SnailAni_Fast
+SnailAni_Slow:	dc.b	$5, $00, $1, $FF
+	rev02even
+SnailAni_Fast:	dc.b	$1, $00, $1, $FF
 	even
 ;=============================================================================== 
 ; Object 0xD0 - Snailer
@@ -235,8 +219,6 @@ J_DeleteObject_26: ; loc_1F96C:
 		jmp	 DeleteObject			; loc_D3B4
 J_SingleObjLoad2_0C: ; loc_1F972:
 		jmp	 SingleObjLoad2	  ; loc_E788
-J_AnimateSprite_0E: ; loc_1F978:
-		jmp	 AnimateSprite		   ; loc_D412
 J_ObjectFall_06: ; loc_1F990:
 		jmp	ObjectMoveAndFall			   ; loc_D24E
 J_SpeedToPos_12: ; loc_1F996:

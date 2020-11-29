@@ -1,7 +1,7 @@
+	cmpi.b	#ObjID_Tails,(MainCharacter+id).w
+	bne.w	Tails_Super_Return
 	tst.b	(Super_Sonic_flag).w	; Ignore all this code if not Super Tails
 	beq.w	Tails_Super_Return
-	cmpi.w	#2,(Player_mode).w
-	bne.w	Tails_Super_Return
 	cmpi.b	#1,(Super_Sonic_palette).w	; is Super Sonic's transformation sequence finished?
 	beq.w	Tails_Super_Return			; if not, branch
 	tst.b	(Update_HUD_timer).w ; is the hud being updated (is the level over?)

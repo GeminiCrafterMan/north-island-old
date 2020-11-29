@@ -13,7 +13,7 @@
 	bset	#1,$39(a0)
  
 	bsr.w	Sonic_LevelBound
-	bsr.w	AnglePos
+	jsr	AnglePos
  
 +
 	rts	
@@ -75,6 +75,6 @@ Sonic_DashResetScr:
 	subq.w	#2,($FFFFF73E).w
 +
 	bsr.w	Sonic_LevelBound
-	bsr.w	AnglePos
+	jsr	AnglePos
 	rts
 	

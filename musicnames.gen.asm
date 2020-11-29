@@ -4,19 +4,21 @@ SongNames:	offsetTable
 	offsetTableEntry.w	MusNam_EGHZ
 	offsetTableEntry.w	MusNam_SR
 	offsetTableEntry.w	MusNam_DL
-	offsetTableEntry.w	MusNam_NT
-	offsetTableEntry.w	MusNam_UM
+	offsetTableEntry.w	MusNam_WM
+	offsetTableEntry.w	MusNam_Jungle
 	offsetTableEntry.w	MusNam_CM
 	offsetTableEntry.w	MusNam_MR
 	offsetTableEntry.w	MusNam_Baka
+	offsetTableEntry.w	MusNam_MLS
+	offsetTableEntry.w	MusNam_SurgingPower
 	offsetTableEntry.w	MusNam_ChoosePlayer
 	offsetTableEntry.w	MusNam_RM
 	offsetTableEntry.w	MusNam_WWGameSel
-	offsetTableEntry.w	MusNam_WM
-	offsetTableEntry.w	MusNam_Jungle
 	offsetTableEntry.w	MusNam_S3DBInvincible
 	offsetTableEntry.w	MusNam_S3DBSpecStage
 	offsetTableEntry.w	MusNam_S3KEndLevel
+	offsetTableEntry.w	MusNam_NT
+	offsetTableEntry.w	MusNam_UM
 	offsetTableEntry.w	MusNam_MM3Title
 	offsetTableEntry.w	MusNam_MM3Boss
 	offsetTableEntry.w	MusNam_SPASpecStag
@@ -48,19 +50,21 @@ MusNam_GHZ:	songtext	"GREEN HILL"
 MusNam_EGHZ:	songtext	"GHZ WITH EHZ"
 MusNam_SR:	songtext	"SHOOTING RISTAR"
 MusNam_DL:	songtext	"DANCING LEAVES"
-MusNam_NT:	songtext	"NEO TOKYO"
-MusNam_UM:	songtext	"UNDER MAGMA"
+MusNam_WM:	songtext	"WOOD MAN"
+MusNam_Jungle:	songtext	"STAGE 2 JUNGLE"
 MusNam_CM:	songtext	"COLD MAN"
 MusNam_MR:	songtext	"MISTY RAIN"
 MusNam_Baka:	songtext	"BELOVED TOMBOY"
+MusNam_MLS:	songtext	"MMX2 INTRO"
+MusNam_SurgingPower:	songtext	"SURGING POWER"
 MusNam_ChoosePlayer:	songtext	"SMB2 PLAYER SEL"
 MusNam_RM:	songtext	"ROBOT MUSEUM"
 MusNam_WWGameSel:	songtext	"GAME SELECT"
-MusNam_WM:	songtext	"WOOD MAN"
-MusNam_Jungle:	songtext	"STAGE 2 JUNGLE"
 MusNam_S3DBInvincible:	songtext	"S3D INVINCIBLE"
 MusNam_S3DBSpecStage:	songtext	"S3D SPECIALSTAGE"
 MusNam_S3KEndLevel:	songtext	"S3K ACT CLEAR"
+MusNam_NT:	songtext	"NEO TOKYO"
+MusNam_UM:	songtext	"UNDER MAGMA"
 MusNam_MM3Title:	songtext	"MEGA MAN 3 TITLE"
 MusNam_MM3Boss:	songtext	"MEGA MAN 3 BOSS"
 MusNam_SPASpecStag:	songtext	"SPA SPECIALSTAGE"

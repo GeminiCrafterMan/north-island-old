@@ -1311,7 +1311,7 @@
             "name": "Title menu",
             "palettes": [],
             "art": {
-                "path": "",
+                "path": "art\\uncompressed\\Sonic's art.bin",
                 "compression": "Uncompressed"
             },
             "mappings": {
@@ -1447,6 +1447,90 @@
                 "enabled": true,
                 "path": "mappings\\spriteDPLC\\Insta-Shield.bin",
                 "format": "Sonic 2/3&K",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Stump",
+            "palettes": [],
+            "art": {
+                "path": "art\\nemesis\\WZ Stump.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\obj3B_b.bin",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Saw",
+            "palettes": [],
+            "art": {
+                "path": "art\\nemesis\\WZ saw.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "mappings\\sprite\\S1Obj48.asm",
+                "format": "Sonic 2",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Tails Slot",
+            "palettes": [],
+            "art": {
+                "path": "art\\uncompressed\\Tails Slot Picture.bin",
+                "compression": "Uncompressed"
+            },
+            "mappings": {
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            }
+        },
+        {
+            "name": "Standard Font X",
+            "palettes": [],
+            "art": {
+                "path": "art\\nemesis\\Standard font X.bin",
+                "compression": "Nemesis"
+            },
+            "mappings": {
+                "path": "",
+                "format": "Sonic 1",
+                "customDefinition": "",
+                "label": ""
+            },
+            "dplcs": {
+                "enabled": false,
+                "path": "",
+                "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
             }

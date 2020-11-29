@@ -8,13 +8,15 @@ Obj_HyperSonic_Stars:
 H0517Stars_Index:	offsetTable
 		offsetTableEntry.w H0517Stars_Init	; 0
 		offsetTableEntry.w Obj_HyperSonic_Stars_Init
-		offsetTableEntry.w Obj_HyperSonic_Stars_Main.child	; 2
-		offsetTableEntry.w Obj_HyperSonic_Stars_Main	; 2
+		offsetTableEntry.w Obj_HyperSonic_Stars_Main	; 4
+		offsetTableEntry.w Obj_HyperSonic_Stars_Main.child	; 6
 ; ===========================================================================
 H0517Stars_Init:
+		move.w	(MainCharacter+x_pos).w,x_pos(a0)
+		move.w	(MainCharacter+y_pos).w,y_pos(a0)
+		lea		(Ani_HyperStars).l,a1
+		jsr	AnimateSprite
         jsr     LoadHyperStars
-                move.w  #SndID_Checkpoint,d0
-                jsr     PlaySound
 ;        addq.b  #2,routine(a0)
 	move.l	#Map_HyperSonicStars,mappings(a0)
 		move.b	#4,render_flags(a0)
@@ -29,8 +31,8 @@ H0517Stars_Init:
 		moveq	#3,d1
 
 	.createObject:
-		addq.b	#2,routine(a1)
-		move.b	d0,angle(a1)
+		move.b	#2,routine(a1)
+		move.b	d0,angle(a1)	; set to 0 beforehand
 		;move.b	d2,anim_frame_duration(a1) ;Added from 0517?
 		addi.b	#$40,d0
 		addq.b	#1,d2
@@ -44,20 +46,24 @@ H0517Stars_Init:
 Obj_HyperSonic_Stars_Init:
 		subq.b	#1,anim_frame_duration(a0)
 		bne.s	H0517Stars_Init.return
+		move.l	#Map_HyperSonicStars,mappings(a0)
+		move.b	#4,render_flags(a0)
+		move.b	#$80,priority(a0)
+		move.b	#$18,width_pixels(a0)
 		move.w	#ArtTile_ShieldAndStars,art_tile(a0)
 		move.b	#6,mapping_frame(a0)
 		cmpa.w	#InvincibilityStars,a0
 		beq.s	.isParent
-		addq.b	#2,routine(a0)
+		move.b	#6,routine(a0)
 		bra.s	Obj_HyperSonic_Stars_Main.child
 ; ---------------------------------------------------------------------------
 
 	.isParent:
-		addq.b	#2,routine(a0)
+		move.b	#4,routine(a0)
 
 Obj_HyperSonic_Stars_Main:
 		tst.b	anim(a0)
-		beq.s	Obj_HyperSonic_Stars_Main.child
+		beq.s	.child
 		clr.b	anim(a0)
 		move.w	(MainCharacter+x_pos).w,x_pos(a0)
 		move.w	(MainCharacter+y_pos).w,y_pos(a0)
@@ -91,7 +97,7 @@ loc_18054:                              ; CODE XREF: ROM:0001804C?j
         add.w   (MainCharacter+y_pos).w,d3
         move.w  d2,$10(a0)
         move.w  d3,$14(a0)
-        move.w  #$80,8(a0)
+        move.w  #$80,priority(a0)
         tst.b   angle(a0)
         bpl.s   loc_180A8
         move.w  #$100,8(a0)
@@ -111,3 +117,8 @@ loc_180C2:                              ; CODE XREF: ROM:000180BA?j
 loc_180C8:                              ; CODE XREF: ROM:0001803E?j
         jmp	(DeleteObject).l
 ; ---------------------------------------------------------------------------
+
+Ani_HyperStars: offsetTable
+	offsetTableEntry.w .theonlyanim
+.theonlyanim:	dc.b	0, 0, 1, 2, 3, 4, 5, $FF
+	even

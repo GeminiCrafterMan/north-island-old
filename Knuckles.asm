@@ -1660,7 +1660,7 @@ Knuckles_Boundary_Bottom:			  ; ...
 		cmp.w	d0,d1			; screen still scrolling down?
 		blt.s	+			; if so, don't kill Sonic
 	addq.l	#4,sp
-	jmpto	(KillCharacter).l, JmpTo_KillCharacter
+	jmp	(KillCharacter).l
 +
 	rts
 ; ---------------------------------------------------------------------------

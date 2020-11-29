@@ -3,19 +3,21 @@ zMasterPlaylist:
 	zmakePlaylistEntry	Mus_EGHZ,0
 	zmakePlaylistEntry	Mus_SR,musprop_uncompressed
 	zmakePlaylistEntry	Mus_DL,musprop_uncompressed
-	zmakePlaylistEntry	Mus_NT,musprop_uncompressed
-	zmakePlaylistEntry	Mus_UM,musprop_uncompressed
+	zmakePlaylistEntry	Mus_WM,musprop_uncompressed
+	zmakePlaylistEntry	Mus_Jungle,0
 	zmakePlaylistEntry	Mus_CM,musprop_uncompressed
 	zmakePlaylistEntry	Mus_MR,0
 	zmakePlaylistEntry	Mus_Baka,0
+	zmakePlaylistEntry	Mus_MLS,0
+	zmakePlaylistEntry	Mus_SurgingPower,musprop_uncompressed
 	zmakePlaylistEntry	Mus_ChoosePlayer,0
 	zmakePlaylistEntry	Mus_RM,musprop_uncompressed
 	zmakePlaylistEntry	Mus_WWGameSel,musprop_uncompressed
-	zmakePlaylistEntry	Mus_WM,musprop_uncompressed
-	zmakePlaylistEntry	Mus_Jungle,0
 	zmakePlaylistEntry	Mus_S3DBInvincible,0
 	zmakePlaylistEntry	Mus_S3DBSpecStage,musprop_uncompressed
 	zmakePlaylistEntry	Mus_S3KEndLevel,0
+	zmakePlaylistEntry	Mus_NT,musprop_uncompressed
+	zmakePlaylistEntry	Mus_UM,musprop_uncompressed
 	zmakePlaylistEntry	Mus_MM3Title,musprop_uncompressed
 	zmakePlaylistEntry	Mus_MM3Boss,musprop_uncompressed
 	zmakePlaylistEntry	Mus_SPASpecStag,musprop_uncompressed

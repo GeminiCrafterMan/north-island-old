@@ -1206,7 +1206,7 @@ SuperMighty_Cont: ; known as Sonic_Transform: in S3K
 	move.b	#1,(Super_Sonic_flag).w
 	move.b	#$81,obj_control(a0)
 	move.b	#AniIDSupSonAni_Transform,anim(a0)			; use transformation animation
-	move.b	#ObjID_SuperSonicStars,(SuperSonicStars+id).w ; load Obj7E (super sonic stars object) at $FFFFD040
+	move.b	#ObjID_HyperTrail,(SuperSonicStars+id).w ; load Obj7E (super sonic stars object) at $FFFFD040
 	move.b	#ObjID_WaiInvinc,(InvincibilityStars+id).w ; load Obj35 (invincibility stars) at $FFFFD200
 	move.w	a0,(InvincibilityStars+parent).w
 	move.w	#$A00,(Sonic_top_speed).w
@@ -1267,6 +1267,8 @@ return2_1AB36:
 	rts
 ; End of subroutine Mighty_JumpHeight
 Mighty_Super:
+	cmpi.b	#ObjID_Mighty,(MainCharacter+id).w
+	bne.w	MtySuperRet
 	tst.b	(Super_Sonic_flag).w	; Ignore all this code if not Super Sonic
 	beq.w	MtySuperRet
 	cmpi.b	#1,(Super_Sonic_palette).w	; is Super Sonic's transformation sequence finished?

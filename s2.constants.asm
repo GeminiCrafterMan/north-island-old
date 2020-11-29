@@ -138,6 +138,11 @@ objoff_28 =		$28 ; overlaps subtype, but a few objects use it for other things a
 object_size =		$40 ; the size of an object
 next_object =		object_size
 
+; S3K shield shit.
+LastLoadedDPLC      = $30;objoff_30
+Art_Address         = $34 ;objoff_34
+DPLC_Address        = $38 ;objoff_38
+
 ; ---------------------------------------------------------------------------
 ; Bits 3-6 of an object's status after a SolidObject call is a
 ; bitfield with the following meaning:
@@ -488,6 +493,7 @@ PLCID_Wz2 =			id(PLCptr_Wz2) ; 46
 PLCID_Std2_Ice =			id(PLCptr_Std2_Ice) ; 1
 PLCID_MightyLife =			id(PLCptr_MightyLife)
 PLCID_ResultsMighty =	id(PLCptr_ResultsMighty)
+PLCID_WzBoss =			id(PLCptr_WzBoss) ; 46
 
 ; Object IDs
 offset :=	Obj_Index
@@ -593,6 +599,8 @@ ObjID_Mighty =				id(ObjPtr_Mighty)			; 5A
 ObjID_Insta_Shield =		id(ObjPtr_InstaShield)		; 5B
 ObjID_Masher =				id(ObjPtr_Masher)			; 5C
 ObjID_CPZBoss =				id(ObjPtr_CPZBoss)		; 5D
+ObjID_WZSaw =				id(ObjPtr_WZSaw)		; 5E
+ObjID_PushBlock =			id(ObjPtr_PushableBlock); 5F
 ObjID_Knuckles =			id(ObjPtr_Knuckles)		; 62
 ObjID_MTZTwinStompers =		id(ObjPtr_MTZTwinStompers); 64
 ObjID_MTZLongPlatform =		id(ObjPtr_MTZLongPlatform); 65
@@ -622,8 +630,9 @@ ObjID_CPZStaircase =		id(ObjPtr_CPZStaircase)	; 78
 ObjID_Starpost =			id(ObjPtr_Starpost)		; 79
 ObjID_SidewaysPform =		id(ObjPtr_SidewaysPform)	; 7A
 ObjID_PipeExitSpring =		id(ObjPtr_PipeExitSpring)	; 7B
+ObjID_HyperTrail =			id(ObjPtr_HyperTrail)	; 7C
 ObjID_EndPoints =			id(ObjPtr_EndPoints)	; 7D
-ObjID_SuperSonicStars =		id(ObjPtr_SuperSonicStars)	; 7E
+ObjID_WZBoss =				id(ObjPtr_WZBoss)	; 7E
 ObjID_VineSwitch =			id(ObjPtr_VineSwitch)		; 7F
 ObjID_MovingVine =			id(ObjPtr_MovingVine)		; 80
 ObjID_MCZDrawbridge =		id(ObjPtr_MCZDrawbridge)	; 81
@@ -1111,7 +1120,9 @@ Underwater_palette_line4:	ds.b palette_line_size
 SSAngle:	ds.w	1
 SSRotate:	ds.w	1
 SS_RAM_End:
-				ds.b	$4FC	; $FFFFF104-$FFFFF5FF ; unused, leftover from the Sonic 1 sound driver (and used by it when you port it to Sonic 2)
+HyperSonicStars_Address1:	ds.w	1
+HyperSonicStars_Address2:	ds.w	1
+				ds.b	$4F8	; $FFFFF104-$FFFFF5FF ; unused, leftover from the Sonic 1 sound driver (and used by it when you port it to Sonic 2)
 
 Game_Mode:			ds.w	1	; 1 byte ; see GameModesArray (master level trigger, Mstr_Lvl_Trigger)
 Ctrl_1_Logical:					; 2 bytes
