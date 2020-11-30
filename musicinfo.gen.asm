@@ -8,11 +8,11 @@ zMasterPlaylist:
 	zmakePlaylistEntry	Mus_CM,musprop_uncompressed
 	zmakePlaylistEntry	Mus_MR,0
 	zmakePlaylistEntry	Mus_Baka,0
-	zmakePlaylistEntry	Mus_MLS,0
 	zmakePlaylistEntry	Mus_SurgingPower,musprop_uncompressed
 	zmakePlaylistEntry	Mus_ChoosePlayer,0
 	zmakePlaylistEntry	Mus_RM,musprop_uncompressed
 	zmakePlaylistEntry	Mus_WWGameSel,musprop_uncompressed
+	zmakePlaylistEntry	Mus_WT2,musprop_uncompressed
 	zmakePlaylistEntry	Mus_S3DBInvincible,0
 	zmakePlaylistEntry	Mus_S3DBSpecStage,musprop_uncompressed
 	zmakePlaylistEntry	Mus_S3KEndLevel,0

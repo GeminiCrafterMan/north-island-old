@@ -4138,7 +4138,7 @@ MusicList: zoneOrderedTable 1,2
 	zoneTableEntry.b MusID_SR,	MusID_DL	; 0 ; Lavender Valley
 	zoneTableEntry.b MusID_GHZ, MusID_EGHZ	; 1 ; Green Hill
 	zoneTableEntry.b MusID_WM,	MusID_Jungle; 2 ; Wood
-	zoneTableEntry.b MusID_MLS,	MusID_RM	; 3 ; Test
+	zoneTableEntry.b MusID_RM,	MusID_RM	; 3 ; Test
 	zoneTableEntry.b MusID_MTZ, MusID_MTZ	; 4 ; MTZ1,2
 	zoneTableEntry.b MusID_MTZ, MusID_EHZ	; 5 ; MTZ3
 	zoneTableEntry.b MusID_WFZ, MusID_EHZ	; 6 ; WFZ
@@ -9439,7 +9439,7 @@ LevelSize: zoneOrderedTable 2,8	; WrdArr_LvlSize
 	zoneTableEntry.w	$0,	$24BF,	$0,	$300	; GHZ act 1
 	zoneTableEntry.w	$0,	$1EBF,	$0,	$720	; GHZ act 2
 	zoneTableEntry.w	$0,	$29A0,	$0,	$720	; WZ act 1
-	zoneTableEntry.w	$0,	$3FFF,	$0,	$720	; WZ act 2
+	zoneTableEntry.w	$0,	$2A60,	$0,	$720	; WZ act 2
 	zoneTableEntry.w	$0,	$3FFF,	$0,	$720	; $03
 	zoneTableEntry.w	$0,	$3FFF,	$0,	$720
 	zoneTableEntry.w	$0,	$2280,	-$100,	$800	; MTZ act 1
@@ -14071,8 +14071,8 @@ LevEvents_WZ2_Routine1:
 	blo.s	+	; rts
 	move.w	(Camera_X_pos).w,(Camera_Min_X_pos).w
 	move.w	(Camera_X_pos).w,(Tails_Min_X_pos).w
-;	move.w	#$390,(Camera_Max_Y_pos).w
-;	move.w	#$390,(Tails_Max_Y_pos).w
+	move.w	#$300,(Camera_Max_Y_pos).w
+	move.w	#$300,(Tails_Max_Y_pos).w
 	addq.b	#2,(Dynamic_Resize_Routine).w ; => LevEvents_EHZ2_Routine2
 +
 	rts
@@ -14084,12 +14084,12 @@ LevEvents_WZ2_Routine1:
 ; ===========================================================================
 ; loc_E6B0:
 LevEvents_WZ2_Routine2:
-	cmpi.w	#$28F0,(Camera_X_pos).w
+	cmpi.w	#$2960,(Camera_X_pos).w
 	blo.s	+	; rts
-	move.w	#$28F0,(Camera_Min_X_pos).w
-	move.w	#$2940,(Camera_Max_X_pos).w
-	move.w	#$28F0,(Tails_Min_X_pos).w
-	move.w	#$2940,(Tails_Max_X_pos).w
+	move.w	#$2960,(Camera_Min_X_pos).w
+	move.w	#$2960,(Camera_Max_X_pos).w
+	move.w	#$2960,(Tails_Min_X_pos).w
+	move.w	#$2960,(Tails_Max_X_pos).w
 	addq.b	#2,(Dynamic_Resize_Routine).w ; => LevEvents_EHZ2_Routine3
 	move.w	#MusID_FadeOut,d0
 	jsrto	(PlayMusic).l, JmpTo3_PlayMusic
@@ -14102,19 +14102,15 @@ LevEvents_WZ2_Routine2:
 ; ===========================================================================
 ; loc_E6EE:
 LevEvents_WZ2_Routine3:
-;	cmpi.w	#$388,(Camera_Y_pos).w
-;	blo.s	+
-;	move.w	#$388,(Camera_Min_Y_pos).w
-;	move.w	#$388,(Tails_Min_Y_pos).w
-;+
+	move.w	#$280,(Camera_Min_Y_pos).w
+	move.w	#$280,(Tails_Min_Y_pos).w
 	addq.b	#1,(ScreenShift).w
 	cmpi.b	#$5A,(ScreenShift).w
 	blo.s	++
 	jsrto	(SingleObjLoad).l, JmpTo_SingleObjLoad
 	bne.s	+
 
-	move.b	#ObjID_WZBoss,id(a1) ; load obj56 (EHZ boss)
-;	move.b	#$81,subtype(a1)
+	move.b	#ObjID_WZBoss,id(a1) ; load """GHZ""" (WHZ) Boss
 	move.w	#$2A60,x_pos(a1)
 	move.w	#$280,y_pos(a1)
 +
