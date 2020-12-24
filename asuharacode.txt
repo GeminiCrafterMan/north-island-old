@@ -1,0 +1,102 @@
+Touch_ChkHurt:				; XREF: Touch_ChkValue
+		tst.w	($FFFFFE2C).w			; is Sonic invincible or shield-less?
+		beq.s	Touch_ChkHurt_Alt		; if not, you can get hurt
+		tst.b	($FFFFFE2D).w			; is Sonic invincible?
+		bne.w	Touch_ChkHurt_Return		; if yes, branch
+		move.b	($FFFFFE2C).w,d0		; get shield type
+		cmp.b	shield_reaction(a1),d0	; is the shield supposed the negate the effects of the object?
+		bne.w	Touch_ChkHurt_Alt		; if not, get hurt as usual
+
+Touch_ChkHurt_Return:			; XREF: Touch_Hurt
+		moveq	#-1,d0
+		rts	
+
+; ===========================================================================
+
+Touch_ChkHurt_Alt:				; XREF: Touch_ChkValue
+
+; Knuckles only
+                cmpi.b  #ID_Knux,(Character_Slot).w	  ; Knuckles?
+                bne.w   @ignore		          ; if not, ignore
+		cmp.b	#1,collision_property(a0) ; is Knuckles gliding?
+		bne.w	Touch_ChkHurt_ChkInvinc	  ; if not, return
+		jmp 	@beep
+		
+; Tails only		
+@ignore:
+                cmpi.b  #ID_Tails,(Character_Slot).w    ; Tails?
+                bne.w   Touch_ChkHurt_ChkInvinc	  ; if not, ignore
+		btst	#6,$22(a0)	          ; is Tails underwater?
+		bne.w	Touch_ChkHurt_ChkInvinc   ; if yes, branch
+		tst.b	(TailsFly_Flag).w	  ; is Tails flying?
+		beq.w	Touch_ChkHurt_ChkInvinc	  ; if not, branch
+		jmp 	@beep
+		
+; --------------------------------------------------------------------------
+; Check if colliding object is a projectile that bounces off shields
+; --------------------------------------------------------------------------
+@beep:
+		lea     ProjectileBounce(pc),a2   ; load list of projectiles
+        @checkobject:
+		move.w  (a2)+,d1                  ; puts two bytes $(routine number)(object id) into d1
+		cmpi.w  #$00FF,d1                 ; reached the end of list?
+		beq.s   Touch_ChkHurt_ChkInvinc  ; if so, branch
+		cmp.b   (a1),d1                   ; does object id match with list?
+		bne.s   @checkobject              ; if not, check next item on list
+	@checkroutine:
+                move.b  #0,d1                     ; clear object id from d1
+	        tst.w   d1                        ; is there a routine number left over to check for?
+	        beq.s   @bounceprojectile         ; if not, branch
+                lsr.w   #8,d1                     ; shift routine number into lowest byte of register
+		cmp.b   $24(a1),d1          ; does object routine match with list?
+		bne.s   @checkobject              ; if not, check next item on list
+; --------------------------------------------------------------------------
+          ; object bounces off shield
+        @bounceprojectile:
+		move.w	8(a0),d1                ; sonic's X
+		move.w	$C(a0),d2               ;   ""    Y
+		sub.w	8(a1),d1                ; sub object's X
+		sub.w	$C(a1),d2               ;  ""    ""    Y
+		jsr	(CalcAngle).l
+		
+		
+                cmpi.b  #ID_Tails,(Character_Slot).w		; Tails?
+                bne.w   @ignore3	                ; if not, ignore
+		subi.b	#$20,d0
+		cmpi.b	#$40,d0
+		bcc.w	Touch_ChkHurt_ChkInvinc
+		
+@ignore3:
+		jsr	(CalcSine).l
+		muls.w	#-$800,d1
+		asr.l	#8,d1
+		move.w	d1,$10(a1)
+		muls.w	#-$800,d0
+		asr.l	#8,d0
+		move.w	d0,$12(a1)
+;		clr.b	collision_flags(a1)         ; clear's object's element type (s3k only)
+		bra.w	Touch_ChkHurt_Return
+		
+		
+Touch_ChkHurt_ChkInvinc:
+		tst.b	($FFFFFE2D).w	; is Sonic invincible?
+		beq.s	Touch_Hurt	; if not, branch
+		jmp	Touch_ChkHurt_Return
+		
+ProjectileBounce:
+		dc.b	$06,$5F ; Walking Bomb
+		dc.b	$00,$23 ; Buzz Bomber's missile object
+		dc.b	$08,$1F ; Crabmeat (missile sub-object)
+		dc.b	$00,$FF ; End
+		even
+
+; ===========================================================================
+
+Touch_Hurt:				; XREF: Touch_ChkHurt
+		nop	
+		tst.w	$30(a0)			; Is the player invulnerable?
+		bne.w	Touch_ChkHurt_Return	; If so, branch
+		movea.l	a1,a2
+
+; End of function TouchResponse
+; continue straight to HurtSonic

@@ -9,7 +9,8 @@ SongNames:	offsetTable
 	offsetTableEntry.w	MusNam_CM
 	offsetTableEntry.w	MusNam_MR
 	offsetTableEntry.w	MusNam_Baka
-	offsetTableEntry.w	MusNam_SurgingPower
+	offsetTableEntry.w	MusNam_Wood
+	offsetTableEntry.w	MusNam_Animaniacs
 	offsetTableEntry.w	MusNam_ChoosePlayer
 	offsetTableEntry.w	MusNam_RM
 	offsetTableEntry.w	MusNam_WWGameSel
@@ -55,7 +56,8 @@ MusNam_Jungle:	songtext	"STAGE 2 JUNGLE"
 MusNam_CM:	songtext	"COLD MAN"
 MusNam_MR:	songtext	"MISTY RAIN"
 MusNam_Baka:	songtext	"BELOVED TOMBOY"
-MusNam_SurgingPower:	songtext	"SURGING POWER"
+MusNam_Wood:	songtext	"WOOD ZONE"
+MusNam_Animaniacs:	songtext	"ANIMANIACS THEME"
 MusNam_ChoosePlayer:	songtext	"SMB2 PLAYER SEL"
 MusNam_RM:	songtext	"ROBOT MUSEUM"
 MusNam_WWGameSel:	songtext	"GAME SELECT"

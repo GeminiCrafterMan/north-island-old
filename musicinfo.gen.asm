@@ -8,7 +8,8 @@ zMasterPlaylist:
 	zmakePlaylistEntry	Mus_CM,musprop_uncompressed
 	zmakePlaylistEntry	Mus_MR,0
 	zmakePlaylistEntry	Mus_Baka,0
-	zmakePlaylistEntry	Mus_SurgingPower,musprop_uncompressed
+	zmakePlaylistEntry	Mus_Wood,musprop_uncompressed
+	zmakePlaylistEntry	Mus_Animaniacs,musprop_uncompressed
 	zmakePlaylistEntry	Mus_ChoosePlayer,0
 	zmakePlaylistEntry	Mus_RM,musprop_uncompressed
 	zmakePlaylistEntry	Mus_WWGameSel,musprop_uncompressed

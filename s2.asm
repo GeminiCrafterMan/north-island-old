@@ -19541,13 +19541,7 @@ invincible_monitor:
 	bne.s	+
 	cmpi.b	#$C,air_left(a1)	; or when drowning
 	bls.s	+
-	cmpi.b	#ObjID_Mighty,id(a1)
-	bne.s	.notmighty
-	move.w	#MusID_SurgingPower,d0	; prepare to play invincibility music
-	bra.s	.done
-.notmighty:
 	move.w	#MusID_S3DBInvincible,d0	; prepare to play invincibility music
-.done:
 	jsr	(PlayMusic).l
 +
 	move.b	#ObjID_InvStars,(InvincibilityStars+id).w ; load Obj35 (invincibility stars) at $FFFFD200
@@ -35268,13 +35262,7 @@ ResumeMusic:
 
 	btst	#status_sec_isInvincible,status_secondary(a1)
 	beq.s	+		; branch if Sonic is not invincible
-	cmpi.b	#ObjID_Mighty,id(a1)
-	bne.s	.notmighty
-	move.w	#MusID_SurgingPower,d0	; prepare to play invincibility music
-	bra.s	+
-.notmighty:
 	move.w	#MusID_S3DBInvincible,d0	; prepare to play invincibility music
-+
 	tst.b	(Super_Sonic_flag).w
 	beq.s	+		; branch if it isn't Super Sonic
 	move.w	#MusID_SPASpecStag,d0	; prepare to play super sonic music
@@ -43998,6 +43986,11 @@ Obj47_Main:
 	beq.s	+
 	moveq	#7,d3
 +
+;	tst.b	subtype(a0)
+;	bpl.s	+
+;	bsr.w	But_MZBlock
+;	bne.s	++
+;+
 	move.b	status(a0),d0
 	andi.b	#standing_mask,d0
 	bne.s	+
@@ -44037,8 +44030,79 @@ JmpTo6_SolidObject
 	align 4
     endif
 
+But_MZBlock:
+		move.w	d3,-(sp)
+		move.w	x_pos(a0),d2
+		move.w	y_pos(a0),d3
+		subi.w	#$10,d2
+		subq.w	#8,d3
+		move.w	#$20,d4
+		move.w	#$10,d5
+		lea	($FFFFD800).w,a1 ; begin checking object RAM
+		move.w	#$5F,d6
 
+But_MZLoop:
+		tst.b	render_flags(a1)
+		bpl.s	loc_BE4E
+		cmpi.b	#ObjID_PushBlock,id(a1) ; is the object a green MZ block?
+		beq.s	loc_BE5E	; if yes, branch
 
+loc_BE4E:
+		lea	$40(a1),a1	; check	next object
+		dbf	d6,But_MZLoop	; repeat $5F times
+
+		move.w	(sp)+,d3
+		moveq	#0,d0
+
+locret_BE5A:
+		rts	
+; ===========================================================================
+But_MZData:	dc.b $10, $10
+; ===========================================================================
+
+loc_BE5E:
+		moveq	#1,d0
+		andi.w	#$3F,d0
+		add.w	d0,d0
+		lea	But_MZData-2(pc,d0.w),a2
+		move.b	(a2)+,d1
+		ext.w	d1
+		move.w	x_pos(a1),d0
+		sub.w	d1,d0
+		sub.w	d2,d0
+		bcc.s	loc_BE80
+		add.w	d1,d1
+		add.w	d1,d0
+		bcs.s	loc_BE84
+		bra.s	loc_BE4E
+; ===========================================================================
+
+loc_BE80:
+		cmp.w	d4,d0
+		bhi.s	loc_BE4E
+
+loc_BE84:
+		move.b	(a2)+,d1
+		ext.w	d1
+		move.w	y_pos(a1),d0
+		sub.w	d1,d0
+		sub.w	d3,d0
+		bcc.s	loc_BE9A
+		add.w	d1,d1
+		add.w	d1,d0
+		bcs.s	loc_BE9E
+		bra.s	loc_BE4E
+; ===========================================================================
+
+loc_BE9A:
+		cmp.w	d5,d0
+		bhi.s	loc_BE4E
+
+loc_BE9E:
+		move.w	(sp)+,d3
+		moveq	#1,d0
+		rts	
+; End of function But_MZBlock
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------

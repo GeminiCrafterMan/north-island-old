@@ -14,8 +14,8 @@ Mus_TFIVCountDown:	include "sound/music/Thunder Force IV/Count Down.asm" ; $1505
 SndMus2_Start:	startBank
 
 Mus_MetalSquad:	include "sound/music/Thunder Force IV/Metal Squad.asm" ; $6227 bytes
-Mus_SurgingPower:	include "sound/music/Chaotix/Surging Power.asm" ; $17F5 bytes
-Mus_EGHZ:	BINCLUDE "sound/music/GHZ with EHZ voices_cmp.bin" ; $5BA bytes
+Mus_Wood:	include "sound/music/Experiments/Wood.asm" ; $1A94 bytes
+Mus_SCZ:	BINCLUDE "sound/music/S2/SCZ_cmp.bin" ; $326 bytes
 
 	finishBank
 
@@ -61,7 +61,7 @@ SndMus6_Start:	startBank
 
 Mus_UM:	include "sound/music/Ristar/Under Magma.asm" ; $3D17 bytes
 Mus_SR:	include "sound/music/Ristar/Shooting Ristar.asm" ; $3C30 bytes
-Mus_GHZ:	BINCLUDE "sound/music/Mus81 - GHZ_cmp.bin" ; $5AA bytes
+Mus_EGHZ:	BINCLUDE "sound/music/GHZ with EHZ voices_cmp.bin" ; $5BA bytes
 Mus_Emerald:	BINCLUDE "sound/music/S2/Got emerald_cmp.bin" ; $CB bytes
 
 	finishBank
@@ -71,14 +71,11 @@ Mus_Emerald:	BINCLUDE "sound/music/S2/Got emerald_cmp.bin" ; $CB bytes
 ; ------------------------------------------------------------------------------
 SndMus7_Start:	startBank
 
+Mus_Animaniacs:	include "sound/music/Experiments/AnimaniacsTheme.asm" ; $2168 bytes
 Mus_CM:	include "sound/music/Mega Man & Bass/Cold Man.asm" ; $1E32 bytes
 Mus_RM:	include "sound/music/Mega Man & Bass/Robot Museum.asm" ; $1DE1 bytes
 Mus_SPASpecStag:	include "sound/music/Other/SPA Special Stage.asm" ; $14FF bytes
 Mus_Phantom:	include "sound/music/Thunder Force IV/Phantom.asm" ; $BD0 bytes
-Mus_WWGameSel:	include "sound/music/Mega Man The Wily Wars/Game Select.asm" ; $BBF bytes
-Mus_S3DBSpecStage:	include "sound/music/S3DB/Special Stage.asm" ; $AB2 bytes
-Mus_MR:	BINCLUDE "sound/music/Misty Rain-optimized_cmp.bin" ; $590 bytes
-Mus_Baka:	BINCLUDE "sound/music/Beloved Tomboyish Girl_cmp.bin" ; $531 bytes
 Mus_GameOver:	include "sound/music/S2/Game over.asm" ; $14F bytes
 
 	finishBank
@@ -88,6 +85,11 @@ Mus_GameOver:	include "sound/music/S2/Game over.asm" ; $14F bytes
 ; ------------------------------------------------------------------------------
 SndMus8_Start:	startBank
 
+Mus_WWGameSel:	include "sound/music/Mega Man The Wily Wars/Game Select.asm" ; $BBF bytes
+Mus_S3DBSpecStage:	include "sound/music/S3DB/Special Stage.asm" ; $AB2 bytes
+Mus_GHZ:	BINCLUDE "sound/music/Mus81 - GHZ_cmp.bin" ; $5AA bytes
+Mus_MR:	BINCLUDE "sound/music/Misty Rain-optimized_cmp.bin" ; $590 bytes
+Mus_Baka:	BINCLUDE "sound/music/Beloved Tomboyish Girl_cmp.bin" ; $531 bytes
 Mus_EHZ:	BINCLUDE "sound/music/S2/EHZ_cmp.bin" ; $518 bytes
 Mus_Ending:	BINCLUDE "sound/music/S2/Ending_cmp.bin" ; $4E8 bytes
 Mus_CNZ:	BINCLUDE "sound/music/S2/CNZ_cmp.bin" ; $4E1 bytes
@@ -99,7 +101,6 @@ Mus_DEZ:	BINCLUDE "sound/music/S2/DEZ_cmp.bin" ; $37B bytes
 Mus_HTZ:	BINCLUDE "sound/music/S2/HTZ_cmp.bin" ; $35E bytes
 Mus_S3KEndLevel:	BINCLUDE "sound/music/Level Outro_cmp.bin" ; $351 bytes
 Mus_WFZ:	BINCLUDE "sound/music/S2/WFZ_cmp.bin" ; $348 bytes
-Mus_SCZ:	BINCLUDE "sound/music/S2/SCZ_cmp.bin" ; $326 bytes
 Mus_ChoosePlayer:	BINCLUDE "sound/music/SMB2 Character Select_cmp.bin" ; $310 bytes
 Mus_Countdown:	BINCLUDE "sound/music/S2/Drowning_cmp.bin" ; $11F bytes
 Mus_ExtraLife:	BINCLUDE "sound/music/Extra life_cmp.bin" ; $B7 bytes
