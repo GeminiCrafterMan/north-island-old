@@ -4106,7 +4106,7 @@ CopyrightText:
 	dc.w  make_art_tile(ArtTile_ArtNem_FontStuff_TtlScr + '2',0,0)	; 1
 	dc.w  make_art_tile(ArtTile_ArtNem_FontStuff_TtlScr + '0',0,0)	; 9
 	dc.w  make_art_tile(ArtTile_ArtNem_FontStuff_TtlScr + '2',0,0)	; 9
-	dc.w  make_art_tile(ArtTile_ArtNem_FontStuff_TtlScr + '0',0,0)	; 2
+	dc.w  make_art_tile(ArtTile_ArtNem_FontStuff_TtlScr + '1',0,0)	; 2
 	dc.w  make_art_tile(ArtTile_VRAM_Start,0,0)	; [space]
 	dc.w  make_art_tile(ArtTile_ArtNem_FontStuff_TtlScr + 'G',0,0)	; S
 	dc.w  make_art_tile(ArtTile_ArtNem_FontStuff_TtlScr + 'E',0,0)	; E

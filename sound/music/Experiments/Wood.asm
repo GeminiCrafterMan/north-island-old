@@ -2895,22 +2895,22 @@ WoodZone_DAC:
 	dc.b	dKick, $19
 
 WoodZone_Loop00:
-	dc.b	$05, dClap, $0F, dKick, $0A, dClap, $05, dKick, $0A, dClap, $05, dKick
-	dc.b	$0A, $05, dClap, $0F, dSnare, $0A, $05, dKick, $19, $05, dClap, $0F
-	dc.b	dKick, $0A, dClap, $05, dKick, $0A, dClap, $05, dKick, $0A, $05, dClap
-	dc.b	$0F, dSnare
+	dc.b	$05, dSnare, $0F, dKick, $0A, dSnare, $05, dKick, $0A, dSnare, $05, dKick
+	dc.b	$0A, $05, dSnare, $0F, dClap, $0A, $05, dKick, $19, $05, dSnare, $0F
+	dc.b	dKick, $0A, dSnare, $05, dKick, $0A, dSnare, $05, dKick, $0A, $05, dSnare
+	dc.b	$0F, dClap
 	smpsLoop            $00, $02, WoodZone_DAC
 
 WoodZone_Jump00:
 	dc.b	dKick, $19
 	smpsLoop            $01, $06, WoodZone_Loop00
-	dc.b	$05, dClap, $0F, dKick, $0A, dClap, $05, dKick, $0A, dClap, $05, dKick
-	dc.b	$0A, $05, dClap, $0F, dSnare, $0A, $05, dKick, $19, $05, dClap, $0F
-	dc.b	dKick, $0A, dClap, $05, dKick, $0A, dClap, $05, dKick, $0A, $05, dClap
-	dc.b	$0F, dSnare, dKick, $19, $05, dClap, $0F, dKick, $0A, dClap, $05, dKick
-	dc.b	$0A, dClap, $05, dKick, $0A, $05, dClap, $0F, dSnare, $0A, $05, dKick
-	dc.b	$19, $05, dClap, $0F, dKick, $0A, dClap, $05, dKick, $0A, dClap, $05
-	dc.b	dKick, $0A, $05, dClap, $0F, dSnare
+	dc.b	$05, dSnare, $0F, dKick, $0A, dSnare, $05, dKick, $0A, dSnare, $05, dKick
+	dc.b	$0A, $05, dSnare, $0F, dClap, $0A, $05, dKick, $19, $05, dSnare, $0F
+	dc.b	dKick, $0A, dSnare, $05, dKick, $0A, dSnare, $05, dKick, $0A, $05, dSnare
+	dc.b	$0F, dClap, dKick, $19, $05, dSnare, $0F, dKick, $0A, dSnare, $05, dKick
+	dc.b	$0A, dSnare, $05, dKick, $0A, $05, dSnare, $0F, dClap, $0A, $05, dKick
+	dc.b	$19, $05, dSnare, $0F, dKick, $0A, dSnare, $05, dKick, $0A, dSnare, $05
+	dc.b	dKick, $0A, $05, dSnare, $0F, dClap
 	smpsJump            WoodZone_Jump00
 
 WoodZone_Voices:
