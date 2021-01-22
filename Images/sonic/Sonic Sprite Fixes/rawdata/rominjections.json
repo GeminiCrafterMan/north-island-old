@@ -1,0 +1,12 @@
+{
+"superfix1_thanks_mrgrassman14":
+	{
+		"File": "superfix1.bin",
+		"RomInject": "0x012c44"
+	},
+"superfix2_thanks_mrgrassman14":
+	{
+		"File": "superfix2.bin",
+		"RomInject": "0x012c94"
+	}
+}
