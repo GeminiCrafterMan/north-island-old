@@ -7,7 +7,7 @@ zMasterPlaylist:
 	zmakePlaylistEntry	Mus_Jungle,0
 	zmakePlaylistEntry	Mus_CM,musprop_uncompressed
 	zmakePlaylistEntry	Mus_MR,0
-	zmakePlaylistEntry	Mus_Baka,0
+	zmakePlaylistEntry	Mus_Baka,musprop_uncompressed
 	zmakePlaylistEntry	Mus_Wood,musprop_uncompressed
 	zmakePlaylistEntry	Mus_Animaniacs,musprop_uncompressed
 	zmakePlaylistEntry	Mus_ChoosePlayer,0

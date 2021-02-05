@@ -28990,9 +28990,6 @@ Obj01_InWater:
 	cmp.w	y_pos(a0),d0	; is Sonic above the water?
 	bge.s	Obj01_OutWater	; if yes, branch
 
-	tst.w	y_vel(a0)	; check if player is moving upward (i.e. from jumping)
-	bmi.s	return_1A18C	; if yes, skip routine
-
 	bset	#6,status(a0)	; set underwater flag
 	bne.s	return_1A18C	; if already underwater, branch
 
@@ -29034,10 +29031,10 @@ Obj01_OutWater:
 	move.w	#$30,(Sonic_acceleration).w
 	move.w	#$100,(Sonic_deceleration).w
 +
-;	cmpi.b	#4,routine(a0)	; is Sonic falling back from getting hurt?
-;	beq.s	+		; if yes, branch
+	cmpi.b	#4,routine(a0)	; is Sonic falling back from getting hurt?
+	beq.s	+		; if yes, branch
 	asl	y_vel(a0)
-;+
++
 	tst.w	y_vel(a0)
 	beq.w	return_1A18C
 	move.w	#$100,(Sonic_Dust+anim).w	; splash animation
@@ -29112,6 +29109,10 @@ Obj01_MdAir:
 	subi.w	#$28,y_vel(a0)	; reduce gravity by $28 ($38-$28=$10)
 
 .nowind:
+	btst	#6,status(a0)	; is Sonic underwater?
+	beq.s	+		; if not, branch
+	subi.w	#$28,y_vel(a0)	; reduce gravity by $28 ($38-$28=$10)
++
 	bsr.w	Sonic_JumpAngle
 	bsr.w	Sonic_DoLevelCollision
 	rts
@@ -29152,6 +29153,10 @@ Obj01_MdJump:
 	subi.w	#$28,y_vel(a0)	; reduce gravity by $28 ($38-$28=$10)
 
 .nowind:
+	btst	#6,status(a0)	; is Sonic underwater?
+	beq.s	+		; if not, branch
+	subi.w	#$28,y_vel(a0)	; reduce gravity by $28 ($38-$28=$10)
++
 	bsr.w	Sonic_JumpAngle
 	bsr.w	Sonic_DoLevelCollision
 	rts
@@ -32240,6 +32245,12 @@ Obj02_InWater:
 	move.w	#$300,(Tails_top_speed).w
 	move.w	#6,(Tails_acceleration).w
 	move.w	#$40,(Tails_deceleration).w
+	tst.b	(Super_Sonic_flag).w
+	beq.s	+
+	move.w	#$500,(Tails_top_speed).w
+	move.w	#$18,(Tails_acceleration).w
+	move.w	#$80,(Tails_deceleration).w
++
 	asr	x_vel(a0)
 	asr	y_vel(a0)
 	asr	y_vel(a0)
@@ -32258,7 +32269,12 @@ Obj02_OutWater:
 	move.w	#$600,(Tails_top_speed).w
 	move.w	#$C,(Tails_acceleration).w
 	move.w	#$80,(Tails_deceleration).w
-
+	tst.b	(Super_Sonic_flag).w
+	beq.s	+
+	move.w	#$A00,(Tails_top_speed).w
+	move.w	#$30,(Tails_acceleration).w
+	move.w	#$100,(Tails_deceleration).w
++
 	cmpi.b	#4,routine(a0)	; is Tails falling back from getting hurt?
 	beq.s	+		; if yes, branch
 	asl	y_vel(a0)

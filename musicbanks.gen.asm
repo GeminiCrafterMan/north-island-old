@@ -86,10 +86,10 @@ Mus_GameOver:	include "sound/music/S2/Game over.asm" ; $14F bytes
 SndMus8_Start:	startBank
 
 Mus_WWGameSel:	include "sound/music/Mega Man The Wily Wars/Game Select.asm" ; $BBF bytes
+Mus_Baka:	include "sound/music/Other/Beloved Tomboyish Girl.asm" ; $B24 bytes
 Mus_S3DBSpecStage:	include "sound/music/S3DB/Special Stage.asm" ; $AB2 bytes
 Mus_GHZ:	BINCLUDE "sound/music/Mus81 - GHZ_cmp.bin" ; $5AA bytes
 Mus_MR:	BINCLUDE "sound/music/Misty Rain-optimized_cmp.bin" ; $590 bytes
-Mus_Baka:	BINCLUDE "sound/music/Beloved Tomboyish Girl_cmp.bin" ; $531 bytes
 Mus_EHZ:	BINCLUDE "sound/music/S2/EHZ_cmp.bin" ; $518 bytes
 Mus_Ending:	BINCLUDE "sound/music/S2/Ending_cmp.bin" ; $4E8 bytes
 Mus_CNZ:	BINCLUDE "sound/music/S2/CNZ_cmp.bin" ; $4E1 bytes
