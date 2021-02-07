@@ -35,7 +35,7 @@ Obj7E_LoadBoss:				; XREF: Obj7E_Main
 		move.w	x_pos(a0),x_pos(a1)
 		move.w	y_pos(a0),y_pos(a1)
 		move.l	#Map_Eggman,mappings(a1)
-		move.w	#make_art_tile(ArtTile_ArtNem_Eggpod_1,0,0),art_tile(a1)
+		move.w	#make_art_tile(ArtTile_ArtNem_MTZBoss,0,0),art_tile(a1)
 		move.b	#4,render_flags(a1)
 		move.b	#$20,width_pixels(a1)
 		move.b	#3,priority(a1)
@@ -121,6 +121,8 @@ loc_1784C:				; XREF: locs1_177E6
 		jsr		AddPoints
 		move.b	#8,routine_secondary(a0)
 		move.w	#$B3,$3C(a0)
+		moveq	#PLCID_Capsule,d0
+		jsr	(LoadPLC).l
 		rts
 
 ; ---------------------------------------------------------------------------
@@ -290,6 +292,7 @@ loc_179DA:
 loc_179E0:
 		clr.w	y_vel(a0)
 		jsr	(PlayLevelMusic).l
+		jsr	(LoadPLC_AnimalExplosion).l
 
 loc_179EE:
 		bsr.w	BossMove
@@ -423,7 +426,7 @@ Obj5E_Main:				; XREF: Obj5E_Index
 		move.w	#$4080,angle(a0)
 		move.w	#-$200,$3E(a0)
 		move.l	#Map_BossItems,mappings(a0)
-		move.w	#make_art_tile(ArtTile_ArtNem_Snailer,0,0),art_tile(a0)	; use different	graphics
+		move.w	#make_art_tile(ArtTile_ArtNem_BreakWall,0,0),art_tile(a0)	; use different	graphics
 		lea	subtype(a0),a2
 		move.b	#0,(a2)+
 		moveq	#5,d1
@@ -439,7 +442,7 @@ Obj5E_MakeLinks:
 		_move.b	#ObjID_WZSaw,id(a1)	; load chain link object
 		move.b	#6,routine(a1)
 		move.l	#Map_Swing_GHZ,mappings(a1)
-		move.w	#make_art_tile(ArtTile_ArtNem_BreakWall,0,0),art_tile(a1)
+		move.w	#make_art_tile(ArtTile_ArtNem_Crabmeat_SYZ,0,0),art_tile(a1)
 		move.b	#1,mapping_frame(a1)
 		addq.b	#1,subtype(a0)
 
@@ -458,7 +461,7 @@ loc_17B60:				; XREF: Obj5E_Main
 Obj5E_MakeBall:
 		move.b	#8,routine(a1)
 		move.l	#Map_Obj5E,mappings(a1) ; load	different mappings for final link
-		move.w	#make_art_tile(ArtTile_ArtNem_Coconuts,0,0),art_tile(a1)	; use different	graphics
+		move.w	#make_art_tile(ArtTile_ArtNem_Masher,0,0),art_tile(a1)	; use different	graphics
 		move.b	#1,mapping_frame(a1)
 		move.b	#5,priority(a1)
 		move.b	#$81,collision_flags(a1)	; make object hurt Sonic

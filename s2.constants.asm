@@ -490,7 +490,6 @@ PLCID_Ghz1 =			id(PLCptr_Ghz1) ; 45
 PLCID_Ghz2 =			id(PLCptr_Ghz2) ; 46
 PLCID_Wz1 =			id(PLCptr_Wz1) ; 45
 PLCID_Wz2 =			id(PLCptr_Wz2) ; 46
-PLCID_Std2_Ice =			id(PLCptr_Std2_Ice) ; 1
 PLCID_MightyLife =			id(PLCptr_MightyLife)
 PLCID_ResultsMighty =	id(PLCptr_ResultsMighty)
 PLCID_WzBoss =			id(PLCptr_WzBoss) ; 46

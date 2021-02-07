@@ -4194,13 +4194,7 @@ Level:
 	beq.s	+
 	bsr.w	LoadPLC
 +
-	cmpi.b	#aquatic_ruin_zone,(Current_Zone).w ; ARZ
-	beq.s	.arz
 	moveq	#PLCID_Std2,d0
-	bra.s	.cont
-.arz:
-	moveq	#PLCID_Std2_Ice,d0
-.cont:
 	bsr.w	LoadPLC
 	bsr.w	Level_SetPlayerMode
 	moveq	#PLCID_Miles1up,d0
@@ -17579,7 +17573,7 @@ JmpTo2_PlatformObject
     endif
 
 Obj1F_Crabmeat:
-	include	"badniks/Crabmeat.asm"
+	include	"Objects/Badniks/Crabmeat.asm"
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -19113,13 +19107,7 @@ Obj26_Init:
 	addq.b	#2,routine(a0)
 	move.b	#$E,y_radius(a0)
 	move.b	#$E,x_radius(a0)
-	cmpi.b	#aquatic_ruin_zone,(Current_Zone).w	; skip if not ARZ/IFZ
-	bne.s	+		; if not, branch
-	move.l	#Obj26_MapUnc_Ice,mappings(a0)
-	bra.s	++
-+
 	move.l	#Obj26_MapUnc_12D36,mappings(a0)
-+
 	move.w	#make_art_tile(ArtTile_ArtNem_Powerups,0,0),art_tile(a0)
 	bsr.w	Adjust2PArtPointer
 	move.b	#4,render_flags(a0)
@@ -19306,49 +19294,17 @@ Obj2E_Index:	offsetTable
 ; loc_12868:
 Obj2E_Init:
 	addq.b	#2,routine(a0)
+	move.l	#Obj26_MapUnc_Icons,mappings(a0)
 	move.w	#make_art_tile(ArtTile_ArtNem_Powerups,0,1),art_tile(a0)
 	bsr.w	Adjust2PArtPointer
-	move.b	#$24,render_flags(a0)
+	move.b	#$4,render_flags(a0)
 	move.b	#3,priority(a0)
 	move.b	#8,width_pixels(a0)
 	move.w	#-$300,y_vel(a0)
 	moveq	#0,d0
 	move.b	anim(a0),d0
-
-	tst.w	(Two_player_mode).w	; is it two player mode?
-	beq.s	loc_128C6		; if not, branch
-	; give 'random' item in two player mode
-	move.w	(Timer_frames).w,d0	; use the timer to determine which item
-	andi.w	#7,d0	; and 7 means there are 8 different items
-	addq.w	#1,d0	; add 1 to prevent getting the static monitor
-	tst.w	(Two_player_items).w	; are monitors set to 'teleport only'?
-	beq.s	+			; if not, branch
-	moveq	#8,d0			; force contents to be teleport
-+	; keep teleport monitor from causing unwanted effects
-	cmpi.w	#8,d0	; teleport?
-	bne.s	+	; if not, branch
-	move.b	(Update_HUD_timer).w,d1
-	add.b	(Update_HUD_timer_2P).w,d1
-	cmpi.b	#2,d1	; is either player done with the act?
-	beq.s	+	; if not, branch
-	moveq	#7,d0	; give invincibility, instead
-+
-	move.b	d0,anim(a0)
-;loc_128C6:
-loc_128C6:			; Determine correct mappings offset.
 	addq.b	#1,d0
 	move.b	d0,mapping_frame(a0)
-	cmpi.b	#aquatic_ruin_zone,(Current_Zone).w	; skip if not ARZ/IFZ
-	bne.s	+		; if not, branch
-	movea.l	#Obj26_MapUnc_Ice,a1
-	bra.s	++
-+
-	movea.l	#Obj26_MapUnc_12D36,a1
-+
-	add.b	d0,d0
-	adda.w	(a1,d0.w),a1
-	addq.w	#2,a1
-	move.l	a1,mappings(a0)
 ; loc_128DE:
 Obj2E_Raise:
 	bsr.s	+
@@ -19685,7 +19641,7 @@ Ani_obj26_Broken:
 ; ---------------------------------------------------------------------------------
 ; MapUnc_12D36: MapUnc_obj26:
 Obj26_MapUnc_12D36:	BINCLUDE "mappings/sprite/obj26.bin"
-Obj26_MapUnc_Ice:	BINCLUDE "mappings/sprite/obj26_b.bin"
+Obj26_MapUnc_Icons:	BINCLUDE "mappings/sprite/obj26_b.bin"
 ; ===========================================================================
 
     if gameRevision<2
@@ -20566,7 +20522,7 @@ JmpTo4_PlayMusic
 	align 4
     endif
 
-Obj10:	include	"WaiStars.asm"
+Obj10:	include	"Objects/WaiStars.asm"
 ; TODO: maybe try and fix the wai stars to at least play nice
 ; with post-wai stuff...  im so sick of trying to port 0517 stars
 
@@ -31715,7 +31671,12 @@ Obj02_ChkShoes:		; Checks if Speed Shoes have expired and disables them if they 
 	move.w	#$600,(Tails_top_speed).w
 	move.w	#$C,(Tails_acceleration).w
 	move.w	#$80,(Tails_deceleration).w
-; Obj02_RmvSpeed:
+	tst.b	(Super_Sonic_flag).w
+	beq.s	Obj02_RmvSpeed
+	move.w	#$A00,(Tails_top_speed).w
+	move.w	#$30,(Tails_acceleration).w
+	move.w	#$100,(Tails_deceleration).w
+Obj02_RmvSpeed:
 	bclr	#status_sec_hasSpeedShoes,status_secondary(a0)
 	move.w	#MusID_SlowDown,d0	; Slow down tempo
 	jmp	(PlayMusic).l
@@ -34562,7 +34523,7 @@ SuperTailsAniData:		offsetTable
 	offsetTableEntry.w TailsAni_Roll2	;  3 ;   3
 	offsetTableEntry.w TailsAni_Push	;  4 ;   4
 	offsetTableEntry.w SuperTailsAni_Stand	;  5 ;   5
-	offsetTableEntry.w TailsAni_Balance	;  6 ;   6
+	offsetTableEntry.w SuperTailsAni_Balance	;  6 ;   6
 	offsetTableEntry.w TailsAni_LookUp	;  7 ;   7
 	offsetTableEntry.w TailsAni_Duck	;  8 ;   8
 	offsetTableEntry.w TailsAni_Spindash	;  9 ;   9
@@ -34585,7 +34546,7 @@ SuperTailsAniData:		offsetTable
 	offsetTableEntry.w TailsAni_Hurt2	; 26 ; $1A
 	offsetTableEntry.w TailsAni_Slide	; 27 ; $1B
 	offsetTableEntry.w TailsAni_Blank	; 28 ; $1C
-	offsetTableEntry.w TailsAni_Balance2	; 29 ; $1D
+	offsetTableEntry.w SuperTailsAni_Balance	; 29 ; $1D
 	offsetTableEntry.w TailsAni_Dummy5	; 30 ; $1E
 	offsetTableEntry.w TailsAni_HaulAss	; 31 ; $1F
 	offsetTableEntry.w TailsAni_FlyFast	; 32 ; $20
@@ -34600,6 +34561,8 @@ SuperTailsAniData:		offsetTable
 	offsetTableEntry.w TailsAni_SwimCarryTired	; 41 ; $29
 
 SuperTailsAni_Stand:	dc.b   7, 1, 2, 3, 2, $FF
+	rev02even
+SuperTailsAni_Balance:	dc.b   9,$91,$92,$93,$FF
 	rev02even
 SuperTailsAni_Victory:	dc.b	$F, $AC, $AD, $FE, 1
 	even
@@ -37467,7 +37430,7 @@ ObjCheckLeftWallDist:
 ; ----------------------------------------------------------------------------
 ; Object 62 - Knuckles the Echidna... and *all* of his associated code
 ; ----------------------------------------------------------------------------
-	include	"Knuckles.asm"
+	include	"Objects/Characters/Knuckles.asm"
 
 ;--------------------------------------------------------------------------------------
 ; Knuckles's art stuff
@@ -38122,7 +38085,7 @@ JmpTo5_Adjust2PArtPointer
     endif
 
 Obj44_S1:
-	include "44 GHZ Edge Walls.asm"
+	include "Objects/44 GHZ Edge Walls.asm"
 
 	even
 
@@ -39481,7 +39444,7 @@ Obj49_Display:
 Obj49_MapUnc_20C50:	BINCLUDE "mappings/sprite/obj49.bin"
 
 Obj49_WaterSFX:
-	include	"49 Waterfall SFX.asm"
+	include	"Objects/49 Waterfall SFX.asm"
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -39623,7 +39586,7 @@ Obj74_Main:
 Obj74_MapUnc_20F66:	BINCLUDE "mappings/sprite/obj74.bin"
 
 ; CPZ pylons used to be here at Obj7C. However, that's not what I want, so I removed them.
-Obj7C:	include	"HyperTrails.asm"
+Obj7C:	include	"Objects/HyperTrails.asm"
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -45932,7 +45895,7 @@ JmpTo2_SolidObject_Always_SingleCharacter
 	align 4
     endif
 
-Obj42_S1:	include	"Badniks/Newtron.asm"
+Obj42_S1:	include	"Objects/Badniks/Newtron.asm"
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -54871,9 +54834,9 @@ JmpTo21_ObjectMove
 	jmp	(ObjectMove).l
     endif
 
-	include	"badniks/Dinobot.asm"
+	include	"Objects/Badniks/Dinobot.asm"
 
-	include	"badniks/Batbot.asm"
+	include	"Objects/Badniks/Batbot.asm"
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -54972,10 +54935,10 @@ ObjC4:
 ObjD0:
 	cmpi.b	#green_hill_zone,(Current_Zone).w	; GHZ
 	beq.w	MotoBug
-	include	"badniks/Snailer.asm"
+	include	"Objects/Badniks/Snailer.asm"
 
 MotoBug:
-	include "badniks/Motobug.asm"
+	include "Objects/Badniks/Motobug.asm"
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
 ; Object 58 - Boss explosion
@@ -55256,7 +55219,7 @@ JmpTo59_Adjust2PArtPointer
 ; ----------------------------------------------------------------------------
 ; Object 5A - Mighty the Armadillo... and *all* of his associated code
 ; ----------------------------------------------------------------------------
-	include	"Mighty.asm"
+	include	"Objects/Characters/Mighty.asm"
 
 ;--------------------------------------------------------------------------------------
 ; Mighty's art stuff
@@ -55270,9 +55233,9 @@ MapRUnc_Mighty:	BINCLUDE	"mappings/spriteDPLC/Mighty.bin"
 	even
 
 
-Obj5B: include "moves/Insta-Shield.asm"
+Obj5B: include "Objects/Insta-Shield.asm"
 
-Obj5F:	include "Pushable Block.asm"
+Obj5F:	include "Objects/Pushable Block.asm"
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to	check if an object is off screen
@@ -79236,16 +79199,16 @@ DbgObjList_CPZ_End
 
 DbgObjList_ARZ: dbglistheader
 	dbglistobj ObjID_Ring,		Obj25_MapUnc_12382,   0,   0, make_art_tile(ArtTile_ArtNem_Ring,1,0)
-	dbglistobj ObjID_Monitor,	Obj26_MapUnc_Ice,   0,   0, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
-	dbglistobj ObjID_Monitor,	Obj26_MapUnc_Ice,   1,   2, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
-	dbglistobj ObjID_Monitor,	Obj26_MapUnc_Ice,   2,   3, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
-	dbglistobj ObjID_Monitor,	Obj26_MapUnc_Ice,   3,   4, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
-	dbglistobj ObjID_Monitor,	Obj26_MapUnc_Ice,   4,   5, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
-	dbglistobj ObjID_Monitor,	Obj26_MapUnc_Ice,   5,   6, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
-	dbglistobj ObjID_Monitor,	Obj26_MapUnc_Ice,   6,   7, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
-	dbglistobj ObjID_Monitor,	Obj26_MapUnc_Ice,   7,   8, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
-	dbglistobj ObjID_Monitor,	Obj26_MapUnc_Ice,   8,   9, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
-	dbglistobj ObjID_Monitor,	Obj26_MapUnc_Ice,   9,   $A, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   0,   0, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   1,   2, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   2,   3, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   3,   4, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   4,   5, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   5,   6, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   6,   7, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   7,   8, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   8,   9, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
+	dbglistobj ObjID_Monitor,	Obj26_MapUnc_12D36,   9,   $A, make_art_tile(ArtTile_ArtNem_Powerups,0,0)
 	dbglistobj ObjID_Starpost,	Obj79_MapUnc_1F424,   1,   0, make_art_tile(ArtTile_ArtNem_Checkpoint,0,0)
 	dbglistobj ObjID_SwingingPlatform, Obj15_Obj83_MapUnc_1021E, $88,   2, make_art_tile(ArtTile_ArtKos_LevelArt,0,0)
 	dbglistobj ObjID_ARZPlatform,	Obj18_MapUnc_1084E,   1,   0, make_art_tile(ArtTile_ArtKos_LevelArt,2,0)
@@ -79491,10 +79454,9 @@ PLCptr_Ghz1:		offsetTableEntry.w PlrList_Ghz1			; 68
 PLCptr_Ghz2:		offsetTableEntry.w PlrList_Ghz2			; 69
 PLCptr_Wz1:			offsetTableEntry.w PlrList_Wz1			; 70
 PLCptr_Wz2:			offsetTableEntry.w PlrList_Wz2			; 71
-PLCptr_Std2_Ice:		offsetTableEntry.w PlrList_Std2_Ice			; 72
-PLCptr_MightyLife:	offsetTableEntry.w	PlrList_MightyLifeCounter	; 73
-PLCptr_ResultsMighty:	offsetTableEntry.w PlrList_ResultsMighty ; 74
-PLCptr_WzBoss:			offsetTableEntry.w PlrList_WzBoss			; 71
+PLCptr_MightyLife:	offsetTableEntry.w	PlrList_MightyLifeCounter	; 72
+PLCptr_ResultsMighty:	offsetTableEntry.w PlrList_ResultsMighty ; 73
+PLCptr_WzBoss:			offsetTableEntry.w PlrList_WzBoss			; 74
 
 ; macro for a pattern load request list header
 ; must be on the same line as a label that has a corresponding _End label later
@@ -79528,10 +79490,6 @@ PlrList_Std2: plrlistheader
 	plreq ArtTile_ArtNem_Checkpoint, ArtNem_Checkpoint
 	plreq ArtTile_ArtNem_Powerups, ArtNem_Powerups
 PlrList_Std2_End
-PlrList_Std2_Ice: plrlistheader
-	plreq ArtTile_ArtNem_Checkpoint, ArtNem_Checkpoint
-	plreq ArtTile_ArtNem_Powerups, ArtNem_PowerupsIce
-PlrList_Std2_Ice_End
 ;---------------------------------------------------------------------------------------
 ; PATTERN LOAD REQUEST LIST
 ; Aquatic level standard
@@ -80238,10 +80196,10 @@ PlrList_Wz2: plrlistheader
 PlrList_Wz2_End
 
 PlrList_WzBoss: plrlistheader
-	plreq ArtTile_ArtNem_Eggpod_1, ArtNem_S1Eggman
-	plreq ArtTile_ArtNem_Coconuts, ArtNem_WZSaw
-	plreq ArtTile_ArtNem_Snailer, ArtNem_S1BossExtra
-	plreq ArtTile_ArtNem_BreakWall, ArtNem_Swing_GHZ
+	plreq ArtTile_ArtNem_MTZBoss, ArtNem_S1Eggman
+	plreq ArtTile_ArtNem_Masher, ArtNem_WZSaw
+	plreq ArtTile_ArtNem_BreakWall, ArtNem_S1BossExtra
+	plreq ArtTile_ArtNem_Crabmeat_SYZ, ArtNem_Swing_GHZ
 	plreq ArtTile_ArtNem_FieryExplosion, ArtNem_FieryExplosion
 PlrList_WzBoss_End
 
@@ -80720,10 +80678,6 @@ ArtNem_Ring:	BINCLUDE	"art/nemesis/Ring.bin"
 ; Monitors and contents		ArtNem_79550:
 	even
 ArtNem_Powerups:	BINCLUDE	"art/nemesis/Monitor and contents.bin"
-; Nemesis compressed art (60 blocks)
-; Monitors and contents in IFZ		ArtNem_79550:
-	even
-ArtNem_PowerupsIce:	BINCLUDE	"art/nemesis/Monitor and contents in Icicle Falls.bin"
 ;---------------------------------------------------------------------------------------
 ; Nemesis compressed art (8 blocks)
 ; Spikes			7995C:
