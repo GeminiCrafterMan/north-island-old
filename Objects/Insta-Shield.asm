@@ -19,7 +19,6 @@ Obj5B_Init:
 	move.b	#1,priority(a0)
 	move.b	#$18,width_pixels(a0)
 	move.w	#make_art_tile(ArtTile_ShieldAndStars,0,0),art_tile(a0)
-	jsr	Adjust2PArtPointer
 
 Obj_Insta_Shield_Main:
 		movea.w	parent(a0),a2

@@ -18,7 +18,6 @@ Edge_Main:	; Routine 0
 		addq.b	#2,routine(a0)
 		move.l	#Map_Edge,mappings(a0)
 		move.w	#make_art_tile(ArtTile_ArtNem_GHZ_WallBarrier,2,0),art_tile(a0)
-		jsr		Adjust2PArtPointer
 		ori.b	#4,render_flags(a0)
 		move.b	#8,width_pixels(a0)
 		move.b	#6,priority(a0)

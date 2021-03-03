@@ -13,7 +13,6 @@ Snailer_Index: offsetTable
 Snailer_Main:
 	move.l  #Snailer_Mappings,mappings(a0) ; loc_1F938
 	move.w	#make_art_tile(ArtTile_ArtNem_Snailer,0,0),art_tile(a0) ; the shell
-	jsr		Adjust2PArtPointer
 	ori.b   #$4, render_flags(a0)
 	move.b  #$A, collision_flags(a0)
 	move.b  #$4, priority(a0)
@@ -96,7 +95,6 @@ loc_1F82C:
 	move.b  #$8,routine(a1)
 	move.l	#Obj4B_MapUnc_2D2EA,mappings(a1) ; this whole bit was yanked out of Obj4B -- Buzzer. I guess it works...? i did edit it a little
 	move.w	#make_art_tile(ArtTile_ArtNem_Buzzer,0,0),art_tile(a1)
-	jsrto	(Adjust2PArtPointer2).l, JmpTo7_Adjust2PArtPointer2
 	move.b	#4,priority(a1)
 	move.b	#$10,width_pixels(a1)
 	move.b	status(a0),status(a1)

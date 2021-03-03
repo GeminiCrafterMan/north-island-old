@@ -26,7 +26,6 @@ Obj59_Init:
 	move.l	#Map_WoodMan,mappings(a0)
 	move.w	#make_art_tile(ArtTile_ArtNem_Coconuts,0,0),art_tile(a0)
 .cont:
-	jsr		Adjust2PArtPointer
 	move.b	#4,render_flags(a0)
 	move.b	#$13,width_pixels(a0)
 	move.b	#4,priority(a0)

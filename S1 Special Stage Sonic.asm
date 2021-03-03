@@ -1,757 +1,3 @@
-; ---------------------------------------------------------------------------
-; Subroutine to	show the special stage layout
-; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
-
-
-SS_ShowLayout:				; XREF: SpecialStage
-		bsr.w	SS_AniWallsRings
-		bsr.w	SS_AniItems
-		move.w	d5,-(sp)
-		lea	(Chunk_Table_End).l,a1
-		move.b	(SSAngle).w,d0
-		andi.b	#$FC,d0
-		jsr	(CalcSine).l
-		move.w	d0,d4
-		move.w	d1,d5
-		muls.w	#$18,d4
-		muls.w	#$18,d5
-		moveq	#0,d2
-		move.w	(Camera_X_pos).w,d2
-		divu.w	#$18,d2
-		swap	d2
-		neg.w	d2
-		addi.w	#-$B4,d2
-		moveq	#0,d3
-		move.w	(Camera_Y_pos).w,d3
-		divu.w	#$18,d3
-		swap	d3
-		neg.w	d3
-		addi.w	#-$B4,d3
-		move.w	#$F,d7
-
-s1loc_1B19E:
-		movem.w	d0-d2,-(sp)
-		movem.w	d0-d1,-(sp)
-		neg.w	d0
-		muls.w	d2,d1
-		muls.w	d3,d0
-		move.l	d0,d6
-		add.l	d1,d6
-		movem.w	(sp)+,d0-d1
-		muls.w	d2,d0
-		muls.w	d3,d1
-		add.l	d0,d1
-		move.l	d6,d2
-		move.w	#$F,d6
-
-s1loc_1B1C0:
-		move.l	d2,d0
-		asr.l	#8,d0
-		move.w	d0,(a1)+
-		move.l	d1,d0
-		asr.l	#8,d0
-		move.w	d0,(a1)+
-		add.l	d5,d2
-		add.l	d4,d1
-		dbf	d6,s1loc_1B1C0
-
-		movem.w	(sp)+,d0-d2
-		addi.w	#$18,d3
-		dbf	d7,s1loc_1B19E
-
-		move.w	(sp)+,d5
-		lea	($FF0000).l,a0
-		moveq	#0,d0
-		move.w	(Camera_Y_pos).w,d0
-		divu.w	#$18,d0
-		mulu.w	#$80,d0
-		adda.l	d0,a0
-		moveq	#0,d0
-		move.w	(Camera_X_pos).w,d0
-		divu.w	#$18,d0
-		adda.w	d0,a0
-		lea	(Chunk_Table_End).l,a4
-		move.w	#$F,d7
-
-s1loc_1B20C:
-		move.w	#$F,d6
-
-s1loc_1B210:
-		moveq	#0,d0
-		move.b	(a0)+,d0
-		beq.s	s1loc_1B268
-		cmpi.b	#$4E,d0
-		bhi.s	s1loc_1B268
-		move.w	(a4),d3
-		addi.w	#$120,d3
-		cmpi.w	#$70,d3
-		bcs.s	s1loc_1B268
-		cmpi.w	#$1D0,d3
-		bcc.s	s1loc_1B268
-		move.w	2(a4),d2
-		addi.w	#$F0,d2
-		cmpi.w	#$70,d2
-		bcs.s	s1loc_1B268
-		cmpi.w	#$170,d2
-		bcc.s	s1loc_1B268
-		lea	($FF4000).l,a5
-		lsl.w	#3,d0
-		lea	(a5,d0.w),a5
-		movea.l	(a5)+,a1
-		move.w	(a5)+,d1
-		add.w	d1,d1
-		adda.w	(a1,d1.w),a1
-		movea.w	(a5)+,a3
-		moveq	#0,d1
-		move.b	(a1)+,d1
-		subq.b	#1,d1
-		bmi.s	s1loc_1B268
-		jsr	(sub_D762).l
-
-s1loc_1B268:
-		addq.w	#4,a4
-		dbf	d6,s1loc_1B210
-
-		lea	$70(a0),a0
-		dbf	d7,s1loc_1B20C
-
-		move.b	d5,(Sprite_count).w
-		cmpi.b	#$50,d5
-		beq.s	s1loc_1B288
-		move.l	#0,(a2)
-		rts	
-; ===========================================================================
-
-s1loc_1B288:
-		move.b	#0,-5(a2)
-		rts	
-; End of function SS_ShowLayout
-
-; ---------------------------------------------------------------------------
-; Subroutine to	animate	walls and rings	in the special stage
-; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
-
-
-SS_AniWallsRings:			; XREF: SS_ShowLayout
-		lea	($FF400C).l,a1
-		moveq	#0,d0
-		move.b	(SSAngle).w,d0
-		lsr.b	#2,d0
-		andi.w	#$F,d0
-		moveq	#$23,d1
-
-s1loc_1B2A4:
-		move.w	d0,(a1)
-		addq.w	#8,a1
-		dbf	d1,s1loc_1B2A4
-
-		lea	($FF4005).l,a1
-		subq.b	#1,(Rings_anim_counter).w
-		bpl.s	s1loc_1B2C8
-		move.b	#7,(Rings_anim_counter).w
-		addq.b	#1,(Rings_anim_frame).w
-		andi.b	#3,(Rings_anim_frame).w
-
-s1loc_1B2C8:
-		move.b	(Rings_anim_frame).w,$1D0(a1)
-		subq.b	#1,(Unknown_anim_counter).w
-		bpl.s	s1loc_1B2E4
-		move.b	#7,(Unknown_anim_counter).w
-		addq.b	#1,(Unknown_anim_frame).w
-		andi.b	#1,(Unknown_anim_frame).w
-
-s1loc_1B2E4:
-		move.b	(Unknown_anim_frame).w,d0
-		move.b	d0,$138(a1)
-		move.b	d0,$160(a1)
-		move.b	d0,$148(a1)
-		move.b	d0,$150(a1)
-		move.b	d0,$1D8(a1)
-		move.b	d0,$1E0(a1)
-		move.b	d0,$1E8(a1)
-		move.b	d0,$1F0(a1)
-		move.b	d0,$1F8(a1)
-		move.b	d0,$200(a1)
-		subq.b	#1,(Ring_spill_anim_counter).w
-		bpl.s	s1loc_1B326
-		move.b	#4,(Ring_spill_anim_counter).w
-		addq.b	#1,(Ring_spill_anim_frame).w
-		andi.b	#3,(Ring_spill_anim_frame).w
-
-s1loc_1B326:
-		move.b	(Ring_spill_anim_frame).w,d0
-		move.b	d0,$168(a1)
-		move.b	d0,$170(a1)
-		move.b	d0,$178(a1)
-		move.b	d0,$180(a1)
-		subq.b	#1,(Logspike_anim_counter).w
-		bpl.s	s1loc_1B350
-		move.b	#7,(Logspike_anim_counter).w
-		subq.b	#1,(Logspike_anim_frame).w
-		andi.b	#7,(Logspike_anim_frame).w
-
-s1loc_1B350:
-		lea	($FF4016).l,a1
-		lea	(SS_WaRiVramSet).l,a0
-		moveq	#0,d0
-		move.b	(Logspike_anim_frame).w,d0
-		add.w	d0,d0
-		lea	(a0,d0.w),a0
-		move.w	(a0),(a1)
-		move.w	2(a0),x_pos(a1)
-		move.w	4(a0),x_vel(a1)
-		move.w	6(a0),priority(a1)
-		move.w	x_pos(a0),collision_flags(a1)
-		move.w	x_sub(a0),subtype(a1)
-		move.w	y_pos(a0),$30(a1)
-		move.w	y_sub(a0),$38(a1)
-		adda.w	#$20,a0
-		adda.w	#$48,a1
-		move.w	(a0),(a1)
-		move.w	2(a0),x_pos(a1)
-		move.w	4(a0),x_vel(a1)
-		move.w	6(a0),priority(a1)
-		move.w	x_pos(a0),collision_flags(a1)
-		move.w	x_sub(a0),subtype(a1)
-		move.w	y_pos(a0),$30(a1)
-		move.w	y_sub(a0),$38(a1)
-		adda.w	#$20,a0
-		adda.w	#$48,a1
-		move.w	(a0),(a1)
-		move.w	2(a0),x_pos(a1)
-		move.w	4(a0),x_vel(a1)
-		move.w	6(a0),priority(a1)
-		move.w	x_pos(a0),collision_flags(a1)
-		move.w	x_sub(a0),subtype(a1)
-		move.w	y_pos(a0),$30(a1)
-		move.w	y_sub(a0),$38(a1)
-		adda.w	#$20,a0
-		adda.w	#$48,a1
-		move.w	(a0),(a1)
-		move.w	2(a0),x_pos(a1)
-		move.w	4(a0),x_vel(a1)
-		move.w	6(a0),priority(a1)
-		move.w	x_pos(a0),collision_flags(a1)
-		move.w	x_sub(a0),subtype(a1)
-		move.w	y_pos(a0),$30(a1)
-		move.w	y_sub(a0),$38(a1)
-		adda.w	#$20,a0
-		adda.w	#$48,a1
-		rts	
-; End of function SS_AniWallsRings
-
-; ===========================================================================
-SS_WaRiVramSet:	dc.w $142, $6142, $142,	$142, $142, $142, $142,	$6142
-		dc.w $142, $6142, $142,	$142, $142, $142, $142,	$6142
-		dc.w $2142, $142, $2142, $2142,	$2142, $2142, $2142, $142
-		dc.w $2142, $142, $2142, $2142,	$2142, $2142, $2142, $142
-		dc.w $4142, $2142, $4142, $4142, $4142,	$4142, $4142, $2142
-		dc.w $4142, $2142, $4142, $4142, $4142,	$4142, $4142, $2142
-		dc.w $6142, $4142, $6142, $6142, $6142,	$6142, $6142, $4142
-		dc.w $6142, $4142, $6142, $6142, $6142,	$6142, $6142, $4142
-; ---------------------------------------------------------------------------
-; Subroutine to	remove items when you collect them in the special stage
-; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
-
-
-SS_RemoveCollectedItem:			; XREF: Obj09_ChkItems
-		lea	($FF4400).l,a2
-		move.w	#$1F,d0
-
-s1loc_1B4C4:
-		tst.b	(a2)
-		beq.s	locret_1B4CE
-		addq.w	#8,a2
-		dbf	d0,s1loc_1B4C4
-
-locret_1B4CE:
-		rts	
-; End of function SS_RemoveCollectedItem
-
-; ---------------------------------------------------------------------------
-; Subroutine to	animate	special	stage items when you touch them
-; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
-
-
-SS_AniItems:				; XREF: SS_ShowLayout
-		lea	($FF4400).l,a0
-		move.w	#$1F,d7
-
-s1loc_1B4DA:
-		moveq	#0,d0
-		move.b	(a0),d0
-		beq.s	s1loc_1B4E8
-		lsl.w	#2,d0
-		movea.l	SS_AniIndex-4(pc,d0.w),a1
-		jsr	(a1)
-
-s1loc_1B4E8:
-		addq.w	#8,a0
-
-s1loc_1B4EA:
-		dbf	d7,s1loc_1B4DA
-
-		rts	
-; End of function SS_AniItems
-
-; ===========================================================================
-SS_AniIndex:	dc.l SS_AniRingSparks
-		dc.l SS_AniBumper
-		dc.l SS_Ani1Up
-		dc.l SS_AniReverse
-		dc.l SS_AniEmeraldSparks
-		dc.l SS_AniGlassBlock
-; ===========================================================================
-
-SS_AniRingSparks:			; XREF: SS_AniIndex
-		subq.b	#1,2(a0)
-		bpl.s	locret_1B530
-		move.b	#5,2(a0)
-		moveq	#0,d0
-		move.b	3(a0),d0
-		addq.b	#1,3(a0)
-		movea.l	4(a0),a1
-		move.b	SS_AniRingData(pc,d0.w),d0
-		move.b	d0,(a1)
-		bne.s	locret_1B530
-		clr.l	(a0)
-		clr.l	4(a0)
-
-locret_1B530:
-		rts	
-; ===========================================================================
-SS_AniRingData:	dc.b $42, $43, $44, $45, 0, 0
-; ===========================================================================
-
-SS_AniBumper:				; XREF: SS_AniIndex
-		subq.b	#1,2(a0)
-		bpl.s	locret_1B566
-		move.b	#7,2(a0)
-		moveq	#0,d0
-		move.b	3(a0),d0
-		addq.b	#1,3(a0)
-		movea.l	4(a0),a1
-		move.b	SS_AniBumpData(pc,d0.w),d0
-		bne.s	s1loc_1B564
-		clr.l	(a0)
-		clr.l	4(a0)
-		move.b	#$25,(a1)
-		rts	
-; ===========================================================================
-
-s1loc_1B564:
-		move.b	d0,(a1)
-
-locret_1B566:
-		rts	
-; ===========================================================================
-SS_AniBumpData:	dc.b $32, $33, $32, $33, 0, 0
-; ===========================================================================
-
-SS_Ani1Up:				; XREF: SS_AniIndex
-		subq.b	#1,2(a0)
-		bpl.s	locret_1B596
-		move.b	#5,2(a0)
-		moveq	#0,d0
-		move.b	3(a0),d0
-		addq.b	#1,3(a0)
-		movea.l	4(a0),a1
-		move.b	SS_Ani1UpData(pc,d0.w),d0
-		move.b	d0,(a1)
-		bne.s	locret_1B596
-		clr.l	(a0)
-		clr.l	4(a0)
-
-locret_1B596:
-		rts	
-; ===========================================================================
-SS_Ani1UpData:	dc.b $46, $47, $48, $49, 0, 0
-; ===========================================================================
-
-SS_AniReverse:				; XREF: SS_AniIndex
-		subq.b	#1,2(a0)
-		bpl.s	locret_1B5CC
-		move.b	#7,2(a0)
-		moveq	#0,d0
-		move.b	3(a0),d0
-		addq.b	#1,3(a0)
-		movea.l	4(a0),a1
-		move.b	SS_AniRevData(pc,d0.w),d0
-		bne.s	s1loc_1B5CA
-		clr.l	(a0)
-		clr.l	4(a0)
-		move.b	#$2B,(a1)
-		rts	
-; ===========================================================================
-
-s1loc_1B5CA:
-		move.b	d0,(a1)
-
-locret_1B5CC:
-		rts	
-; ===========================================================================
-SS_AniRevData:	dc.b $2B, $31, $2B, $31, 0, 0
-; ===========================================================================
-
-SS_AniEmeraldSparks:			; XREF: SS_AniIndex
-		subq.b	#1,2(a0)
-		bpl.s	locret_1B60C
-		move.b	#5,2(a0)
-		moveq	#0,d0
-		move.b	3(a0),d0
-		addq.b	#1,3(a0)
-		movea.l	4(a0),a1
-		move.b	SS_AniEmerData(pc,d0.w),d0
-		move.b	d0,(a1)
-		bne.s	locret_1B60C
-		clr.l	(a0)
-		clr.l	4(a0)
-		move.b	#4,(Object_RAM+routine).w
-		move.w	#SndID_SSExit,d0
-		jsr	(PlaySound).l ;	play special stage GOAL	sound
-
-locret_1B60C:
-		rts	
-; ===========================================================================
-SS_AniEmerData:	dc.b $46, $47, $48, $49, 0, 0
-; ===========================================================================
-
-SS_AniGlassBlock:			; XREF: SS_AniIndex
-		subq.b	#1,2(a0)
-		bpl.s	locret_1B640
-		move.b	#1,2(a0)
-		moveq	#0,d0
-		move.b	3(a0),d0
-		addq.b	#1,3(a0)
-		movea.l	4(a0),a1
-		move.b	SS_AniGlassData(pc,d0.w),d0
-		move.b	d0,(a1)
-		bne.s	locret_1B640
-		move.b	4(a0),(a1)
-		clr.l	(a0)
-		clr.l	4(a0)
-
-locret_1B640:
-		rts	
-; ===========================================================================
-SS_AniGlassData:dc.b $4B, $4C, $4D, $4E, $4B, $4C, $4D,	$4E, 0,	0
-; ---------------------------------------------------------------------------
-; Special stage	layout pointers
-; ---------------------------------------------------------------------------
-SS_LayoutIndex:
-		dc.l SS_1
-		dc.l SS_2
-		dc.l SS_3
-		dc.l SS_4
-		dc.l SS_5
-		dc.l SS_6
-		align 2
-
-; ---------------------------------------------------------------------------
-; Special stage	start locations
-; ---------------------------------------------------------------------------
-SS_StartLoc:	BINCLUDE	misc\sloc_ss.bin
-		even
-
-; ---------------------------------------------------------------------------
-; Subroutine to	load special stage layout
-; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
-
-
-SS_Load:				; XREF: SpecialStage
-		moveq	#0,d0
-		move.b	(Current_Special_Stage).w,d0 ; load	number of last special stage entered
-		addq.b	#1,(Current_Special_Stage).w
-		cmpi.b	#6,(Current_Special_Stage).w
-		bcs.s	SS_ChkEmldNum
-		move.b	#0,(Current_Special_Stage).w ; reset if higher than	6
-
-SS_ChkEmldNum:
-		cmpi.b	#6,(Emerald_count).w ; do you have all emeralds?
-		beq.s	SS_LoadData	; if yes, branch
-		moveq	#0,d1
-		move.b	(Emerald_count).w,d1
-		subq.b	#1,d1
-		bcs.s	SS_LoadData
-		lea	(Emerald_count+1).w,a3 ; check which emeralds	you have
-
-SS_ChkEmldLoop:	
-		cmp.b	(a3,d1.w),d0
-		bne.s	SS_ChkEmldRepeat
-		bra.s	SS_Load
-; ===========================================================================
-
-SS_ChkEmldRepeat:
-		dbf	d1,SS_ChkEmldLoop
-
-SS_LoadData:
-		lsl.w	#2,d0
-		lea	SS_StartLoc(pc,d0.w),a1
-		move.w	(a1)+,(Object_RAM+x_pos).w
-		move.w	(a1)+,(Object_RAM+y_pos).w
-		movea.l	SS_LayoutIndex(pc,d0.w),a0
-		lea	($FF4000).l,a1
-		move.w	#0,d0
-		jsr	(EniDec).l
-		lea	($FF0000).l,a1
-		move.w	#$FFF,d0
-
-SS_ClrRAM3:
-		clr.l	(a1)+
-		dbf	d0,SS_ClrRAM3
-
-		lea	($FF1020).l,a1
-		lea	($FF4000).l,a0
-		moveq	#$3F,d1
-
-s1loc_1B6F6:
-		moveq	#$3F,d2
-
-s1loc_1B6F8:
-		move.b	(a0)+,(a1)+
-		dbf	d2,s1loc_1B6F8
-
-		lea	$40(a1),a1
-		dbf	d1,s1loc_1B6F6
-
-		lea	($FF4008).l,a1
-		lea	(SS_MapIndex).l,a0
-		moveq	#$4D,d1
-
-s1loc_1B714:
-		move.l	(a0)+,(a1)+
-		move.w	#0,(a1)+
-		move.b	-4(a0),-1(a1)
-		move.w	(a0)+,(a1)+
-		dbf	d1,s1loc_1B714
-
-		lea	($FF4400).l,a1
-		move.w	#$3F,d1
-
-s1loc_1B730:
-
-		clr.l	(a1)+
-		dbf	d1,s1loc_1B730
-
-		rts
-; End of function SS_Load
-
-; ===========================================================================
-; ---------------------------------------------------------------------------
-; Special stage	mappings and VRAM pointers
-; ---------------------------------------------------------------------------
-SS_MapIndex:
-		dc.l Map_SSWalls	; address of mappings
-		dc.w $142		; VRAM setting
-		dc.l Map_SSWalls
-		dc.w $142
-		dc.l Map_SSWalls
-		dc.w $142
-		dc.l Map_SSWalls
-		dc.w $142
-		dc.l Map_SSWalls
-		dc.w $142
-		dc.l Map_SSWalls
-		dc.w $142
-		dc.l Map_SSWalls
-		dc.w $142
-		dc.l Map_SSWalls
-		dc.w $142
-		dc.l Map_SSWalls
-		dc.w $142
-		dc.l Map_SSWalls
-		dc.w $2142
-		dc.l Map_SSWalls
-		dc.w $2142
-		dc.l Map_SSWalls
-		dc.w $2142
-		dc.l Map_SSWalls
-		dc.w $2142
-		dc.l Map_SSWalls
-		dc.w $2142
-		dc.l Map_SSWalls
-		dc.w $2142
-		dc.l Map_SSWalls
-		dc.w $2142
-		dc.l Map_SSWalls
-		dc.w $2142
-		dc.l Map_SSWalls
-		dc.w $2142
-		dc.l Map_SSWalls
-		dc.w $4142
-		dc.l Map_SSWalls
-		dc.w $4142
-		dc.l Map_SSWalls
-		dc.w $4142
-		dc.l Map_SSWalls
-		dc.w $4142
-		dc.l Map_SSWalls
-		dc.w $4142
-		dc.l Map_SSWalls
-		dc.w $4142
-		dc.l Map_SSWalls
-		dc.w $4142
-		dc.l Map_SSWalls
-		dc.w $4142
-		dc.l Map_SSWalls
-		dc.w $4142
-		dc.l Map_SSWalls
-		dc.w $6142
-		dc.l Map_SSWalls
-		dc.w $6142
-		dc.l Map_SSWalls
-		dc.w $6142
-		dc.l Map_SSWalls
-		dc.w $6142
-		dc.l Map_SSWalls
-		dc.w $6142
-		dc.l Map_SSWalls
-		dc.w $6142
-		dc.l Map_SSWalls
-		dc.w $6142
-		dc.l Map_SSWalls
-		dc.w $6142
-		dc.l Map_SSWalls
-		dc.w $6142
-		dc.l Map_SSBumper
-		dc.w $23B
-		dc.l Map_SS_R
-		dc.w $570
-		dc.l Map_SS_R
-		dc.w $251
-		dc.l Map_SS_R
-		dc.w $370
-		dc.l Map_SS_Up
-		dc.w $263
-		dc.l Map_SS_Down
-		dc.w $263
-		dc.l Map_SS_R
-		dc.w $22F0
-		dc.l Map_SS_Glass
-		dc.w $470
-		dc.l Map_SS_Glass
-		dc.w $5F0
-		dc.l Map_SS_Glass
-		dc.w $65F0
-		dc.l Map_SS_Glass
-		dc.w $25F0
-		dc.l Map_SS_Glass
-		dc.w $45F0
-		dc.l Map_SS_R
-		dc.w $2F0
-		dc.l Map_SSBumper+$1000000	; add frame no.	* $1000000
-		dc.w $23B
-		dc.l Map_SSBumper+$2000000
-		dc.w $23B
-		dc.l Map_SS_R
-		dc.w $797
-		dc.l Map_SS_R
-		dc.w $7A0
-		dc.l Map_SS_R
-		dc.w $7A9
-		dc.l Map_SS_R
-		dc.w $797
-		dc.l Map_SS_R
-		dc.w $7A0
-		dc.l Map_SS_R
-		dc.w $7A9
-		dc.l Map_SSRing
-		dc.w $6BC
-		dc.l Map_SS_Chaos3
-		dc.w $770
-		dc.l Map_SS_Chaos3
-		dc.w $2770
-		dc.l Map_SS_Chaos3
-		dc.w $4770
-		dc.l Map_SS_Chaos3
-		dc.w $6770
-		dc.l Map_SS_Chaos1
-		dc.w $770
-		dc.l Map_SS_Chaos2
-		dc.w $770
-		dc.l Map_SS_R
-		dc.w $4F0
-		dc.l Map_SSRing+$4000000
-		dc.w $6BC
-		dc.l Map_SSRing+$5000000
-		dc.w $6BC
-		dc.l Map_SSRing+$6000000
-		dc.w $6BC
-		dc.l Map_SSRing+$7000000
-		dc.w $6BC
-		dc.l Map_SS_Glass
-		dc.w $23F0
-		dc.l Map_SS_Glass+$1000000
-		dc.w $23F0
-		dc.l Map_SS_Glass+$2000000
-		dc.w $23F0
-		dc.l Map_SS_Glass+$3000000
-		dc.w $23F0
-		dc.l Map_SS_R+$2000000
-		dc.w $4F0
-		dc.l Map_SS_Glass
-		dc.w $5F0
-		dc.l Map_SS_Glass
-		dc.w $65F0
-		dc.l Map_SS_Glass
-		dc.w $25F0
-		dc.l Map_SS_Glass
-		dc.w $45F0
-
-; ---------------------------------------------------------------------------
-; Sprite mappings - special stage "R" block
-; ---------------------------------------------------------------------------
-Map_SS_R:
-		include	"mappings/s1ss/SSRblock.asm"
-
-; ---------------------------------------------------------------------------
-; Sprite mappings - special stage breakable glass blocks and red-white blocks
-; ---------------------------------------------------------------------------
-Map_SS_Glass:
-		include	"mappings/s1ss/SSglassblock.asm"
-
-; ---------------------------------------------------------------------------
-; Sprite mappings - special stage "UP" block
-; ---------------------------------------------------------------------------
-Map_SS_Up:
-		include	"mappings/s1ss/SSUPblock.asm"
-
-; ---------------------------------------------------------------------------
-; Sprite mappings - special stage "DOWN" block
-; ---------------------------------------------------------------------------
-Map_SS_Down:
-		include	"mappings/s1ss/SSDOWNblock.asm"
-
-; ---------------------------------------------------------------------------
-; Sprite mappings - special stage chaos	emeralds
-; ---------------------------------------------------------------------------
-Map_SS_Chaos1:	dc.w byte_1B96C-Map_SS_Chaos1
-		dc.w byte_1B97E-Map_SS_Chaos1
-Map_SS_Chaos2:	dc.w byte_1B972-Map_SS_Chaos2
-		dc.w byte_1B97E-Map_SS_Chaos2
-Map_SS_Chaos3:	dc.w byte_1B978-Map_SS_Chaos3
-		dc.w byte_1B97E-Map_SS_Chaos3
-byte_1B96C:	dc.b 1
-		dc.b $F8, 5, 0,	0, $F8
-byte_1B972:	dc.b 1
-		dc.b $F8, 5, 0,	4, $F8
-byte_1B978:	dc.b 1
-		dc.b $F8, 5, 0,	8, $F8
-byte_1B97E:	dc.b 1
-		dc.b $F8, 5, 0,	$C, $F8
-		align 2
-; ===========================================================================
-
 Obj09:					; XREF: Obj_Index
 		tst.w	(Debug_placement_mode).w	; is debug mode	being used?
 		beq.s	Obj09_Normal	; if not, branch
@@ -779,27 +25,26 @@ Obj09_Main:				; XREF: Obj09_Index
 		cmpi.w	#5,(Player_option).w
 		blt.s	.knuxcheck
 		move.l	#MapUnc_Mighty,mappings(a0)
-	move.w	#make_art_tile(ArtTile_ArtUnc_Sonic,0,0),art_tile(a0)
-	bra.s	+++
+		move.w	#make_art_tile(ArtTile_ArtUnc_Sonic,0,0),art_tile(a0)
+		bra.s	.cont
 .knuxcheck:
 		cmpi.w	#3,(Player_option).w
-		blt.s	+
+		blt.s	.tailscheck
 		move.l	#MapUnc_Knuckles,mappings(a0)
-	move.w	#make_art_tile(ArtTile_ArtUnc_Sonic,0,0),art_tile(a0)
-		bra.s	+++
-+
+		move.w	#make_art_tile(ArtTile_ArtUnc_Sonic,0,0),art_tile(a0)
+		bra.s	.cont
+.tailscheck:
 		cmpi.w	#2,(Player_option).w
-		bne.s	+
+		bne.s	.sonic
 		move.l	#MapUnc_Tails,mappings(a0)
-	move.w	#make_art_tile(ArtTile_ArtUnc_Tails,0,0),art_tile(a0)
-	move.b	#ObjID_TailsTails,(Tails_Tails+id).w ; load Obj05 (Tails' Tails) at $FFFFD000
-	move.w	a0,(Tails_Tails+parent).w ; set its parent object to this
-		bra.s	++
-+
+		move.w	#make_art_tile(ArtTile_ArtUnc_Tails,0,0),art_tile(a0)
+		move.b	#ObjID_TailsTails,(Tails_Tails+id).w ; load Obj05 (Tails' Tails) at $FFFFD000
+		move.w	a0,(Tails_Tails+parent).w ; set its parent object to this
+		bra.s	.cont
+.sonic:
 		move.l	#MapUnc_Sonic,mappings(a0)
-	move.w	#make_art_tile(ArtTile_ArtUnc_Sonic,0,0),art_tile(a0)
-+
-		jsr	Adjust2PArtPointer
+		move.w	#make_art_tile(ArtTile_ArtUnc_Sonic,0,0),art_tile(a0)
+.cont:
 		move.b	#4,render_flags(a0)
 		move.b	#0,priority(a0)
 		move.b	#AniIDSonAni_Roll,anim(a0)
@@ -1201,7 +446,7 @@ s1loc_1BCD4:
 
 
 sub_1BCE8:				; XREF: Obj09_Move; Obj09_Fall
-		lea	($FF0000).l,a1
+		lea	(Chunk_Table).l,a1
 		moveq	#0,d4
 		swap	d2
 		move.w	d2,d4
@@ -1260,7 +505,7 @@ s1loc_1BD46:
 
 
 Obj09_ChkItems:				; XREF: Obj09_Display
-		lea	($FF0000).l,a1
+		lea	(Chunk_Table).l,a1
 		moveq	#0,d4
 		move.w	y_pos(a0),d4
 		addi.w	#$50,d4
@@ -1283,7 +528,7 @@ Obj09_ChkItems:				; XREF: Obj09_Display
 Obj09_ChkCont:
 		cmpi.b	#$3A,d4		; is the item a	ring?
 		bne.s	Obj09_Chk1Up
-		bsr.w	SS_RemoveCollectedItem
+		jsr		SS_RemoveCollectedItem
 		bne.s	Obj09_GetCont
 		move.b	#1,(a2)
 		move.l	a1,4(a2)
@@ -1306,7 +551,7 @@ Obj09_NoCont:
 Obj09_Chk1Up:
 		cmpi.b	#$28,d4		; is the item an extra life?
 		bne.s	Obj09_ChkEmer
-		bsr.w	SS_RemoveCollectedItem
+		jsr		SS_RemoveCollectedItem
 		bne.s	Obj09_Get1Up
 		move.b	#3,(a2)
 		move.l	a1,4(a2)
@@ -1325,7 +570,7 @@ Obj09_ChkEmer:
 		bcs.s	Obj09_ChkGhost
 		cmpi.b	#$40,d4
 		bhi.s	Obj09_ChkGhost
-		bsr.w	SS_RemoveCollectedItem
+		jsr		SS_RemoveCollectedItem
 		bne.s	Obj09_GetEmer
 		move.b	#5,(a2)
 		move.l	a1,4(a2)
@@ -1367,7 +612,7 @@ Obj09_NoGhost:
 Obj09_MakeGhostSolid:
 		cmpi.b	#2,$3A(a0)	; is the ghost marked as "solid"?
 		bne.s	Obj09_GhostNotSolid ; if not, branch
-		lea	($FF1020).l,a1
+		lea	(Chunk_Table+$1020).l,a1
 		moveq	#$3F,d1
 
 Obj09_GhostLoop2:
@@ -1434,7 +679,7 @@ Obj09_ChkBumper:
 		asr.l	#8,d0
 		move.w	d0,y_vel(a0)
 		bset	#1,status(a0)
-		bsr.w	SS_RemoveCollectedItem
+		jsr		SS_RemoveCollectedItem
 		bne.s	Obj09_BumpSnd
 		move.b	#2,(a2)
 		move.l	$32(a0),d0
@@ -1497,7 +742,7 @@ Obj09_Rblock:
 		tst.b	$37(a0)
 		bne.w	Obj09_NoGlass
 		move.b	#$1E,$37(a0)
-		bsr.w	SS_RemoveCollectedItem
+		jsr		SS_RemoveCollectedItem
 		bne.s	Obj09_RevStage
 		move.b	#4,(a2)
 		move.l	$32(a0),d0
@@ -1521,7 +766,7 @@ Obj09_ChkGlass:
 		bne.s	Obj09_NoGlass	; if not, branch
 
 Obj09_Glass:
-		bsr.w	SS_RemoveCollectedItem
+		jsr		SS_RemoveCollectedItem
 		bne.s	Obj09_GlassSnd
 		move.b	#6,(a2)
 		movea.l	$32(a0),a1

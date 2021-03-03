@@ -12,7 +12,6 @@ loc_12660:
 		jsr		Unc_Stars_Load
         move.l  #Obj35_MapUnc_1DCBC,mappings(a0)
         move.w  #make_art_tile(ArtTile_ShieldAndStars,0,0),art_tile(a0)
-        bsr     Adjust2PArtPointer2     ; loc_DC30
         move.b  #$4,render_flags(a0)
         bset    #$6,render_flags(a0)
         move.b  #$10,$E(a0)

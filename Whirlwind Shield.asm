@@ -21,7 +21,6 @@ Obj21_Main:
 	move.b	#1,priority(a0)
 	move.b	#$18,width_pixels(a0)
 	move.w	#make_art_tile(ArtTile_ShieldAndStars,0,0),art_tile(a0)
-	bsr.w	Adjust2PArtPointer
 ; loc_1D92C:
 Obj21_Shield:
 	movea.w	parent(a0),a2 ; a2=character
