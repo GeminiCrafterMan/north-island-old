@@ -257,6 +257,7 @@ return2_1A2DE:
 ; Called if Mighty is airborne, but not in a ball (thus, probably not jumping)
 ; loc2_1A2E0: Obj5A_MdJump
 Obj5A_MdAir:
+    clr.b   spindash_flag(a0)
 	jsr	SonicKnux_AirRoll
 	bsr.w	Mighty_JumpHeight
 	bsr.w	Mighty_ChgJumpDir
@@ -310,6 +311,7 @@ Obj5A_MdRoll:
 ;        Why they gave it a separate copy of the code, I don't know.
 ; loc2_1A330: Obj5A_MdJump2:
 Obj5A_MdJump:
+    clr.b   spindash_flag(a0)
 	bsr.w	Mighty_JumpHeight
 	bsr.w	Mighty_ChgJumpDir
 	bsr.w	Mighty_LevelBound

@@ -303,6 +303,7 @@ Obj62_MdNormal:					  ; ...
 
 
 Obj62_MdAir:					  ; ...
+    clr.b   spindash_flag(a0)
 		tst.b	collision_property(a0)
 		bne.s	Obj62_MdAir_Gliding
 	jsr	SonicKnux_AirRoll
@@ -988,6 +989,7 @@ loc_315DA6:					  ; ...
 ; ---------------------------------------------------------------------------
 
 Obj62_MdJump:					  ; ...
+    clr.b   spindash_flag(a0)
 		tst.b	collision_property(a0)
 		bne.w	Obj62_MdAir_Gliding
 		bsr.w	Knuckles_JumpHeight

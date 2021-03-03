@@ -27529,6 +27529,7 @@ return_1A2DE:
 ; Called if Sonic is airborne, but not in a ball (thus, probably not jumping)
 ; loc_1A2E0: Obj01_MdJump
 Obj01_MdAir:
+    clr.b   spindash_flag(a0)
 	bsr.w	SonicKnux_AirRoll
 	bsr.w	Sonic_JumpHeight
 	bsr.w	Sonic_ChgJumpDir
@@ -27574,6 +27575,7 @@ Obj01_MdRoll:
 ;        Why they gave it a separate copy of the code, I don't know.
 ; loc_1A330: Obj01_MdJump2:
 Obj01_MdJump:
+    clr.b   spindash_flag(a0)
 	bsr.w	Sonic_JumpHeight
 	bsr.w	Sonic_ChgJumpDir
 	bsr.w	Sonic_LevelBound
@@ -30751,6 +30753,7 @@ Obj02_MdNormal:
 ; Called if Tails is airborne, but not in a ball (thus, probably not jumping)
 ; loc_1C032: Obj02_MdJump
 Obj02_MdAir:
+    clr.b   spindash_flag(a0)
 	tst.b	($FFFFFEB0).w     ; CHANGING THIS TO double_jump_flag(a0) BREAKS FLIGHT. DO NOT DO IT.
 	bne.s	Tails_FlyingSwimming
 	bsr.w	Tails_AirRoll
@@ -30949,6 +30952,7 @@ Obj02_MdRoll:
 ;        Why they gave it a separate copy of the code, I don't know.
 ; loc_1C082: Obj02_MdJump2:
 Obj02_MdJump:
+    clr.b   spindash_flag(a0)
 	bsr.w	Tails_JumpHeight
 	bsr.w	Tails_ChgJumpDir
 	bsr.w	Tails_LevelBound
