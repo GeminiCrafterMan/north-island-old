@@ -4016,10 +4016,10 @@ TitleScreen_Demo:
 ; ===========================================================================
 ; word_3DAC:
 DemoLevels:
-	dc.w	emerald_hill_zone_act_1		; LVZ
-	dc.w	chemical_plant_zone_act_1	; CPZ
-	dc.w	aquatic_ruin_zone_act_1		; ARZ
-	dc.w	casino_night_zone_act_1		; CNZ
+	dc.w	green_hill_zone_act_1		; GHZ
+	dc.w	emerald_hill_zone_act_1 	; LVZ
+	dc.w	wood_zone_act_1        		; WHZ
+	dc.w	aquatic_ruin_zone_act_1		; IFZ
 DemoLevels_End:
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
