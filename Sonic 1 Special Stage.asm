@@ -68,7 +68,7 @@ SS_ClrNemRam:
 		jsr	(SS_Load).l
 		move.l	#0,(Camera_X_pos).w
 		move.l	#0,(Camera_Y_pos).w
-		move.b	#ObjID_SonicSS,(Object_RAM).w ; load	special	stage Sonic object
+		move.b	#ObjID_SonicSS,(MainCharacter+id).w ; load	special	stage Sonic object
 		bsr.w	PalCycle_SS
 		clr.w	(SSAngle).w	; set stage angle to "upright"
 		move.w	#$40,(SSRotate).w ; set stage rotation	speed
