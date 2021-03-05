@@ -29635,7 +29635,7 @@ SAnim_Tumble:
 	andi.b	#$FC,render_flags(a0)
 	addi.b	#$B,d0
 	divu.w	#$16,d0
-	addi.b	#$31,d0
+	addi.b	#SonFr_Twirl1,d0
 	move.b	d0,mapping_frame(a0)
 	move.b	#0,anim_frame_duration(a0)
 	rts
@@ -29710,6 +29710,8 @@ SAnim_Push:
 	bra.w	SAnim_Do2
 ; ===========================================================================
 
+	include "anim/Sonic Frame IDs.asm"
+
 ; ---------------------------------------------------------------------------
 ; Animation script - Sonic
 ; ---------------------------------------------------------------------------
@@ -29725,15 +29727,15 @@ SonAni_Balance_ptr:		offsetTableEntry.w SonAni_Balance	;  6 ;   6
 SonAni_LookUp_ptr:		offsetTableEntry.w SonAni_LookUp	;  7 ;   7
 SonAni_Duck_ptr:		offsetTableEntry.w SonAni_Duck		;  8 ;   8
 SonAni_Spindash_ptr:		offsetTableEntry.w SonAni_Spindash	;  9 ;   9
-SonAni_Blink_ptr:		offsetTableEntry.w SonAni_Blink		; 10 ;  $A
-SonAni_GetUp_ptr:		offsetTableEntry.w SonAni_GetUp		; 11 ;  $B
+SonAni_Blink_ptr:		offsetTableEntry.w SonAni_Blank		; 10 ;  $A
+SonAni_GetUp_ptr:		offsetTableEntry.w SonAni_Blank		; 11 ;  $B
 SonAni_Balance2_ptr:		offsetTableEntry.w SonAni_Balance2	; 12 ;  $C
 SonAni_Stop_ptr:		offsetTableEntry.w SonAni_Stop		; 13 ;  $D
 SonAni_Float_ptr:		offsetTableEntry.w SonAni_Float		; 14 ;  $E
 SonAni_Float2_ptr:		offsetTableEntry.w SonAni_Float2	; 15 ;  $F
 SonAni_Spring_ptr:		offsetTableEntry.w SonAni_Spring	; 16 ; $10
 SonAni_Hang_ptr:		offsetTableEntry.w SonAni_Hang		; 17 ; $11
-SonAni_Dash2_ptr:		offsetTableEntry.w SonAni_Dash2		; 18 ; $12
+SonAni_Dash2_ptr:		offsetTableEntry.w SonAni_Blank		; 18 ; $12
 SonAni_Victory_ptr:		offsetTableEntry.w SonAni_Victory	; 19 ; $13
 SonAni_Hang2_ptr:		offsetTableEntry.w SonAni_Hang2		; 20 ; $14
 SonAni_Bubble_ptr:		offsetTableEntry.w SonAni_Bubble	; 21 ; $15
@@ -29744,95 +29746,82 @@ SonAni_Hurt_ptr:		offsetTableEntry.w SonAni_Hurt		; 25 ; $19
 SonAni_Hurt2_ptr:		offsetTableEntry.w SonAni_Hurt		; 26 ; $1A
 SonAni_Slide_ptr:		offsetTableEntry.w SonAni_Slide		; 27 ; $1B
 SonAni_Blank_ptr:		offsetTableEntry.w SonAni_Blank		; 28 ; $1C
-SonAni_Dummy_ptr:		offsetTableEntry.w SonAni_Dummy	; 29 ; $1D
-SonAni_Dummy2_ptr:		offsetTableEntry.w SonAni_Dummy2	; 30 ; $1E
+SonAni_Dummy_ptr:		offsetTableEntry.w SonAni_Blank	; 29 ; $1D
+SonAni_Dummy2_ptr:		offsetTableEntry.w SonAni_Blank	; 30 ; $1E
 SupSonAni_Transform_ptr:	offsetTableEntry.w SupSonAni_Transform	; 31 ; $1F
 SonAni_Continue_ptr:		offsetTableEntry.w SonAni_Continue		; 32 ; $20
 SonAni_React_ptr:		offsetTableEntry.w SonAni_React	; 33 ; $21
 SonAni_PeelChrg_ptr:	offsetTableEntry.w SonAni_PeelChrg	; 34 ; $22
 SonAni_HaulAss_ptr:		offsetTableEntry.w SonAni_HaulAss	; 35 ; $23
-SonAni_WallJump_ptr:	offsetTableEntry.w SonAni_WallJump	; 36 ; $24
+SonAni_WallJump_ptr:	offsetTableEntry.W SonAni_Blank
 
-SonAni_Walk:	dc.b $FF,   7,   8,   1,   2,   3,   4,   5,   6, $FF
+SonAni_Walk:	dc.b $FF,   SonFr_Walk7,   SonFr_Walk8,   SonFr_Walk1,   SonFr_Walk2,   SonFr_Walk3,   SonFr_Walk4,   SonFr_Walk5,   SonFr_Walk6, $FF
 	rev02even
-SonAni_Run:	dc.b	$FF, $21, $22, $23, $24, $FF, $FF, $FF, $FF, $FF
+SonAni_Run:	dc.b	$FF, SonFr_Run1, SonFr_Run2, SonFr_Run3, SonFr_Run4, $FF, $FF, $FF, $FF, $FF
 	rev02even
-SonAni_Roll:	dc.b $FE, $96, $97, $96, $98, $96, $99, $96, $9A, $FF
+SonAni_Roll:	dc.b $FE, SonFr_Roll1, SonFr_Roll2, SonFr_Roll1, SonFr_Roll3, SonFr_Roll1, SonFr_Roll4, SonFr_Roll1, SonFr_Roll5, $FF
 	rev02even
-SonAni_Roll2:	dc.b $FE, $96, $97, $96, $98, $96, $99, $96, $9A, $FF
+SonAni_Roll2:	dc.b $FE, SonFr_Roll1, SonFr_Roll2, SonFr_Roll1, SonFr_Roll3, SonFr_Roll1, SonFr_Roll4, SonFr_Roll1, SonFr_Roll5, $FF
 	rev02even
-SonAni_Push:	dc.b $FD, $B6, $B7, $B8, $B9, $FF, $FF, $FF, $FF, $FF
+SonAni_Push:	dc.b $FD, SonFr_Push1, SonFr_Push2, SonFr_Push3, SonFr_Push4, $FF, $FF, $FF, $FF, $FF
 	rev02even
 SonAni_Wait:
-		dc.b	5, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA
-		dc.b  $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA
-		dc.b  $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA, $BA
-		dc.b  $BA, $BA, $BA, $BB, $BC, $BC, $BD, $BD, $BE, $BE, $BD, $BD, $BE, $BE, $BD, $BD
-		dc.b  $BE, $BE, $BD, $BD, $BE, $BE, $BD, $BD, $BE, $BE, $BD, $BD, $BE, $BE, $BD, $BD
-		dc.b  $BE, $BE, $BD, $BD, $BE, $BE, $AD, $AD, $AD, $AD, $AD, $AD, $AE, $AE, $AE, $AE
-		dc.b  $AE, $AE, $AF, $D9, $D9, $D9, $D9, $D9, $D9, $AF, $AF, $FE, $35
+		dc.b	5, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd
+		dc.b  SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd
+		dc.b  SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Stnd
+		dc.b  SonFr_Stnd, SonFr_Stnd, SonFr_Stnd, SonFr_Wait1, SonFr_Wait2, SonFr_Wait2, SonFr_Wait3, SonFr_Wait3, SonFr_Wait4, SonFr_Wait4, SonFr_Wait3, SonFr_Wait3, SonFr_Wait4, SonFr_Wait4, SonFr_Wait3, SonFr_Wait3
+		dc.b  SonFr_Wait4, SonFr_Wait4, SonFr_Wait3, SonFr_Wait3, SonFr_Wait4, SonFr_Wait4, SonFr_Wait3, SonFr_Wait3, SonFr_Wait4, SonFr_Wait4, SonFr_Wait3, SonFr_Wait3, SonFr_Wait4, SonFr_Wait4, SonFr_Wait3, SonFr_Wait3
+		dc.b  SonFr_Wait4, SonFr_Wait4, SonFr_Wait3, SonFr_Wait3, SonFr_Wait4, SonFr_Wait4, SonFr_Wait5, SonFr_Wait5, SonFr_Wait5, SonFr_Wait5, SonFr_Wait5, SonFr_Wait5, SonFr_Wait6, SonFr_Wait6, SonFr_Wait6, SonFr_Wait6
+		dc.b  SonFr_Wait6, SonFr_Wait6, SonFr_Wait7, SonFr_Wait8, SonFr_Wait8, SonFr_Wait8, SonFr_Wait8, SonFr_Wait8, SonFr_Wait8, SonFr_Wait7, SonFr_Wait7, $FE, $35
 	rev02even
-SonAni_Balance:	dc.b   7, $A4, $A5, $A6, $FF
+SonAni_Balance:	dc.b   7, SonFr_BalB1, SonFr_BalB2, SonFr_BalB3, $FF
 	rev02even
-SonAni_LookUp:	dc.b   5, $C3, $C4, $FE,   1
+SonAni_LookUp:	dc.b   5, SonFr_Look1, SonFr_Look2, $FE,   1
 	rev02even
-SonAni_Duck:	dc.b   5, $9B, $9C, $FE,   1
+SonAni_Duck:	dc.b   5, SonFr_Duck1, SonFr_Duck2, $FE,   1
 	rev02even
-SonAni_Spindash:dc.b   0, $86, $87, $86, $88, $86, $89, $86, $8A, $86, $8B, $FF
+SonAni_Spindash:dc.b   0, SonFr_SpnD1, SonFr_SpnD2, SonFr_SpnD1, SonFr_SpnD3, SonFr_SpnD1, SonFr_SpnD4, SonFr_SpnD1, SonFr_SpnD5, SonFr_SpnD1, SonFr_SpnD6, $FF
 	rev02even
-SonAni_Blink:	dc.b   9, $BA, $C5, $C6, $C6, $C6, $C6, $C6, $C6, $C7, $C7, $C7, $C7, $C7, $C7, $C7
-		dc.b  $C7, $C7, $C7, $C7, $C7, $FD,   0
+SonAni_Balance2:dc.b   5, SonFr_BalA1, SonFr_BalA2, SonFr_BalA3, $FF
 	rev02even
-SonAni_GetUp:	dc.b   $F, $8F, $FF
+SonAni_Stop:	dc.b   3, SonFr_Skid1, SonFr_Skid2, SonFr_Skid3, SonFr_Skid4, $FD,   0 ; skid
 	rev02even
-SonAni_Balance2:dc.b   5, $A1, $A2, $A3, $FF
+SonAni_Float:	dc.b   7, SonFr_Flt1, $FF
 	rev02even
-SonAni_Stop:	dc.b   3, $9D, $9E, $9F, $A0, $FD,   0 ; skid
+SonAni_Float2:	dc.b   7, SonFr_Flt1, SonFr_Flt2, SonFr_Flt3, SonFr_Flt4, SonFr_Flt5, SonFr_Flt6, SonFr_Flt7, SonFr_Flt8, $FF
 	rev02even
-SonAni_Float:	dc.b   7, $C8, $FF
+SonAni_Spring:	dc.b $2F, SonFr_Spng, $FD,   0
 	rev02even
-SonAni_Float2:	dc.b   7, $C8, $C9, $CA, $CB, $CC, $CD, $CE, $CF, $FF
+SonAni_Hang:	dc.b   1, SonFr_HangA1, SonFr_HangA2, $FF
 	rev02even
-SonAni_Spring:	dc.b $2F, $8E, $FD,   0
+SonAni_Victory:	dc.b	7, SonFr_Win1, SonFr_Win3, SonFr_Win3, SonFr_Win3, SonFr_Win3, SonFr_Win3, SonFr_Win3, SonFr_Win2, SonFr_Win3, SonFr_Win4, SonFr_Win3, $FE,   4
 	rev02even
-SonAni_Hang:	dc.b   1, $AA, $AB, $FF
+SonAni_Hang2:	dc.b $13, SonFr_HangB1, $FF
 	rev02even
-SonAni_Dash2:	dc.b  $F, $43, $43, $43, $FE,   1
+SonAni_Bubble:	dc.b	$B, SonFr_Bubble, SonFr_Bubble,   SonFr_Walk3,   SonFr_Walk4, $FD,   0 ; breathe
 	rev02even
-SonAni_Victory:	dc.b	7, $B0, $B2, $B2, $B2, $B2, $B2, $B2, $B1, $B2, $B3, $B2, $FE,   4
+SonAni_DeathBW:	dc.b $20, SonFr_Toasty, $FF
 	rev02even
-SonAni_Hang2:	dc.b $13, $91, $FF
+SonAni_Drown:	dc.b $20, SonFr_Drown, $FF
 	rev02even
-SonAni_Bubble:	dc.b	$B, $AC, $AC,   3,   4, $FD,   0 ; breathe
+SonAni_Death:	dc.b $20, SonFr_Die, $FF
 	rev02even
-SonAni_DeathBW:	dc.b $20, $A8, $FF
+SonAni_Hurt:	dc.b $40, SonFr_Ow, $FF
 	rev02even
-SonAni_Drown:	dc.b $20, $A9, $FF
+SonAni_Slide:	dc.b   9, SonFr_Slide1, SonFr_Slide2, $FF
 	rev02even
-SonAni_Death:	dc.b $20, $A7, $FF
+SonAni_Blank:	dc.b $77,  SonFr_Blank,$FD,  0
 	rev02even
-SonAni_Hurt:	dc.b $40, $8D, $FF
+SonAni_Continue:	dc.b   5,SonFr_Wait3,SonFr_Wait3,SonFr_Wait4,SonFr_Wait4,$FF
 	rev02even
-SonAni_Slide:	dc.b   9, $D7, $D8, $FF
+SonAni_React:	dc.b   3,SonFr_Turn7,SonFr_Turn6,SonFr_Turn5,$FD,  0
 	rev02even
-SonAni_Blank:	dc.b $77,  0,$FD,  0
+SonAni_PeelChrg:dc.b 	0,  SonFr_Walk7, SonFr_Walk7, SonFr_Walk7, SonFr_Walk7, SonFr_Walk7, SonFr_Walk7, SonFr_Walk7, SonFr_Walk7
+		dc.b	SonFr_Walk8, SonFr_Walk8, SonFr_Walk8, SonFr_Walk8, SonFr_Walk1, SonFr_Walk1, SonFr_Run4, SonFr_Run4
+		dc.b	SonFr_Run1,  SonFr_Run2,  SonFr_Run3,  SonFr_Run4, SonFr_Run1,  SonFr_Run2,  SonFr_Run3,  SonFr_Run4
+		dc.b	SonFr_Peel1,  SonFr_Peel2, 	SonFr_Peel3,  SonFr_Peel4, -2, 4, $FE
 	rev02even
-SonAni_Dummy:dc.b 3,$C6,$FF
-	rev02even
-SonAni_Dummy2:dc.b 3,$C6,$FF
-	rev02even
-SonAni_Continue:	dc.b   5,$BD,$BD,$BE,$BE,$FF
-	rev02even
-SonAni_React:	dc.b   3,$5B,$5A,$59,$FD,  0
-	rev02even
-SonAni_PeelChrg:dc.b 	0,  $7, $7, $7, $7, $7, $7, $7, $7
-		dc.b	$8, $8, $8, $8, $1, $1, $24, $24
-		dc.b	$21,  $22,  $23,  $24, $21,  $22,  $23,  $24
-		dc.b	$DA,  $DB, 	$DC,  $DD, -2, 4, $FE
-	rev02even
-SonAni_HaulAss:	dc.b $FF, $DA, $DB, $DC, $DD, $FF, $FF,	$FF
-	rev02even
-SonAni_WallJump:	dc.b	$77,$EA,$FF
+SonAni_HaulAss:	dc.b $FF, SonFr_Peel1,  SonFr_Peel2, 	SonFr_Peel3,  SonFr_Peel4, $FF, $FF,	$FF
 	even
 
 ; ---------------------------------------------------------------------------
@@ -29848,17 +29837,17 @@ SuperSonicAniData: offsetTable
 	offsetTableEntry.w SupSonAni_Stand	;  5 ;   5
 	offsetTableEntry.w SupSonAni_Balance	;  6 ;   6
 	offsetTableEntry.w SonAni_LookUp	;  7 ;   7
-	offsetTableEntry.w SupSonAni_Duck	;  8 ;   8
+	offsetTableEntry.w SonAni_Duck	;  8 ;   8
 	offsetTableEntry.w SonAni_Spindash	;  9 ;   9
-	offsetTableEntry.w SonAni_Blink		; 10 ;  $A
-	offsetTableEntry.w SonAni_GetUp		; 11 ;  $B
+	offsetTableEntry.w SonAni_Blank		; 10 ;  $A
+	offsetTableEntry.w SonAni_Blank		; 11 ;  $B
 	offsetTableEntry.w SonAni_Balance2	; 12 ;  $C
 	offsetTableEntry.w SonAni_Stop		; 13 ;  $D
 	offsetTableEntry.w SonAni_Float		; 14 ;  $E
 	offsetTableEntry.w SonAni_Float2	; 15 ;  $F
 	offsetTableEntry.w SonAni_Spring	; 16 ; $10
 	offsetTableEntry.w SonAni_Hang		; 17 ; $11
-	offsetTableEntry.w SonAni_Dash2		; 18 ; $12
+	offsetTableEntry.w SonAni_Blank		; 18 ; $12
 	offsetTableEntry.w SonAni_Victory	; 19 ; $13
 	offsetTableEntry.w SonAni_Hang2		; 20 ; $14
 	offsetTableEntry.w SonAni_Bubble	; 21 ; $15
@@ -29869,22 +29858,20 @@ SuperSonicAniData: offsetTable
 	offsetTableEntry.w SonAni_Hurt		; 26 ; $1A
 	offsetTableEntry.w SonAni_Slide		; 27 ; $1B
 	offsetTableEntry.w SonAni_Blank		; 28 ; $1C
-	offsetTableEntry.w SonAni_Dummy	; 29 ; $1D
-	offsetTableEntry.w SonAni_Dummy2	; 30 ; $1E
+	offsetTableEntry.w SonAni_Blank	; 29 ; $1D
+	offsetTableEntry.w SonAni_Blank	; 30 ; $1E
 	offsetTableEntry.w SupSonAni_Transform	; 31 ; $1F
 	offsetTableEntry.w SonAni_Blank	; 32 ; $20
 	offsetTableEntry.w SonAni_Blank		; 33 ; $21
 	offsetTableEntry.w SonAni_PeelChrg		; 34 ; $22
 	offsetTableEntry.w SonAni_HaulAss		; 35 ; $23
-	offsetTableEntry.w SonAni_WallJump		; 36 ; $24
+	offsetTableEntry.w SonAni_Blank
 
-SupSonAni_Stand:	dc.b	7, $BA, $BB, $BC, $BB, $FF
+SupSonAni_Stand:	dc.b	7, SonFr_Stnd, SonFr_Wait1, SonFr_Wait2, SonFr_Wait1, $FF
 	rev02even
-SupSonAni_Balance:	dc.b   9, $A1, $A2, $A3, $FF
+SupSonAni_Balance:	dc.b   9, SonFr_BalA1, SonFr_BalA2, SonFr_BalA3, SonFr_BalA2, $FF
 	rev02even
-SupSonAni_Duck:		dc.b   5, $9B, $FF
-	rev02even
-SupSonAni_Transform:dc.b   2, $D2, $D2, $D3, $D3, $D4, $D5, $D6, $D5, $D6, $D5, $D6, $D5, $D6, $FD,   0
+SupSonAni_Transform:dc.b   2, SonFr_Trns1, SonFr_Trns1, SonFr_Trns2, SonFr_Trns2, SonFr_Trns3, SonFr_Trns4, SonFr_Trns5, SonFr_Trns4, SonFr_Trns5, SonFr_Trns4, SonFr_Trns5, SonFr_Trns4, SonFr_Trns5, $FD,   0
 	even
 
 ; ---------------------------------------------------------------------------
