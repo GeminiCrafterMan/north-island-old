@@ -17,21 +17,22 @@ loc_12660:
         move.b  #$10,$E(a0)
         move.b  #$8,$F(a0)
 loc_1268E:
-	tst.b	(Super_Sonic_flag).w
-        beq     DeleteObject            ; loc_D3B4
-	lea	(MainCharacter).w,a1 ; a1=character
+		tst.b	(Super_Sonic_flag).w
+		beq     DeleteObject            ; loc_D3B4
+		lea	(MainCharacter).w,a1 ; a1=character
 		move.b	angle(a1),angle(a0)
 		move.b	status(a1),status(a0)
+		andi.b	#1,status(a0) ; added this so it can only get the facing status since it's the only needed one
         move.w  x_pos(a1),x_pos(a0)
         move.w  y_pos(a1),y_pos(a0)
         move.b  status(a1),d6
         lea     (loc_127B0).l,a2
 		move.b  angle(a1),d1
-        btst    #$1,d6
-        beq.s   loc_126C0
-        move.b  status_secondary(a1),d1
-        moveq	#0,d6
-loc_126C0:
+;		btst    #$1,d6
+;		beq.s   loc_126C0
+;		move.b  status_secondary(a1),d1
+;		moveq	#0,d6
+;loc_126C0: ; Commented these out because they were causing the stars to only face right in air
         andi.b  #$1,d6
         beq.s   loc_126C8
         neg.w   d1

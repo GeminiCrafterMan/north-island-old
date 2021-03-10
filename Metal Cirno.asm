@@ -1,40 +1,38 @@
-ObjC4_status		= objoff_2A
-ObjC4_x_pos_next	= objoff_30
-ObjC4_y_pos_next	= objoff_38
-ObjC4_hover_counter	= objoff_3F
-ObjC4_FloatDown_Flag = objoff_3C
-
 	moveq	#0,d0
 	move.b	routine(a0),d0
 	move.w	ObjC4_Index(pc,d0.w),d1
 	jsr	ObjC4_Index(pc,d1.w)
 	jmp	(DisplaySprite).l
 ; ===========================================================================
+ObjC4_status		= objoff_2A
+ObjC4_y_pos_next	= objoff_38
+ObjC4_hover_counter	= objoff_3F
+ObjC4_FloatDown_Flag = objoff_3C
+ObjC4_move_option_timer	= objoff_32
 ; off_15CD6:
 ObjC4_Index:	offsetTable
 		offsetTableEntry.w ObjC4_Init	; 0
 		offsetTableEntry.w ObjC4_Main	; 2
-		offsetTableEntry.w ObjC4_PHold	; 4
+		offsetTableEntry.w ObjC4_SwishAttack	; 4
 		offsetTableEntry.w ObjC4_PHold2	; 6
 		offsetTableEntry.w ObjC4_Defeated	; 8
 ; ===========================================================================
 ; loc_15CDA:
 ObjC4_Init:
-
-		move.w	#$2B10,x_pos(a0)	; please god let her show up on-screen
-		cmpi.w	#$400,y_pos(a0)	; okay so y pos is distance from the top. is she $400 pixels from the top?
-		bgt.s	+	; if she's more than that, go forward
-		move.w	#$500,y_vel(a0)	; if not, speed up!
-		bra.s	++
+	move.w	#$2B10,x_pos(a0)	; please god let her show up on-screen
+	cmpi.w	#$400,y_pos(a0)	; okay so y pos is distance from the top. is she $400 pixels from the top?
+	bgt.s	+	; if she's more than that, go forward
+	move.w	#$500,y_vel(a0)	; if not, speed up!
+	bra.s	++
 +
-		move.w	#$100,y_vel(a0)	; move her down
+	move.w	#$100,y_vel(a0)	; move her down
 +
-		jsr	ObjectMove
-		cmpi.w	#$430,y_pos(a0) ; please let this work
-		bne.s	ObjC4_AnimateNormal	; if it works... go to the animate part??? thanks arz boss for being confusing af
-		move.w	#0,y_vel(a0)	; stop her too, i guess
-		move.b	#1,ObjC4_FloatDown_Flag(a0)
-		addq.b	#2,routine(a0)
+	jsr	(ObjectMove).l
+	cmpi.w	#$430,y_pos(a0) ; please let this work
+	bne.s	ObjC4_AnimateNormal	; if it works... go to the animate part??? thanks arz boss for being confusing af
+	move.w	#0,y_vel(a0)	; stop her too, i guess
+	move.b	#1,ObjC4_FloatDown_Flag(a0)
+	addq.b	#2,routine(a0)
 
 ObjC4_AnimateNormal:
 	move.l	#MapUnc_MCirno,mappings(a0)
@@ -42,30 +40,30 @@ ObjC4_AnimateNormal:
 	move.b	#4,render_flags(a0)
 	move.b	#$10,width_pixels(a0)
 	move.b	#4,priority(a0)
-;	move.w	x_pos(a0),ObjC4_x_pos_next(a0)
 	move.w	y_pos(a0),ObjC4_y_pos_next(a0); very large sine wave.
+	tst.b	ObjC4_FloatDown_Flag(a0)
+	beq.s	ObjC4_Main.Only_Animate
 	move.b	#$F,collision_flags(a0)
 	move.b	#8,collision_property(a0)
 
+ObjC4_Idle_timer:
+	move.w	#6*60,ObjC4_move_option_timer(a0)
+	tst.w	x_vel(a0)
+	bhs.s	.notnegate
+	move.w	#-$200,x_vel(a0)
+	bra.s	.setroutine
+	.notnegate:
+	move.w	#$200,x_vel(a0)
+	.setroutine:
+	move.b	#2,routine(a0)
 ; loc_15D02:
 ObjC4_Main:
-	cmpi.b	#8,routine(a0)
-	bge.s	ObjC4_Main_End
-	jsr		Obj_GetOrientationToPlayer
-	bclr	#0,render_flags(a0)	; face right
-	bclr	#0,status(a0)
-	tst.w	d0		; is player to object's left?
-	bne.s	ObjC4_Main_End		; if not, branch
-	bset	#0,render_flags(a0)	; face left
-	bset	#0,status(a0)
-+
-	move.w	#$1B,d1
-	move.w	#$10,d2
-	move.w	#$10,d3
-;	move.w	x_pos(a0),d4
-
-ObjC4_Main_End:
+	subq.w	#1,ObjC4_move_option_timer(a0)
+	bmi.w	ObjC4_DoSwishAttack
 	bsr.w	ObjC4_SineWaveAndHandleHits
+	bsr.s	ObjC4_Main_Move
+
+	.Only_Animate:
 	lea		(Ani_MCirno).l,a1 ; this specific order makes it work fine. dunno why...
 	tst.b	invulnerable_time(a0)	; is boss invulnerable?
 	beq.s	+				; if not, branch
@@ -77,6 +75,32 @@ ObjC4_Main_End:
 	jsr	(AnimateSprite).l
 	jmp		MetalCirno_LoadGraphics
 ;	jmp		Obj_DeleteBehindScreen
+
+ObjC4_Main_Move:	; shared routine, checks positions and sets direction
+	move.w	x_pos(a0),d0
+	cmpi.w	#$2A40,d0	; Is this the left boundary?
+	ble.s	+	; if lower or equal, negate x velocity
+	cmpi.w	#$2B80,d0 ; Is this the right boundary?
+	blt.s	++			; if lower than it, only move
+
++
+	neg.w	x_vel(a0)	; change direction of velocity
++
+	move.l	x_pos(a0),d2
+	move.w	x_vel(a0),d0
+	ext.l	d0
+	asl.l	#8,d0
+	add.l	d0,d2
+	move.l	d2,x_pos(a0)	; set x_pos depening on velocity
+	jsr		Obj_GetOrientationToPlayer
+	bclr	#0,render_flags(a0)	; face right
+	bclr	#0,status(a0)
+	tst.w	d0		; is player to object's left?
+	bne.s	+		; if not, branch
+	bset	#0,render_flags(a0)	; face left
+	bset	#0,status(a0)
++
+	jmp	(JmpTo35_DisplaySprite).l
 
 ObjC4_SineWaveAndHandleHits:
 	tst.b	ObjC4_FloatDown_Flag(a0)
@@ -115,6 +139,18 @@ ObjC4_HandleHits:
 
 MC_MainEnd_Return:
 	rts
+
+ObjC4_DoSwishAttack:
+	move.w	#6*60,ObjC4_move_option_timer(a0)
+	tst.w	x_vel(a0)
+	bhs.s	.notnegate
+	move.w	#-$380,x_vel(a0)
+	bra.s	.setroutine
+	.notnegate:
+	move.w	#$380,x_vel(a0)
+	.setroutine:
+	move.b	#4,routine(a0)
+	rts
 ; ===========================================================================
 ; loc_2D5C4:
 MCirno_Defeat:
@@ -127,7 +163,21 @@ MCirno_Defeat:
 	moveq	#PLCID_Capsule,d0
 	jmp		(LoadPLC).l
 
-ObjC4_PHold:	rts
+ObjC4_SwishAttack:
+	subq.w	#1,ObjC4_move_option_timer(a0)
+	bmi.w	ObjC4_Idle_timer
+	bsr.w	ObjC4_Main_Move
+	move.b	ObjC4_hover_counter(a0),d0
+	jsr	(CalcSine).l
+	asr.w	#1,d1
+	add.w	ObjC4_y_pos_next(a0),d1	; get y position for next frame, add sine value
+	cmp.w	#$430,d1
+	bgt.s	.noNeg
+	move.w	#$430,d1
+	.noNeg:
+	move.w	d1,y_pos(a0)			; set y positions
+	addq.b	#2,ObjC4_hover_counter(a0)
+	bra.w	ObjC4_HandleHits
 ObjC4_PHold2:	rts
 
 ObjC4_Defeated:

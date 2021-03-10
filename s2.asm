@@ -29821,7 +29821,7 @@ SonAni_PeelChrg:dc.b 	0,  SonFr_Walk7, SonFr_Walk7, SonFr_Walk7, SonFr_Walk7, So
 		dc.b	SonFr_Run1,  SonFr_Run2,  SonFr_Run3,  SonFr_Run4, SonFr_Run1,  SonFr_Run2,  SonFr_Run3,  SonFr_Run4
 		dc.b	SonFr_Peel1,  SonFr_Peel2, 	SonFr_Peel3,  SonFr_Peel4, -2, 4, $FE
 	rev02even
-SonAni_HaulAss:	dc.b $FF, SonFr_Peel1,  SonFr_Peel2, 	SonFr_Peel3,  SonFr_Peel4, $FF, $FF,	$FF
+SonAni_HaulAss:    dc.b $FF, SonFr_Peel1,  SonFr_Peel2,     SonFr_Peel3,  SonFr_Peel4, $FF, $FF, $FF, $FF, $FF
 	even
 
 ; ---------------------------------------------------------------------------
