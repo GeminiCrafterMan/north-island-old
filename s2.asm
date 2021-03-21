@@ -21538,7 +21538,7 @@ Off_TitleCardLetters:
 	dc.b TitleCardLetters_EHZ - TitleCardLetters	; 0 ; Lavender Valley
 	dc.b TitleCardLetters_GHZ - TitleCardLetters	; 1 ; Green Hill
 	dc.b TitleCardLetters_WHZ  - TitleCardLetters	; 2 ; Wooded Hills
-	dc.b TitleCardLetters_TTZ - TitleCardLetters	; 3 ; Zone 3
+	dc.b TitleCardLetters_TTZ - TitleCardLetters	; 3 ; Techno Test
 	dc.b TitleCardLetters_MTZ - TitleCardLetters	; 4 ; Metropolis 1 & 2
 	dc.b TitleCardLetters_MTZ - TitleCardLetters	; 5 ; Metropolis 3
 	dc.b TitleCardLetters_WFZ - TitleCardLetters	; 6 ; Wing Fortress
