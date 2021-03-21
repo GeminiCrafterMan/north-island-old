@@ -25,6 +25,7 @@
 	bne.s	Tails_Super_Return
 ; loc_1ABF2:
 Tails_RevertToNormal:
+    clr.b   (Tails_Trails+id).w
 	jsr		Unc_NormalIcons_Reload
 	move.l	#MapUnc_Tails,mappings(a0)
 	move.w	#make_art_tile(ArtTile_ArtUnc_Tails,0,0),art_tile(a0)

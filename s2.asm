@@ -18643,7 +18643,7 @@ invincible_monitor:
 	bne.s	+
 	cmpi.b	#$C,air_left(a1)	; or when drowning
 	bls.s	+
-	move.w	#MusID_S3DBInvincible,d0	; prepare to play invincibility music
+	move.w	#MusID_TanTanTaTaTaTan,d0	; prepare to play invincibility music
 	jsr	(PlayMusic).l
 +
 	move.b	#ObjID_InvStars,(InvincibilityStars+id).w ; load Obj35 (invincibility stars) at $FFFFD200
@@ -18686,6 +18686,7 @@ super_monitor:
 	move.b	#AniIDSupSonAni_Transform,anim(a1)			; use transformation animation
 +
 	move.b	#ObjID_HyperTrail,(SuperSonicStars+id).w ; load Obj7E (super sonic stars object) at $FFFFD040
+    move.w  a1,(SuperSonicStars+parent).w
 	move.b	#ObjID_WaiInvinc,(InvincibilityStars+id).w ; load Obj35 (invincibility stars) at $FFFFD200
 	move.w	a1,(InvincibilityStars+parent).w
 	cmpi.w	#2,(Player_mode).w
@@ -28551,6 +28552,7 @@ SuperSonic_Cont: ; known as Sonic_Transform: in S3K
 	move.b	#AniIDSupSonAni_Transform,anim(a0)			; use transformation animation
 +
 	move.b	#ObjID_HyperTrail,(SuperSonicStars+id).w ; load Obj7E (super sonic stars object) at $FFFFD040
+    move.w  a0,(SuperSonicStars+parent).w
 	move.b	#ObjID_WaiInvinc,(InvincibilityStars+id).w ; load Obj35 (invincibility stars) at $FFFFD200
 	move.w	a0,(InvincibilityStars+parent).w
 	cmpi.w	#2,(Player_mode).w
@@ -33706,7 +33708,7 @@ ResumeMusic:
 
 	btst	#status_sec_isInvincible,status_secondary(a1)
 	beq.s	+		; branch if Sonic is not invincible
-	move.w	#MusID_S3DBInvincible,d0	; prepare to play invincibility music
+	move.w	#MusID_TanTanTaTaTaTan,d0	; prepare to play invincibility music
 	tst.b	(Super_Sonic_flag).w
 	beq.s	+		; branch if it isn't Super Sonic
 	move.w	#MusID_SPASpecStag,d0	; prepare to play super sonic music

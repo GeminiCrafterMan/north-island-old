@@ -978,7 +978,11 @@ InvincibilityStars:
 				ds.b	object_size
 				ds.b	object_size
 ; used to be Tails_InvincibilityStars
-				ds.b	$100
+Tails_Trails:
+				ds.b	object_size
+				ds.b	object_size
+				ds.b	object_size
+				ds.b	object_size
 LevelOnly_Object_RAM_End:
 
 Object_RAM_End:

@@ -50,7 +50,8 @@ SndMus5_Start:	startBank
 Mus_MM3Boss:	include "sound/music/Mega Man The Wily Wars/Mega Man 3/Boss Theme.asm" ; $4479 bytes
 Mus_NT:	include "sound/music/Pulseman/Neo Tokyo.asm" ; $21F8 bytes
 Mus_Credits:	include "sound/music/S2/Credits.asm" ; $16E0 bytes
-Mus_S3DBInvincible:	BINCLUDE "sound/music/Invincible_cmp.bin" ; $2AD bytes
+Mus_GameOver:	include "sound/music/S2/Game over.asm" ; $14F bytes
+Mus_Countdown:	BINCLUDE "sound/music/S2/Drowning_cmp.bin" ; $11F bytes
 
 	finishBank
 
@@ -74,9 +75,9 @@ SndMus7_Start:	startBank
 Mus_Animaniacs:	include "sound/music/Experiments/AnimaniacsTheme.asm" ; $2168 bytes
 Mus_CM:	include "sound/music/Mega Man & Bass/Cold Man.asm" ; $1E32 bytes
 Mus_RM:	include "sound/music/Mega Man & Bass/Robot Museum.asm" ; $1DE1 bytes
-Mus_SPASpecStag:	include "sound/music/Other/SPA Special Stage.asm" ; $14FF bytes
-Mus_Phantom:	include "sound/music/Thunder Force IV/Phantom.asm" ; $BD0 bytes
-Mus_GameOver:	include "sound/music/S2/Game over.asm" ; $14F bytes
+Mus_TanTanTaTaTaTan:	include "sound/music/Thunder Force IV/Tan Tan Ta Ta Ta Tan.asm" ; $1A17 bytes
+Mus_GHZ:	BINCLUDE "sound/music/Mus81 - GHZ_cmp.bin" ; $5AA bytes
+Mus_ExtraLife:	BINCLUDE "sound/music/Extra life_cmp.bin" ; $B7 bytes
 
 	finishBank
 
@@ -85,10 +86,11 @@ Mus_GameOver:	include "sound/music/S2/Game over.asm" ; $14F bytes
 ; ------------------------------------------------------------------------------
 SndMus8_Start:	startBank
 
+Mus_SPASpecStag:	include "sound/music/Other/SPA Special Stage.asm" ; $14FF bytes
+Mus_Phantom:	include "sound/music/Thunder Force IV/Phantom.asm" ; $BD0 bytes
 Mus_WWGameSel:	include "sound/music/Mega Man The Wily Wars/Game Select.asm" ; $BBF bytes
 Mus_Baka:	include "sound/music/Other/Beloved Tomboyish Girl.asm" ; $B24 bytes
 Mus_S3DBSpecStage:	include "sound/music/S3DB/Special Stage.asm" ; $AB2 bytes
-Mus_GHZ:	BINCLUDE "sound/music/Mus81 - GHZ_cmp.bin" ; $5AA bytes
 Mus_MR:	BINCLUDE "sound/music/Misty Rain-optimized_cmp.bin" ; $590 bytes
 Mus_EHZ:	BINCLUDE "sound/music/S2/EHZ_cmp.bin" ; $518 bytes
 Mus_Ending:	BINCLUDE "sound/music/S2/Ending_cmp.bin" ; $4E8 bytes
@@ -102,8 +104,6 @@ Mus_HTZ:	BINCLUDE "sound/music/S2/HTZ_cmp.bin" ; $35E bytes
 Mus_S3KEndLevel:	BINCLUDE "sound/music/Level Outro_cmp.bin" ; $351 bytes
 Mus_WFZ:	BINCLUDE "sound/music/S2/WFZ_cmp.bin" ; $348 bytes
 Mus_ChoosePlayer:	BINCLUDE "sound/music/SMB2 Character Select_cmp.bin" ; $310 bytes
-Mus_Countdown:	BINCLUDE "sound/music/S2/Drowning_cmp.bin" ; $11F bytes
-Mus_ExtraLife:	BINCLUDE "sound/music/Extra life_cmp.bin" ; $B7 bytes
 
 	finishBank
 

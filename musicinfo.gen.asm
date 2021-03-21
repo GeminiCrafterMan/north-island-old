@@ -14,7 +14,7 @@ zMasterPlaylist:
 	zmakePlaylistEntry	Mus_RM,musprop_uncompressed
 	zmakePlaylistEntry	Mus_WWGameSel,musprop_uncompressed
 	zmakePlaylistEntry	Mus_WT2,musprop_uncompressed
-	zmakePlaylistEntry	Mus_S3DBInvincible,0
+	zmakePlaylistEntry	Mus_TanTanTaTaTaTan,musprop_uncompressed
 	zmakePlaylistEntry	Mus_S3DBSpecStage,musprop_uncompressed
 	zmakePlaylistEntry	Mus_S3KEndLevel,0
 	zmakePlaylistEntry	Mus_NT,musprop_uncompressed

@@ -15,7 +15,7 @@ SongNames:	offsetTable
 	offsetTableEntry.w	MusNam_RM
 	offsetTableEntry.w	MusNam_WWGameSel
 	offsetTableEntry.w	MusNam_WT2
-	offsetTableEntry.w	MusNam_S3DBInvincible
+	offsetTableEntry.w	MusNam_TanTanTaTaTaTan
 	offsetTableEntry.w	MusNam_S3DBSpecStage
 	offsetTableEntry.w	MusNam_S3KEndLevel
 	offsetTableEntry.w	MusNam_NT
@@ -62,7 +62,7 @@ MusNam_ChoosePlayer:	songtext	"SMB2 PLAYER SEL"
 MusNam_RM:	songtext	"ROBOT MUSEUM"
 MusNam_WWGameSel:	songtext	"GAME SELECT"
 MusNam_WT2:	songtext	"WILY TOWER 2"
-MusNam_S3DBInvincible:	songtext	"S3D INVINCIBLE"
+MusNam_TanTanTaTaTaTan:	songtext	"TANTANTATATATAN"
 MusNam_S3DBSpecStage:	songtext	"S3D SPECIALSTAGE"
 MusNam_S3KEndLevel:	songtext	"S3K ACT CLEAR"
 MusNam_NT:	songtext	"NEO TOKYO"
