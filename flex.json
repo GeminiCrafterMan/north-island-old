@@ -1,492 +1,761 @@
 {
-    "description": "Flex 2 Project File",
+    "Flex": 2,
     "name": "Sonic North Island",
+    "node": "0f3cd9c5-22ca-4c9f-89d2-bba9c7d05463",
     "objects": [
         {
-            "name": "Sonic",
-            "palettes": [
+            "name": "Characters",
+            "children": [
                 {
-                    "path": "art/palettes/SonicAndTails.bin",
-                    "length": 1
+                    "name": "Normal Forms",
+                    "children": [
+                        {
+                            "name": "Sonic",
+                            "palettes": [
+                                {
+                                    "path": "art/palettes/SonicAndTails.bin",
+                                    "length": 1
+                                },
+                                {
+                                    "path": "art/palettes/Sonic underwater.bin",
+                                    "length": 1
+                                }
+                            ],
+                            "art": {
+                                "path": "art/uncompressed/Sonic's art.bin",
+                                "compression": "Uncompressed",
+                                "offset": 0
+                            },
+                            "mappings": {
+                                "path": "mappings/sprite/Sonic.bin",
+                                "format": "Sonic 2",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "dplcs": {
+                                "enabled": true,
+                                "path": "mappings/spriteDPLC/Sonic.bin",
+                                "format": "Sonic 2/3&K",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "uuid": "ac0150a0-440f-4cd9-8522-ca4c9f89d2bb",
+                            "format": "Sonic 2.js"
+                        },
+                        {
+                            "name": "P1 Tails",
+                            "palettes": [
+                                {
+                                    "path": "art/palettes/Tails.bin",
+                                    "length": 1
+                                },
+                                {
+                                    "path": "art/palettes/Tails underwater.bin",
+                                    "length": 1
+                                }
+                            ],
+                            "art": {
+                                "path": "art/uncompressed/P1 Tails.bin",
+                                "compression": "Uncompressed",
+                                "offset": 0
+                            },
+                            "mappings": {
+                                "path": "mappings/sprite/Tails.bin",
+                                "format": "Sonic 2",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "dplcs": {
+                                "enabled": true,
+                                "path": "mappings/spriteDPLC/Tails.bin",
+                                "format": "Sonic 2/3&K",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "uuid": "0150a044-0f3c-49c5-a2ca-4c9f89d2bba9",
+                            "format": "Sonic 2.js"
+                        },
+                        {
+                            "name": "P2 Tails",
+                            "palettes": [
+                                {
+                                    "path": "art/palettes/SonicAndTails.bin",
+                                    "length": 1
+                                },
+                                {
+                                    "path": "art/palettes/Sonic underwater.bin",
+                                    "length": 1
+                                }
+                            ],
+                            "art": {
+                                "path": "art/uncompressed/Tails's art.bin",
+                                "compression": "Uncompressed",
+                                "offset": 0
+                            },
+                            "mappings": {
+                                "path": "mappings/sprite/Tails.bin",
+                                "format": "Sonic 2",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "dplcs": {
+                                "enabled": true,
+                                "path": "mappings/spriteDPLC/Tails.bin",
+                                "format": "Sonic 2/3&K",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "uuid": "50a0440f-3cd9-4522-8a4c-9f89d2bba9c7",
+                            "format": "Sonic 2.js"
+                        },
+                        {
+                            "name": "Knuckles",
+                            "palettes": [
+                                {
+                                    "path": "art/palettes/Knuckles.bin",
+                                    "length": 1
+                                },
+                                {
+                                    "path": "art/palettes/Knux underwater.bin",
+                                    "length": 1
+                                }
+                            ],
+                            "art": {
+                                "path": "art/uncompressed/Knuckles's art.bin",
+                                "compression": "Uncompressed",
+                                "offset": 0
+                            },
+                            "mappings": {
+                                "path": "mappings/sprite/Knuckles.bin",
+                                "format": "Sonic 2",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "dplcs": {
+                                "enabled": true,
+                                "path": "mappings/spriteDPLC/Knuckles.bin",
+                                "format": "Sonic 2/3&K",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "uuid": "a0440f3c-d9c5-42ca-8c9f-89d2bba9c7d0",
+                            "format": "Sonic 2.js"
+                        },
+                        {
+                            "name": "Mighty",
+                            "palettes": [
+                                {
+                                    "path": "art/palettes/Mighty.bin",
+                                    "length": 1
+                                },
+                                {
+                                    "path": "art/palettes/Mighty underwater.bin",
+                                    "length": 1
+                                },
+                                {
+                                    "path": "art/palettes/SonicAndTails.bin",
+                                    "length": 1
+                                }
+                            ],
+                            "art": {
+                                "path": "art/uncompressed/Mighty's art.bin",
+                                "compression": "Uncompressed",
+                                "offset": 0
+                            },
+                            "mappings": {
+                                "path": "mappings/sprite/Mighty.bin",
+                                "format": "Sonic 2",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "dplcs": {
+                                "enabled": true,
+                                "path": "mappings/spriteDPLC/Mighty.bin",
+                                "format": "Sonic 2/3&K",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "uuid": "440f3cd9-c522-4a4c-9f89-d2bba9c7d054",
+                            "format": "Sonic 2.js"
+                        }
+                    ],
+                    "isDirectory": true,
+                    "expanded": true,
+                    "uuid": "49a2bf97-ed11-458b-88e2-7bca5cd76c94"
                 },
                 {
-                    "path": "art/palettes/Sonic underwater.bin",
-                    "length": 1
+                    "name": "Super Forms",
+                    "children": [
+                        {
+                            "name": "Super Sonic",
+                            "palettes": [
+                                {
+                                    "path": "art/palettes/SonicAndTails.bin",
+                                    "length": 1
+                                }
+                            ],
+                            "art": {
+                                "path": "art/uncompressed/Super Sonic's art.bin",
+                                "compression": "Uncompressed",
+                                "offset": 0
+                            },
+                            "mappings": {
+                                "path": "mappings/sprite/Super Sonic.bin",
+                                "format": "Sonic 2",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "dplcs": {
+                                "enabled": true,
+                                "path": "mappings/spriteDPLC/Super Sonic.bin",
+                                "format": "Sonic 2/3&K",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "uuid": "0f3cd9c5-22ca-4c9f-89d2-bba9c7d05463",
+                            "format": "Sonic 2.js"
+                        },
+                        {
+                            "name": "Super Tails",
+                            "palettes": [
+                                {
+                                    "path": "art/palettes/Tails.bin",
+                                    "length": 1
+                                }
+                            ],
+                            "art": {
+                                "path": "art/uncompressed/Super Tails's art.bin",
+                                "compression": "Uncompressed",
+                                "offset": 0
+                            },
+                            "mappings": {
+                                "path": "mappings/sprite/Super Tails.bin",
+                                "format": "Sonic 2",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "dplcs": {
+                                "enabled": true,
+                                "path": "mappings/spriteDPLC/Super Tails.bin",
+                                "format": "Sonic 2/3&K",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "uuid": "3cd9c522-ca4c-4f89-92bb-a9c7d0546308",
+                            "format": "Sonic 2.js"
+                        },
+                        {
+                            "name": "Super Knuckles",
+                            "palettes": [
+                                {
+                                    "path": "art/palettes/Knuckles.bin",
+                                    "length": 1
+                                }
+                            ],
+                            "art": {
+                                "path": "art/uncompressed/Super Knuckles's art.bin",
+                                "compression": "Uncompressed",
+                                "offset": 0
+                            },
+                            "mappings": {
+                                "path": "mappings/sprite/Super Knuckles.bin",
+                                "format": "Sonic 2",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "dplcs": {
+                                "enabled": true,
+                                "path": "mappings/spriteDPLC/Super Knuckles.bin",
+                                "format": "Sonic 2/3&K",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "uuid": "d9c522ca-4c9f-49d2-bba9-c7d054630896",
+                            "format": "Sonic 2.js"
+                        }
+                    ],
+                    "isDirectory": true,
+                    "expanded": true,
+                    "uuid": "a2bf97ed-1185-4b88-a27b-ca5cd76c9423"
                 }
             ],
-            "art": {
-                "path": "art/uncompressed/Sonic's art.bin",
-                "compression": "Uncompressed"
-            },
-            "mappings": {
-                "path": "mappings/sprite/Sonic.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": true,
-                "path": "mappings/spriteDPLC/Sonic.bin",
-                "format": "Sonic 2/3&K",
-                "customDefinition": "",
-                "label": ""
-            }
+            "isDirectory": true,
+            "expanded": true,
+            "uuid": "e749a2bf-97ed-4185-8b88-e27bca5cd76c"
         },
         {
-            "name": "P1 Tails",
-            "palettes": [
+            "name": "Life Icons",
+            "children": [
                 {
-                    "path": "art/palettes/Tails.bin",
-                    "length": 1
+                    "name": "Uncompressed",
+                    "children": [
+                        {
+                            "name": "Normal",
+                            "children": [
+                                {
+                                    "uuid": "100d8b7f-011f-4bd1-b1eb-c8896a8fce0b",
+                                    "format": "Sonic 2.js",
+                                    "name": "Life Icon (Sonic)",
+                                    "palettes": [],
+                                    "art": {
+                                        "path": "art/uncompressed/Sonic lives counter.bin",
+                                        "compression": "Uncompressed",
+                                        "offset": 0
+                                    },
+                                    "mappings": {
+                                        "path": "",
+                                        "label": ""
+                                    },
+                                    "dplcs": {
+                                        "enabled": false,
+                                        "path": "",
+                                        "label": ""
+                                    }
+                                },
+                                {
+                                    "uuid": "0d8b7f01-1f9b-41b1-abc8-896a8fce0b02",
+                                    "format": "Sonic 2.js",
+                                    "name": "Life Icon (Tails)",
+                                    "palettes": [],
+                                    "art": {
+                                        "path": "art/uncompressed/Tails lives counter.bin",
+                                        "compression": "Uncompressed",
+                                        "offset": 0
+                                    },
+                                    "mappings": {
+                                        "path": "",
+                                        "label": ""
+                                    },
+                                    "dplcs": {
+                                        "enabled": false,
+                                        "path": "",
+                                        "label": ""
+                                    }
+                                },
+                                {
+                                    "uuid": "7f011f9b-d1b1-4bc8-896a-8fce0b02a091",
+                                    "format": "Sonic 2.js",
+                                    "name": "Life Icon (Knuckles)",
+                                    "palettes": [],
+                                    "art": {
+                                        "path": "art/uncompressed/Knuckles lives counter.bin",
+                                        "compression": "Uncompressed",
+                                        "offset": 0
+                                    },
+                                    "mappings": {
+                                        "path": "",
+                                        "label": ""
+                                    },
+                                    "dplcs": {
+                                        "enabled": false,
+                                        "path": "",
+                                        "label": ""
+                                    }
+                                },
+                                {
+                                    "uuid": "8b7f011f-9bd1-41eb-8889-6a8fce0b02a0",
+                                    "format": "Sonic 2.js",
+                                    "name": "Life Icon (Mighty)",
+                                    "palettes": [],
+                                    "art": {
+                                        "path": "art/uncompressed/Mighty lives counter.bin",
+                                        "compression": "Uncompressed",
+                                        "offset": 0
+                                    },
+                                    "mappings": {
+                                        "path": "",
+                                        "label": ""
+                                    },
+                                    "dplcs": {
+                                        "enabled": false,
+                                        "path": "",
+                                        "label": ""
+                                    }
+                                }
+                            ],
+                            "isDirectory": true,
+                            "expanded": false,
+                            "uuid": "ed11858b-88e2-4bca-9cd7-6c942364921b"
+                        },
+                        {
+                            "name": "Super",
+                            "children": [
+                                {
+                                    "uuid": "a4c59535-c510-4d8b-bf01-1f9bd1b1ebc8",
+                                    "format": "Sonic 2.js",
+                                    "name": "Life Icon (Super Sonic)",
+                                    "palettes": [],
+                                    "art": {
+                                        "path": "art/uncompressed/Super Sonic lives counter.bin",
+                                        "compression": "Uncompressed",
+                                        "offset": 0
+                                    },
+                                    "mappings": {
+                                        "path": "",
+                                        "label": ""
+                                    },
+                                    "dplcs": {
+                                        "enabled": false,
+                                        "path": "",
+                                        "label": ""
+                                    }
+                                },
+                                {
+                                    "uuid": "f5a4c595-35c5-400d-8b7f-011f9bd1b1eb",
+                                    "format": "Sonic 2.js",
+                                    "name": "Life Icon (Super Tails)",
+                                    "palettes": [],
+                                    "art": {
+                                        "path": "art/uncompressed/Super Tails lives counter.bin",
+                                        "compression": "Uncompressed",
+                                        "offset": 0
+                                    },
+                                    "mappings": {
+                                        "path": "",
+                                        "label": ""
+                                    },
+                                    "dplcs": {
+                                        "enabled": false,
+                                        "path": "",
+                                        "label": ""
+                                    }
+                                },
+                                {
+                                    "uuid": "b9f5a4c5-9535-4510-8d8b-7f011f9bd1b1",
+                                    "format": "Sonic 2.js",
+                                    "name": "Life Icon (Super Knuckles)",
+                                    "palettes": [],
+                                    "art": {
+                                        "path": "art/uncompressed/Super Knuckles lives counter.bin",
+                                        "compression": "Uncompressed",
+                                        "offset": 0
+                                    },
+                                    "mappings": {
+                                        "path": "",
+                                        "label": ""
+                                    },
+                                    "dplcs": {
+                                        "enabled": false,
+                                        "path": "",
+                                        "label": ""
+                                    }
+                                }
+                            ],
+                            "isDirectory": true,
+                            "expanded": false,
+                            "uuid": "11858b88-e27b-4a5c-976c-942364921bcd"
+                        }
+                    ],
+                    "isDirectory": true,
+                    "expanded": false,
+                    "uuid": "97ed1185-8b88-427b-8a5c-d76c94236492"
                 },
                 {
-                    "path": "art/palettes/Tails underwater.bin",
-                    "length": 1
+                    "name": "Nemesis",
+                    "children": [
+                        {
+                            "name": "Life Icon (Sonic)",
+                            "palettes": [
+                                {
+                                    "path": "art/palettes/SonicAndTails.bin",
+                                    "length": 1
+                                },
+                                {
+                                    "path": "art/palettes/EHZ.bin",
+                                    "length": 3
+                                }
+                            ],
+                            "art": {
+                                "path": "art/nemesis/Sonic lives counter.bin",
+                                "compression": "Nemesis",
+                                "offset": 0
+                            },
+                            "mappings": {
+                                "path": "mappings/Life counters.bin",
+                                "format": "Sonic 2",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "dplcs": {
+                                "enabled": false,
+                                "path": "",
+                                "format": "Sonic 1",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "uuid": "9f89d2bb-a9c7-4054-a308-966c9ff74264",
+                            "format": "Sonic 2.js",
+                            "expanded": true
+                        },
+                        {
+                            "name": "Life Icon (Tails)",
+                            "palettes": [
+                                {
+                                    "path": "art/palettes/Tails.bin",
+                                    "length": 1
+                                },
+                                {
+                                    "path": "art/palettes/EHZ.bin",
+                                    "length": 3
+                                }
+                            ],
+                            "art": {
+                                "path": "art/nemesis/Tails life counter.bin",
+                                "compression": "Nemesis",
+                                "offset": 0
+                            },
+                            "mappings": {
+                                "path": "mappings/Life counters.bin",
+                                "format": "Sonic 2",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "dplcs": {
+                                "enabled": false,
+                                "path": "",
+                                "format": "Sonic 1",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "uuid": "89d2bba9-c7d0-4463-8896-6c9ff742641f",
+                            "format": "Sonic 2.js",
+                            "expanded": true
+                        },
+                        {
+                            "name": "Life Icon (Miles)",
+                            "palettes": [
+                                {
+                                    "path": "art/palettes/Tails.bin",
+                                    "length": 1
+                                },
+                                {
+                                    "path": "art/palettes/EHZ.bin",
+                                    "length": 3
+                                }
+                            ],
+                            "art": {
+                                "path": "art/nemesis/Miles life counter.bin",
+                                "compression": "Nemesis",
+                                "offset": 0
+                            },
+                            "mappings": {
+                                "path": "mappings/Life counters.bin",
+                                "format": "Sonic 2",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "dplcs": {
+                                "enabled": false,
+                                "path": "",
+                                "format": "Sonic 1",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "uuid": "d2bba9c7-d054-4308-966c-9ff742641ffe",
+                            "format": "Sonic 2.js"
+                        },
+                        {
+                            "name": "Life Icon (Knuckles)",
+                            "palettes": [
+                                {
+                                    "path": "art/palettes/Knuckles.bin",
+                                    "length": 1
+                                },
+                                {
+                                    "path": "art/palettes/EHZ.bin",
+                                    "length": 3
+                                }
+                            ],
+                            "art": {
+                                "path": "art/nemesis/Knuckles lives counter.bin",
+                                "compression": "Nemesis",
+                                "offset": 0
+                            },
+                            "mappings": {
+                                "path": "mappings/Life counters.bin",
+                                "format": "Sonic 2",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "dplcs": {
+                                "enabled": false,
+                                "path": "",
+                                "format": "Sonic 1",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "uuid": "bba9c7d0-5463-4896-ac9f-f742641ffe41",
+                            "format": "Sonic 2.js"
+                        },
+                        {
+                            "name": "Life Icon (Mighty)",
+                            "palettes": [
+                                {
+                                    "path": "art/palettes/Mighty.bin",
+                                    "length": 1
+                                },
+                                {
+                                    "path": "art/palettes/EHZ.bin",
+                                    "length": 3
+                                }
+                            ],
+                            "art": {
+                                "path": "art/nemesis/Mighty lives counter.bin",
+                                "compression": "Nemesis",
+                                "offset": 0
+                            },
+                            "mappings": {
+                                "path": "mappings/Life counters.bin",
+                                "format": "Sonic 2",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "dplcs": {
+                                "enabled": false,
+                                "path": "",
+                                "format": "Sonic 1",
+                                "customDefinition": "",
+                                "label": ""
+                            },
+                            "uuid": "a9c7d054-6308-466c-9ff7-42641ffe4169",
+                            "format": "Sonic 2.js"
+                        }
+                    ],
+                    "isDirectory": true,
+                    "expanded": false,
+                    "uuid": "858b88e2-7bca-4cd7-ac94-2364921bcd1f"
                 }
             ],
-            "art": {
-                "path": "art/uncompressed/P1 Tails.bin",
-                "compression": "Uncompressed"
-            },
-            "mappings": {
-                "path": "mappings/sprite/Tails.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": true,
-                "path": "mappings/spriteDPLC/Tails.bin",
-                "format": "Sonic 2/3&K",
-                "customDefinition": "",
-                "label": ""
-            }
+            "isDirectory": true,
+            "expanded": false,
+            "uuid": "bf97ed11-858b-48e2-bbca-5cd76c942364"
         },
         {
-            "name": "P2 Tails",
-            "palettes": [
+            "name": "Continues",
+            "children": [
                 {
-                    "path": "art/palettes/SonicAndTails.bin",
-                    "length": 1
+                    "name": "Continue (Sonic)",
+                    "palettes": [
+                        {
+                            "path": "art/palettes/SonicAndTails.bin",
+                            "length": 1
+                        }
+                    ],
+                    "art": {
+                        "path": "art/nemesis/Sonic continue.bin",
+                        "compression": "Nemesis",
+                        "offset": 0
+                    },
+                    "mappings": {
+                        "path": "mappings/Continue.bin",
+                        "format": "Sonic 2",
+                        "customDefinition": "",
+                        "label": ""
+                    },
+                    "dplcs": {
+                        "enabled": false,
+                        "path": "",
+                        "format": "Sonic 1",
+                        "customDefinition": "",
+                        "label": ""
+                    },
+                    "uuid": "c522ca4c-9f89-42bb-a9c7-d0546308966c",
+                    "format": "Sonic 2.js",
+                    "expanded": true
                 },
                 {
-                    "path": "art/palettes/Sonic underwater.bin",
-                    "length": 1
-                }
-            ],
-            "art": {
-                "path": "art/uncompressed/Tails's art.bin",
-                "compression": "Uncompressed"
-            },
-            "mappings": {
-                "path": "mappings/sprite/Tails.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": true,
-                "path": "mappings/spriteDPLC/Tails.bin",
-                "format": "Sonic 2/3&K",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Knuckles",
-            "palettes": [
-                {
-                    "path": "art/palettes/Knuckles.bin",
-                    "length": 1
+                    "name": "Continue (Tails)",
+                    "palettes": [
+                        {
+                            "path": "art/palettes/Tails.bin",
+                            "length": 1
+                        }
+                    ],
+                    "art": {
+                        "path": "art/nemesis/Tails continue.bin",
+                        "compression": "Nemesis",
+                        "offset": 0
+                    },
+                    "mappings": {
+                        "path": "mappings/Continue.bin",
+                        "format": "Sonic 2",
+                        "customDefinition": "",
+                        "label": ""
+                    },
+                    "dplcs": {
+                        "enabled": false,
+                        "path": "",
+                        "format": "Sonic 1",
+                        "customDefinition": "",
+                        "label": ""
+                    },
+                    "uuid": "22ca4c9f-89d2-4ba9-87d0-546308966c9f",
+                    "format": "Sonic 2.js",
+                    "expanded": true
                 },
                 {
-                    "path": "art/palettes/Knux underwater.bin",
-                    "length": 1
-                }
-            ],
-            "art": {
-                "path": "art/uncompressed/Knuckles's art.bin",
-                "compression": "Uncompressed"
-            },
-            "mappings": {
-                "path": "mappings/sprite/Knuckles.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": true,
-                "path": "mappings/spriteDPLC/Knuckles.bin",
-                "format": "Sonic 2/3&K",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Mighty",
-            "palettes": [
-                {
-                    "path": "art/palettes/Mighty.bin",
-                    "length": 1
+                    "name": "Continue (Knuckles)",
+                    "palettes": [
+                        {
+                            "path": "art/palettes/Knuckles.bin",
+                            "length": 1
+                        }
+                    ],
+                    "art": {
+                        "path": "art/nemesis/Knuckles continue.bin",
+                        "compression": "Nemesis",
+                        "offset": 0
+                    },
+                    "mappings": {
+                        "path": "mappings/Continue.bin",
+                        "format": "Sonic 2",
+                        "customDefinition": "",
+                        "label": ""
+                    },
+                    "dplcs": {
+                        "enabled": false,
+                        "path": "",
+                        "format": "Sonic 1",
+                        "customDefinition": "",
+                        "label": ""
+                    },
+                    "uuid": "ca4c9f89-d2bb-49c7-9054-6308966c9ff7",
+                    "format": "Sonic 2.js",
+                    "expanded": true
                 },
                 {
-                    "path": "art/palettes/Mighty underwater.bin",
-                    "length": 1
-                },
-                {
-                    "path": "art/palettes/SonicAndTails.bin",
-                    "length": 1
+                    "name": "Continue (Mighty)",
+                    "palettes": [
+                        {
+                            "path": "art/palettes/Mighty.bin",
+                            "length": 1
+                        }
+                    ],
+                    "art": {
+                        "path": "art/nemesis/Mighty continue.bin",
+                        "compression": "Nemesis",
+                        "offset": 0
+                    },
+                    "mappings": {
+                        "path": "mappings/Continue.bin",
+                        "format": "Sonic 2",
+                        "customDefinition": "",
+                        "label": ""
+                    },
+                    "dplcs": {
+                        "enabled": false,
+                        "path": "",
+                        "format": "Sonic 1",
+                        "customDefinition": "",
+                        "label": ""
+                    },
+                    "uuid": "4c9f89d2-bba9-47d0-9463-08966c9ff742",
+                    "format": "Sonic 2.js"
                 }
             ],
-            "art": {
-                "path": "art/uncompressed/Mighty's art.bin",
-                "compression": "Uncompressed"
-            },
-            "mappings": {
-                "path": "mappings/sprite/Mighty.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": true,
-                "path": "mappings/spriteDPLC/Mighty.bin",
-                "format": "Sonic 2/3&K",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Super Sonic",
-            "palettes": [
-                {
-                    "path": "art/palettes/SonicAndTails.bin",
-                    "length": 1
-                }
-            ],
-            "art": {
-                "path": "art/uncompressed/Super Sonic's art.bin",
-                "compression": "Uncompressed"
-            },
-            "mappings": {
-                "path": "mappings/sprite/Super Sonic.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": true,
-                "path": "mappings/spriteDPLC/Super Sonic.bin",
-                "format": "Sonic 2/3&K",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Super Tails",
-            "palettes": [
-                {
-                    "path": "art/palettes/Tails.bin",
-                    "length": 1
-                }
-            ],
-            "art": {
-                "path": "art/uncompressed/Super Tails's art.bin",
-                "compression": "Uncompressed"
-            },
-            "mappings": {
-                "path": "mappings/sprite/Super Tails.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": true,
-                "path": "mappings/spriteDPLC/Super Tails.bin",
-                "format": "Sonic 2/3&K",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Super Knuckles",
-            "palettes": [
-                {
-                    "path": "art/palettes/Knuckles.bin",
-                    "length": 1
-                }
-            ],
-            "art": {
-                "path": "art/uncompressed/Super Knuckles's art.bin",
-                "compression": "Uncompressed"
-            },
-            "mappings": {
-                "path": "mappings/sprite/Super Knuckles.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": true,
-                "path": "mappings/spriteDPLC/Super Knuckles.bin",
-                "format": "Sonic 2/3&K",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Continue (Sonic)",
-            "palettes": [
-                {
-                    "path": "art/palettes/SonicAndTails.bin",
-                    "length": 1
-                }
-            ],
-            "art": {
-                "path": "art/nemesis/Sonic continue.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "mappings/Continue.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Continue (Tails)",
-            "palettes": [
-                {
-                    "path": "art/palettes/Tails.bin",
-                    "length": 1
-                }
-            ],
-            "art": {
-                "path": "art/nemesis/Tails continue.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "mappings/Continue.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Continue (Knuckles)",
-            "palettes": [
-                {
-                    "path": "art/palettes/Knuckles.bin",
-                    "length": 1
-                }
-            ],
-            "art": {
-                "path": "art/nemesis/Knuckles continue.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "mappings/Continue.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Continue (Mighty)",
-            "palettes": [
-                {
-                    "path": "art/palettes/Mighty.bin",
-                    "length": 1
-                }
-            ],
-            "art": {
-                "path": "art/nemesis/Mighty continue.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "mappings/Continue.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Life Icon (Sonic)",
-            "palettes": [
-                {
-                    "path": "art/palettes/SonicAndTails.bin",
-                    "length": 1
-                },
-                {
-                    "path": "art/palettes/EHZ.bin",
-                    "length": 3
-                }
-            ],
-            "art": {
-                "path": "art/nemesis/Sonic lives counter.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "mappings/Life counters.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Life Icon (Tails)",
-            "palettes": [
-                {
-                    "path": "art/palettes/Tails.bin",
-                    "length": 1
-                },
-                {
-                    "path": "art/palettes/EHZ.bin",
-                    "length": 3
-                }
-            ],
-            "art": {
-                "path": "art/nemesis/Tails life counter.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "mappings/Life counters.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Life Icon (Miles)",
-            "palettes": [
-                {
-                    "path": "art/palettes/Tails.bin",
-                    "length": 1
-                },
-                {
-                    "path": "art/palettes/EHZ.bin",
-                    "length": 3
-                }
-            ],
-            "art": {
-                "path": "art/nemesis/Miles life counter.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "mappings/Life counters.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Life Icon (Knuckles)",
-            "palettes": [
-                {
-                    "path": "art/palettes/Knuckles.bin",
-                    "length": 1
-                },
-                {
-                    "path": "art/palettes/EHZ.bin",
-                    "length": 3
-                }
-            ],
-            "art": {
-                "path": "art/nemesis/Knuckles lives counter.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "mappings/Life counters.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
-        },
-        {
-            "name": "Life Icon (Mighty)",
-            "palettes": [
-                {
-                    "path": "art/palettes/Mighty.bin",
-                    "length": 1
-                },
-                {
-                    "path": "art/palettes/EHZ.bin",
-                    "length": 3
-                }
-            ],
-            "art": {
-                "path": "art/nemesis/Mighty lives counter.bin",
-                "compression": "Nemesis"
-            },
-            "mappings": {
-                "path": "mappings/Life counters.bin",
-                "format": "Sonic 2",
-                "customDefinition": "",
-                "label": ""
-            },
-            "dplcs": {
-                "enabled": false,
-                "path": "",
-                "format": "Sonic 1",
-                "customDefinition": "",
-                "label": ""
-            }
+            "isDirectory": true,
+            "expanded": false,
+            "uuid": "8b88e27b-ca5c-476c-9423-64921bcd1f2c"
         },
         {
             "name": "Title Card Background (Sonic)",
@@ -502,7 +771,8 @@
             ],
             "art": {
                 "path": "art/nemesis/Title card.bin",
-                "compression": "Nemesis"
+                "compression": "Nemesis",
+                "offset": 0
             },
             "mappings": {
                 "path": "",
@@ -516,7 +786,9 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "c7d05463-0896-4c9f-b742-641ffe41690d",
+            "format": "Sonic 2.js"
         },
         {
             "name": "Title Card Background (Tails)",
@@ -532,7 +804,8 @@
             ],
             "art": {
                 "path": "art/nemesis/Title card Tails.bin",
-                "compression": "Nemesis"
+                "compression": "Nemesis",
+                "offset": 0
             },
             "mappings": {
                 "path": "",
@@ -546,7 +819,9 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "d0546308-966c-4ff7-8264-1ffe41690dbe",
+            "format": "Sonic 2.js"
         },
         {
             "name": "Title Card Background (Knuckles)",
@@ -562,7 +837,8 @@
             ],
             "art": {
                 "path": "art/nemesis/Title card Knuckles.bin",
-                "compression": "Nemesis"
+                "compression": "Nemesis",
+                "offset": 0
             },
             "mappings": {
                 "path": "",
@@ -576,7 +852,9 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "54630896-6c9f-4742-a41f-fe41690dbe81",
+            "format": "Sonic 2.js"
         },
         {
             "name": "Title Card Background (Mighty)",
@@ -592,7 +870,8 @@
             ],
             "art": {
                 "path": "art/nemesis/Title card Mighty.bin",
-                "compression": "Nemesis"
+                "compression": "Nemesis",
+                "offset": 0
             },
             "mappings": {
                 "path": "",
@@ -606,7 +885,9 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "6308966c-9ff7-4264-9ffe-41690dbe81e5",
+            "format": "Sonic 2.js"
         },
         {
             "name": "Signposts",
@@ -631,7 +912,8 @@
             "art": {
                 "path": "art/uncompressed/Signpost.bin",
                 "compression": "Uncompressed",
-                "accessor": ""
+                "accessor": "",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/sprite/obj0D.bin",
@@ -647,14 +929,17 @@
                 "customDefinition": "",
                 "label": "",
                 "accessor": ""
-            }
+            },
+            "uuid": "08966c9f-f742-441f-be41-690dbe81e560",
+            "format": "Sonic 2.js"
         },
         {
             "name": "CNZ Slots",
             "palettes": [],
             "art": {
                 "path": "art/uncompressed/Slot pictures.bin",
-                "compression": "Uncompressed"
+                "compression": "Uncompressed",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/Slots.bin",
@@ -668,7 +953,8 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "966c9ff7-4264-4ffe-8169-0dbe81e5600b"
         },
         {
             "name": "Super Sonic Slot",
@@ -680,7 +966,8 @@
             ],
             "art": {
                 "path": "art/uncompressed/Super Sonic Slot picture.bin",
-                "compression": "Uncompressed"
+                "compression": "Uncompressed",
+                "offset": 0
             },
             "mappings": {
                 "path": "",
@@ -694,14 +981,16 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "6c9ff742-641f-4e41-a90d-be81e5600b4a"
         },
         {
             "name": "Tails Slot",
             "palettes": [],
             "art": {
                 "path": "art/uncompressed/Tails Slot Picture.bin",
-                "compression": "Uncompressed"
+                "compression": "Uncompressed",
+                "offset": 0
             },
             "mappings": {
                 "path": "",
@@ -715,7 +1004,8 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "9ff74264-1ffe-4169-8dbe-81e5600b4ae6"
         },
         {
             "name": "Knuckles Slot",
@@ -727,7 +1017,8 @@
             ],
             "art": {
                 "path": "art/uncompressed/Knuckles Slot Picture.bin",
-                "compression": "Uncompressed"
+                "compression": "Uncompressed",
+                "offset": 0
             },
             "mappings": {
                 "path": "",
@@ -741,7 +1032,8 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "f742641f-fe41-490d-be81-e5600b4ae613"
         },
         {
             "name": "Mighty Slot",
@@ -753,7 +1045,8 @@
             ],
             "art": {
                 "path": "art/uncompressed/Mighty Slot Picture.bin",
-                "compression": "Uncompressed"
+                "compression": "Uncompressed",
+                "offset": 0
             },
             "mappings": {
                 "path": "",
@@ -767,7 +1060,8 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "42641ffe-4169-4dbe-81e5-600b4ae613d8"
         },
         {
             "name": "Monitors",
@@ -783,7 +1077,8 @@
             ],
             "art": {
                 "path": "art/nemesis/Monitor and contents.bin",
-                "compression": "Nemesis"
+                "compression": "Nemesis",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/sprite/obj26.bin",
@@ -797,14 +1092,16 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "641ffe41-690d-4e81-a560-0b4ae613d8c4"
         },
         {
             "name": "Monitor Icons",
             "palettes": [],
             "art": {
                 "path": "art/nemesis/Monitor and contents.bin",
-                "compression": "Nemesis"
+                "compression": "Nemesis",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/sprite/obj26_b.bin",
@@ -818,7 +1115,8 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "1ffe4169-0dbe-41e5-a00b-4ae613d8c4af"
         },
         {
             "name": "Shield",
@@ -826,7 +1124,8 @@
             "art": {
                 "path": "art/uncompressed/Shield.bin",
                 "compression": "Uncompressed",
-                "accessor": ""
+                "accessor": "",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/sprite/obj38.bin",
@@ -841,14 +1140,16 @@
                 "customDefinition": "",
                 "label": "",
                 "accessor": ""
-            }
+            },
+            "uuid": "fe41690d-be81-4560-8b4a-e613d8c4afd2"
         },
         {
             "name": "Whirlwind Shield",
             "palettes": [],
             "art": {
                 "path": "art/uncompressed/Whirlwind Shield.bin",
-                "compression": "Uncompressed"
+                "compression": "Uncompressed",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/sprite/obj21.bin",
@@ -862,14 +1163,16 @@
                 "format": "Sonic 2/3&K",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "41690dbe-81e5-400b-8ae6-13d8c4afd23f"
         },
         {
             "name": "Invincibility Stars",
             "palettes": [],
             "art": {
                 "path": "art/uncompressed/Invincibility stars.bin",
-                "compression": "Uncompressed"
+                "compression": "Uncompressed",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/sprite/obj35.bin",
@@ -883,14 +1186,16 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "690dbe81-e560-4b4a-a613-d8c4afd23fa6"
         },
         {
             "name": "Insta-Shield",
             "palettes": [],
             "art": {
                 "path": "art/uncompressed/Insta-Shield.bin",
-                "compression": "Uncompressed"
+                "compression": "Uncompressed",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/sprite/Insta-Shield.bin",
@@ -904,14 +1209,16 @@
                 "format": "Sonic 2/3&K",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "0dbe81e5-600b-4ae6-93d8-c4afd23fa690"
         },
         {
             "name": "Snailer",
             "palettes": [],
             "art": {
                 "path": "art/nemesis/Snailer.bin",
-                "compression": "Nemesis"
+                "compression": "Nemesis",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/sprite/objD0.bin",
@@ -926,14 +1233,16 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "be81e560-0b4a-4613-98c4-afd23fa690fc"
         },
         {
             "name": "Crabmeat",
             "palettes": [],
             "art": {
                 "path": "art/nemesis/Enemy Crabmeat.bin",
-                "compression": "Nemesis"
+                "compression": "Nemesis",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/sprite/obj1F_s1.bin",
@@ -947,14 +1256,16 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "81e5600b-4ae6-43d8-84af-d23fa690fcb9"
         },
         {
             "name": "Motobug",
             "palettes": [],
             "art": {
                 "path": "art/nemesis/motobug.bin",
-                "compression": "Nemesis"
+                "compression": "Nemesis",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/sprite/motobug.bin",
@@ -968,14 +1279,16 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "e5600b4a-e613-48c4-afd2-3fa690fcb9f5"
         },
         {
             "name": "HUD",
             "palettes": [],
             "art": {
                 "path": "art/nemesis/HUD.bin",
-                "compression": "Nemesis"
+                "compression": "Nemesis",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/sprite/hud_a.bin",
@@ -989,14 +1302,16 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "600b4ae6-13d8-44af-923f-a690fcb9f5a4"
         },
         {
             "name": "Numbers",
             "palettes": [],
             "art": {
                 "path": "art/uncompressed/Big and small numbers used on counters - 3.bin",
-                "compression": "Uncompressed"
+                "compression": "Uncompressed",
+                "offset": 0
             },
             "mappings": {
                 "path": "",
@@ -1010,14 +1325,16 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "0b4ae613-d8c4-4fd2-bfa6-90fcb9f5a4c5"
         },
         {
             "name": "BONU, TOTAL... and stuff",
             "palettes": [],
             "art": {
                 "path": "art/nemesis/End of level results text.bin",
-                "compression": "Nemesis"
+                "compression": "Nemesis",
+                "offset": 0
             },
             "mappings": {
                 "path": "",
@@ -1031,14 +1348,16 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "4ae613d8-c4af-423f-a690-fcb9f5a4c595"
         },
         {
             "name": "PERFECT",
             "palettes": [],
             "art": {
                 "path": "art/nemesis/Perfect text.bin",
-                "compression": "Nemesis"
+                "compression": "Nemesis",
+                "offset": 0
             },
             "mappings": {
                 "path": "",
@@ -1052,14 +1371,16 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "e613d8c4-afd2-4fa6-90fc-b9f5a4c59535"
         },
         {
             "name": "Standard Font",
             "palettes": [],
             "art": {
                 "path": "art/nemesis/Standard font.bin",
-                "compression": "Nemesis"
+                "compression": "Nemesis",
+                "offset": 0
             },
             "mappings": {
                 "path": "",
@@ -1073,14 +1394,16 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "13d8c4af-d23f-4690-bcb9-f5a4c59535c5"
         },
         {
             "name": "Checkpoint",
             "palettes": [],
             "art": {
                 "path": "art/nemesis/Star pole.bin",
-                "compression": "Nemesis"
+                "compression": "Nemesis",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/sprite/obj79_a.bin",
@@ -1094,7 +1417,8 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "d8c4afd2-3fa6-40fc-b9f5-a4c59535c510"
         },
         {
             "name": "E-209 \"⑨\"",
@@ -1110,7 +1434,8 @@
             ],
             "art": {
                 "path": "art/uncompressed/Metal Cirno.bin",
-                "compression": "Uncompressed"
+                "compression": "Uncompressed",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/sprite/Metal Cirno.bin",
@@ -1124,7 +1449,9 @@
                 "format": "Sonic 2/3&K",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "c4afd23f-a690-4cb9-b5a4-c59535c5100d",
+            "format": "Sonic 2.js"
         },
         {
             "name": "Empty Big Ring",
@@ -1140,7 +1467,8 @@
             ],
             "art": {
                 "path": "art/uncompressed/Giant Ring - Empty.bin",
-                "compression": "Uncompressed"
+                "compression": "Uncompressed",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/sprite/obj37_d.bin",
@@ -1154,7 +1482,8 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "afd23fa6-90fc-49f5-a4c5-9535c5100d8b"
         },
         {
             "name": "Gemini Man (SEGA screen replacement?)",
@@ -1166,7 +1495,8 @@
             ],
             "art": {
                 "path": "art/uncompressed/Gemini Man.bin",
-                "compression": "Uncompressed"
+                "compression": "Uncompressed",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/sprite/Gemini Man.bin",
@@ -1180,14 +1510,16 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "d23fa690-fcb9-45a4-8595-35c5100d8b7f"
         },
         {
             "name": "Title menu",
             "palettes": [],
             "art": {
                 "path": "art/uncompressed/Sonic's art.bin",
-                "compression": "Uncompressed"
+                "compression": "Uncompressed",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/sprite/obj0F.bin",
@@ -1201,7 +1533,8 @@
                 "format": "Sonic 2/3&K",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "3fa690fc-b9f5-44c5-9535-c5100d8b7f01"
         },
         {
             "name": "Credit Text",
@@ -1217,7 +1550,8 @@
             ],
             "art": {
                 "path": "art/nemesis/Credit Text.bin",
-                "compression": "Nemesis"
+                "compression": "Nemesis",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/Credits Text.bin",
@@ -1231,14 +1565,16 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "a690fcb9-f5a4-4595-b5c5-100d8b7f011f"
         },
         {
             "name": "Stump",
             "palettes": [],
             "art": {
                 "path": "art/nemesis/WZ Stump.bin",
-                "compression": "Nemesis"
+                "compression": "Nemesis",
+                "offset": 0
             },
             "mappings": {
                 "path": "mappings/sprite/obj3B_b.bin",
@@ -1252,7 +1588,8 @@
                 "format": "Sonic 1",
                 "customDefinition": "",
                 "label": ""
-            }
+            },
+            "uuid": "90fcb9f5-a4c5-4535-8510-0d8b7f011f9b"
         }
     ]
 }
