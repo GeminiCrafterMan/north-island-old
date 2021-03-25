@@ -4079,6 +4079,8 @@ Level:
 	bmi.s	+
 	move.b	#MusID_FadeOut,d0
 	bsr.w	PlaySound	; fade out music
+	move.w	#MusID_SlowDown,d0	; Slow down tempo
+	jsr	PlayMusic
 +
 	bsr.w	ClearPLC
 	bsr.w	Pal_FadeToBlack
