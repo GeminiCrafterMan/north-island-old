@@ -400,6 +400,7 @@ GameClrRAM:
 	move.l	d7,(a6)+
 	dbf	d6,GameClrRAM	; clear RAM ($0000-$FDFF)
 
+	jsr	(InitDMAQueue).l
 	bsr.w	VDPSetupGame
 	jsr	(SoundDriverLoad).l
 	bsr.w	JoypadInit
@@ -430,6 +431,7 @@ JmpTo_ContinueScreen:
 ; loc_3CE:
 ChecksumError:
 	move.l	d1,-(sp)
+	jsr	(InitDMAQueue).l
 	bsr.w	VDPSetupGame
 	move.l	(sp)+,d1
 	move.l	#vdpComm($0000,CRAM,WRITE),(VDP_control_port).l ; set VDP to CRAM write
@@ -1285,98 +1287,7 @@ PlaneMapToVRAM_H40:
 	rts
 ; End of function PlaneMapToVRAM_H40
 
-; ---------------------------------------------------------------------------
-; Subroutine for queueing VDP commands (seems to only queue transfers to VRAM),
-; to be issued the next time ProcessDMAQueue is called.
-; Can be called a maximum of 18 times before the buffer needs to be cleared
-; by issuing the commands (this subroutine DOES check for overflow)
-; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-; sub_144E: DMA_68KtoVRAM: QueueCopyToVRAM: QueueVDPCommand: Add_To_DMA_Queue:
-QueueDMATransfer:
-	movea.l	(VDP_Command_Buffer_Slot).w,a1
-	cmpa.w	#VDP_Command_Buffer_Slot,a1
-	beq.s	QueueDMATransfer_Done ; return if there's no more room in the buffer
-
-	; piece together some VDP commands and store them for later...
-	move.w	#$9300,d0 ; command to specify DMA transfer length & $00FF
-	move.b	d3,d0
-	move.w	d0,(a1)+ ; store command
-
-	move.w	#$9400,d0 ; command to specify DMA transfer length & $FF00
-	lsr.w	#8,d3
-	move.b	d3,d0
-	move.w	d0,(a1)+ ; store command
-
-	move.w	#$9500,d0 ; command to specify source address & $0001FE
-	lsr.l	#1,d1
-	move.b	d1,d0
-	move.w	d0,(a1)+ ; store command
-
-	move.w	#$9600,d0 ; command to specify source address & $01FE00
-	lsr.l	#8,d1
-	move.b	d1,d0
-	move.w	d0,(a1)+ ; store command
-
-	move.w	#$9700,d0 ; command to specify source address & $FE0000
-	lsr.l	#8,d1
-	;andi.b	#$7F,d1		; this instruction safely allows source to be in RAM; S3K added this
-	move.b	d1,d0
-	move.w	d0,(a1)+ ; store command
-
-	andi.l	#$FFFF,d2 ; command to specify destination address and begin DMA
-	lsl.l	#2,d2
-	lsr.w	#2,d2
-	swap	d2
-	ori.l	#vdpComm($0000,VRAM,DMA),d2 ; set bits to specify VRAM transfer
-	move.l	d2,(a1)+ ; store command
-
-	move.l	a1,(VDP_Command_Buffer_Slot).w ; set the next free slot address
-	cmpa.w	#VDP_Command_Buffer_Slot,a1
-	beq.s	QueueDMATransfer_Done ; return if there's no more room in the buffer
-	move.w	#0,(a1) ; put a stop token at the end of the used part of the buffer
-; return_14AA:
-QueueDMATransfer_Done:
-	rts
-; End of function QueueDMATransfer
-
-
-; ---------------------------------------------------------------------------
-; Subroutine for issuing all VDP commands that were queued
-; (by earlier calls to QueueDMATransfer)
-; Resets the queue when it's done
-; ---------------------------------------------------------------------------
-
-; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
-
-; sub_14AC: CopyToVRAM: IssueVDPCommands: Process_DMA: Process_DMA_Queue:
-ProcessDMAQueue:
-	lea	(VDP_control_port).l,a5
-	lea	(VDP_Command_Buffer).w,a1
-; loc_14B6:
-ProcessDMAQueue_Loop:
-	move.w	(a1)+,d0
-	beq.s	ProcessDMAQueue_Done ; branch if we reached a stop token
-	; issue a set of VDP commands...
-	move.w	d0,(a5)		; transfer length
-	move.w	(a1)+,(a5)	; transfer length
-	move.w	(a1)+,(a5)	; source address
-	move.w	(a1)+,(a5)	; source address
-	move.w	(a1)+,(a5)	; source address
-	move.w	(a1)+,(a5)	; destination
-	move.w	(a1)+,(a5)	; destination
-	cmpa.w	#VDP_Command_Buffer_Slot,a1
-	bne.s	ProcessDMAQueue_Loop ; loop if we haven't reached the end of the buffer
-; loc_14CE:
-ProcessDMAQueue_Done:
-	move.w	#0,(VDP_Command_Buffer).w
-	move.l	#VDP_Command_Buffer,(VDP_Command_Buffer_Slot).w
-	rts
-; End of function ProcessDMAQueue
-
-
+    include "DMA-Queue.asm"
 
 ; ---------------------------------------------------------------------------
 ; START OF NEMESIS DECOMPRESSOR
@@ -4279,8 +4190,7 @@ Level_InitNormal:
 	move.w	#$8C87,(a6)			; H res 40 cells, double res interlace
 +
 	move.w	(Hint_counter_reserve).w,(a6)
-	clr.w	(VDP_Command_Buffer).w
-	move.l	#VDP_Command_Buffer,(VDP_Command_Buffer_Slot).w
+	ResetDMAQueue
 	tst.b	(Water_flag).w	; does level have water?
 	beq.s	Level_LoadPal	; if not, branch
 	move.w	#$8014,(a6)	; H-INT enabled
@@ -4707,10 +4617,6 @@ InitPlayers_MightyAlone:
 	move.b	#$13,(MainCharacter+y_radius).w		; Set Sonic's y-radius
 	rts
 ; End of function InitPlayers
-
-
-
-
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to move the water or oil surface sprites to where the screen is at
@@ -5797,7 +5703,7 @@ LoadZoneTiles:
 	move.w	a1,d3
 	cmpi.b	#hill_top_zone,(Current_Zone).w
 	bne.s	+
-	lea	(ArtKos_HTZ).l,a0
+	lea	(ArtKos_HTZ2).l,a0
 	lea	(Chunk_Table+tiles_to_bytes(ArtTile_ArtKos_NumTiles_HTZ_Main)).l,a1
 	bsr.w	KosDec	; patch for HTZ
 	move.w	#tiles_to_bytes(ArtTile_ArtKos_NumTiles_HTZ),d3
@@ -5868,7 +5774,7 @@ SpecialStage:
 	clearRAM Oscillating_Data,Oscillating_variables_End
 
 	clearRAM CNZ_saucer_data,CNZ_saucer_data_End
-	include	"Sonic 1 Special Stage.asm"
+	include	"S1SS/Sonic 1 Special Stage.asm"
 
 word_728C_user:
 	lea	(Obj5F_MapUnc_7240+$4C).l,a2
@@ -6351,8 +6257,7 @@ MenuScreen:
 	clearRAM Menus_Object_RAM,Menus_Object_RAM_End
 
 	; load background + graphics of font/LevSelPics
-	clr.w	(VDP_Command_Buffer).w
-	move.l	#VDP_Command_Buffer,(VDP_Command_Buffer_Slot).w
+	ResetDMAQueue
 	move.l	#vdpComm(tiles_to_bytes(ArtTile_ArtNem_FontStuff),VRAM,WRITE),(VDP_control_port).l
 	lea	(ArtNem_FontStuff).l,a0
 	jsr	NemDec
@@ -12844,7 +12749,7 @@ loadZoneBlockMaps:
 	cmpi.b	#hill_top_zone,(Current_Zone).w
 	bne.s	+
 	lea	(Block_Table+$980).w,a1
-	lea	(BM16_HTZ).l,a0
+	lea	(BM16_HTZ2).l,a0
 	jsrto	(KosDec).l, JmpTo_KosDec	; patch for Hill Top Zone block map
 +
 	move.l	(a2)+,d0
@@ -16752,7 +16657,7 @@ JmpTo2_PlatformObject
     endif
 
 Obj1F_Crabmeat:
-	include	"Objects/Badniks/Crabmeat.asm"
+	include	"objects/Badniks/Crabmeat.asm"
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -19668,7 +19573,7 @@ JmpTo4_PlayMusic
 	align 4
     endif
 
-Obj10:	include	"Objects/WaiStars.asm"
+Obj10:	include	"objects/WaiStars.asm"
 ; TODO: maybe try and fix the wai stars to at least play nice
 ; with post-wai stuff...  im so sick of trying to port 0517 stars
 
@@ -33784,13 +33689,6 @@ Unc_Stars_Load:
 	jsr		(QueueDMATransfer).l
 	rts
 
-LoadHyperStars:
-	move.l	#ArtUnc_HyperSonicStars,d1
-	move.w	#tiles_to_bytes(ArtTile_ShieldAndStars),d2
-	move.w	#$200,d3
-	jsr     (QueueDMATransfer).l
-	rts
-
 Unc_SuperIcons_Load:
 	cmpi.w	#1,(Player_mode).w
 	bgt.s	.tailscheck
@@ -33892,7 +33790,7 @@ JmpTo7_DeleteObject
 	jmp	(DeleteObject).l
 ; ===========================================================================
 
-	include	"Whirlwind Shield.asm"
+	include	"objects/Whirlwind Shield.asm"
 
 Shield_LoadGraphics:
 	moveq	#0,d0
@@ -34360,7 +34258,7 @@ Obj08_MapRUnc_1E074:	BINCLUDE "mappings/spriteDPLC/obj08.bin"
 ; Object 7E - Wood Zone boss
 ; ----------------------------------------------------------------------------
 ; Sprite_1E0F0:
-	include	"WZ Boss.asm"
+	include	"objects/bosses/WZ Boss.asm"
 ; ===========================================================================
 Map_HyperSonicStars:BINCLUDE "mappings/sprite/Hyper Sonic Stars.bin"
 	even
@@ -35898,7 +35796,7 @@ ObjCheckLeftWallDist:
 ; ----------------------------------------------------------------------------
 ; Object 62 - Knuckles the Echidna... and *all* of his associated code
 ; ----------------------------------------------------------------------------
-	include	"Objects/Characters/Knuckles.asm"
+	include	"objects/Characters/Knuckles.asm"
 
 ;--------------------------------------------------------------------------------------
 ; Knuckles's art stuff
@@ -36541,7 +36439,7 @@ JmpTo3_AnimateSprite
     endif
 
 Obj44_S1:
-	include "Objects/44 GHZ Edge Walls.asm"
+	include "objects/44 GHZ Edge Walls.asm"
 
 	even
 
@@ -37865,7 +37763,7 @@ Obj49_Display:
 Obj49_MapUnc_20C50:	BINCLUDE "mappings/sprite/obj49.bin"
 
 Obj49_WaterSFX:
-	include	"Objects/49 Waterfall SFX.asm"
+	include	"objects/49 Waterfall SFX.asm"
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -38006,7 +37904,7 @@ Obj74_Main:
 Obj74_MapUnc_20F66:	BINCLUDE "mappings/sprite/obj74.bin"
 
 ; CPZ pylons used to be here at Obj7C. However, that's not what I want, so I removed them.
-Obj7C:	include	"Objects/HyperTrails.asm"
+Obj7C:	include	"objects/HyperTrails.asm"
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -43229,8 +43127,10 @@ JmpTo11_ObjectMove
 ; ----------------------------------------------------------------------------
 ; Sprite_2588C:
 Obj23:
-	cmpi.b	#green_hill_zone,(Current_Zone).w
-	beq.w	Obj23_S1
+	if newtronEnable=1	; Newtron enabled?
+		cmpi.b	#green_hill_zone,(Current_Zone).w
+		beq.w	Obj23_S1
+	endif
 	moveq	#0,d0
 	move.b	routine(a0),d0
 	move.w	Obj23_Index(pc,d0.w),d1
@@ -44257,7 +44157,11 @@ JmpTo2_SolidObject_Always_SingleCharacter
 	align 4
     endif
 
-Obj42_S1:	include	"Objects/Badniks/Newtron.asm"
+Obj42_S1:
+    if newtronEnable=1	; Newtron enabled?
+		include	"objects/Badniks/Newtron.asm"
+	endif
+	rts
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -52195,6 +52099,8 @@ JmpTo12_AnimateSprite
 
 ArtUnc_Sonic:	BINCLUDE	"art/uncompressed/Sonic's art.bin"
 	even
+ArtUnc_Tails:	BINCLUDE	"art/uncompressed/Tails's art.bin"
+	even
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -53089,9 +52995,9 @@ JmpTo21_ObjectMove
 	jmp	(ObjectMove).l
     endif
 
-	include	"Objects/Badniks/Dinobot.asm"
+	include	"objects/Badniks/Dinobot.asm"
 
-	include	"Objects/Badniks/Batbot.asm"
+	include	"objects/Badniks/Batbot.asm"
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
@@ -53180,17 +53086,17 @@ JmpTo22_ObjectMove
     endif
 
 ObjC4:
-	include "Metal Cirno.asm"
+	include "objects/bosses/Metal Cirno.asm"
 ; ----------------------------------------------------------------------------
 ; Object D0 - Beta Snail Badnik from EHZ & Motobug
 ; ----------------------------------------------------------------------------
 ObjD0:
 	cmpi.b	#green_hill_zone,(Current_Zone).w	; GHZ
 	beq.w	MotoBug
-	include	"Objects/Badniks/Snailer.asm"
+	include	"objects/Badniks/Snailer.asm"
 
 MotoBug:
-	include "Objects/Badniks/Motobug.asm"
+	include "objects/Badniks/Motobug.asm"
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
 ; Object 58 - Boss explosion
@@ -53464,11 +53370,11 @@ JmpTo_AddPoints
 	align 4
     endif
 
-	include	"Robot Masters.asm"
+	include	"objects/Robot Masters.asm"
 ; ----------------------------------------------------------------------------
 ; Object 5A - Mighty the Armadillo... and *all* of his associated code
 ; ----------------------------------------------------------------------------
-	include	"Objects/Characters/Mighty.asm"
+	include	"objects/Characters/Mighty.asm"
 
 ;--------------------------------------------------------------------------------------
 ; Mighty's art stuff
@@ -53482,9 +53388,9 @@ MapRUnc_Mighty:	BINCLUDE	"mappings/spriteDPLC/Mighty.bin"
 	even
 
 
-Obj5B: include "Objects/Insta-Shield.asm"
+Obj5B: include "objects/Insta-Shield.asm"
 
-Obj5F:	include "Objects/Pushable Block.asm"
+Obj5F:	include "objects/Pushable Block.asm"
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to	check if an object is off screen
@@ -60804,7 +60710,7 @@ JmpTo25_ObjectMove
 ; Object 09 - Sonic in Special Stage
 ; ----------------------------------------------------------------------------
 ; Sprite_338EC:
-	include "S1 Special Stage Sonic.asm"
+	include "S1SS/S1 Special Stage Sonic.asm"
 
 ; ---------------------------------------------------------------------------
 ; LoadSubObject
@@ -77493,11 +77399,11 @@ LevelArtPointers:
 	levartptrs PLCID_Ehz1,     PLCID_Ehz2,      PalID_EHZ,  ArtKos_EHZ, BM16_EHZ, BM128_EHZ ;   0 ; EHZ	; EMERALD HILL ZONE
 	levartptrs PLCID_Ghz1,	   PLCID_Ghz2,		PalID_GHZ,	ArtKos_GHZ, BM16_GHZ, BM128_GHZ ;   1 ; GHZ ; GREEN HILL ZONE
 	levartptrs PLCID_Wz1,	   PLCID_Wz2,		PalID_WZ,   ArtKos_WZ,	BM16_WZ,  BM128_WZ	;   2 ; WZ	; WOOD ZONE
-	levartptrs PLCID_Ehz1,	   PLCID_Ehz2,		PalID_Test,	ArtKos_Test,BM16_Test,BM128_Test ;   3 ; LEV3; LEVEL 3 (UNUSED)
+	levartptrs PLCID_Ehz1,	   PLCID_Ehz2,		PalID_Test,	ArtKos_Test,BM16_Test,BM128_Test;   3 ; TTZ ; Techno Test Zone
 	levartptrs PLCID_Mtz1,     PLCID_Mtz2,      PalID_MTZ,  ArtKos_MTZ, BM16_MTZ, BM128_MTZ ;   4 ; MTZ	; METROPOLIS ZONE ACTS 1 & 2
 	levartptrs PLCID_Mtz1,     PLCID_Mtz2,      PalID_MTZ,  ArtKos_MTZ, BM16_MTZ, BM128_MTZ ;   5 ; MTZ3; METROPOLIS ZONE ACT 3
 	levartptrs PLCID_Wfz1,     PLCID_Wfz2,      PalID_WFZ,  ArtKos_SCZ, BM16_WFZ, BM128_WFZ ;   6 ; WFZ	; WING FORTRESS ZONE
-	levartptrs PLCID_Htz1,     PLCID_Htz2,      PalID_HTZ,  ArtKos_HTZ2,BM16_HTZ2,BM128_HTZ ;   7 ; HTZ	; HILL TOP ZONE
+	levartptrs PLCID_Htz1,     PLCID_Htz2,      PalID_HTZ,  ArtKos_HTZ, BM16_HTZ, BM128_HTZ ;   7 ; HTZ	; HILL TOP ZONE
 	levartptrs PLCID_Hpz1,     PLCID_Hpz2,      PalID_HPZ,  ArtKos_HPZ, BM16_HPZ, BM128_HPZ ;   8 ; HPZ	; HIDDEN PALACE ZONE (UNUSED)
 	levartptrs PLCID_Ehz1,	   PLCID_Ehz2,		PalID_ARZ,	ArtKos_EHZ, BM16_EHZ, BM128_EHZ ;   9 ; LEV9; LEVEL 9 (UNUSED)
 	levartptrs PLCID_Ooz1,     PLCID_Ooz2,      PalID_OOZ,  ArtKos_OOZ, BM16_OOZ, BM128_OOZ ;  $A ; OOZ	; OIL OCEAN ZONE
@@ -77686,13 +77592,13 @@ PlrList_Ehz1: plrlistheader
 	plreq ArtTile_ArtNem_Buzzer, ArtNem_Buzzer
 	plreq ArtTile_ArtNem_Coconuts, ArtNem_Coconuts
 	plreq ArtTile_ArtNem_Masher, ArtNem_Masher
-	plreq ArtTile_ArtNem_Snailer, ArtNem_Snailer
 PlrList_Ehz1_End
 ;---------------------------------------------------------------------------------------
 ; PATTERN LOAD REQUEST LIST
 ; Emerald Hill Zone secondary
 ;---------------------------------------------------------------------------------------
 PlrList_Ehz2: plrlistheader
+	plreq ArtTile_ArtNem_Snailer, ArtNem_Snailer
 	plreq ArtTile_ArtNem_Spikes, ArtNem_Spikes
 	plreq ArtTile_ArtNem_DignlSprng, ArtNem_DignlSprng
 	plreq ArtTile_ArtNem_VrtclSprng, ArtNem_VrtclSprng
@@ -78617,7 +78523,6 @@ Level_DEZ:	BINCLUDE	"level/layout/DEZ.bin"
 ; ARZ act 1 level layout (Kosinski compression)
 Level_ARZ1:	BINCLUDE	"level/layout/ARZ_1.bin"
 	even
-
 ;---------------------------------------------------------------------------------------
 ; ARZ act 2 level layout (Kosinski compression)
 Level_ARZ2:	BINCLUDE	"level/layout/ARZ_2.bin"
@@ -78627,19 +78532,18 @@ Level_ARZ2:	BINCLUDE	"level/layout/ARZ_2.bin"
 Level_SCZ:	BINCLUDE	"level/layout/SCZ.bin"
 	even
 
-
-
-ArtUnc_Tails:	BINCLUDE	"art/uncompressed/Tails's art.bin"
-	even
-
 ;---------------------------------------------------------------------------------------
 ; Uncompressed art
 ; Animated flowers in EHZ and HTZ ; ArtUnc_49714: ArtUnc_49794: ArtUnc_49814: ArtUnc_49894:
 ;---------------------------------------------------------------------------------------
 ArtUnc_Flowers1:	BINCLUDE	"art/uncompressed/EHZ and HTZ flowers - 1.bin"
+	even
 ArtUnc_Flowers2:	BINCLUDE	"art/uncompressed/EHZ and HTZ flowers - 2.bin"
+	even
 ArtUnc_Flowers3:	BINCLUDE	"art/uncompressed/EHZ and HTZ flowers - 3.bin"
+	even
 ArtUnc_Flowers4:	BINCLUDE	"art/uncompressed/EHZ and HTZ flowers - 4.bin"
+	even
 ;---------------------------------------------------------------------------------------
 ; Uncompressed art
 ; Pulsing thing against checkered backing from EHZ ; ArtUnc_49914:
@@ -78699,6 +78603,7 @@ ArtUnc_MTASlotPic:	BINCLUDE	"art/uncompressed/Mighty Slot picture.bin"
 ; Uncompressed art
 ; Animated background section in CPZ and DEZ ; ArtUnc_4FAFE:
 ArtUnc_CPZAnimBack:	BINCLUDE	"art/uncompressed/Animated background section (CPZ and DEZ).bin"
+	even
 ;---------------------------------------------------------------------------------------
 ; Uncompressed art
 ; Waterfall patterns from ARZ   ; ArtUnc_4FCFE: ArtUnc_4FDFE: ArtUnc_4FEFE:
@@ -78746,8 +78651,6 @@ ArtUnc_SplashAndDust:	BINCLUDE	"art/uncompressed/Splash and skid dust.bin"
 ;--------------------------------------------------------------------------------------
 	even
 ArtNem_SuperSonic_stars:	BINCLUDE	"art/nemesis/Super Sonic stars.bin"
-	even
-ArtUnc_HyperSonicStars:		BINCLUDE	"art/uncompressed/Hyper Sonic stars.bin"
 ;-------------------------------------------------------------------------------------
 ; Nemesis compressed art (127 blocks)
 ; "SEGA" Patterns	; ArtNem_74876:
@@ -79725,135 +79628,77 @@ ArtUnc_SuperTails:	BINCLUDE	"art/uncompressed/Super Tails's art.bin"
 ; */
 
 ;-----------------------------------------------------------------------------------
-; GHZ stuff
+; Green Hill
 ArtKos_GHZ:	BINCLUDE	"art/kosinski/GHZ.bin"
 BM16_GHZ:	BINCLUDE	"mappings/16x16/GHZ.bin"
 BM128_GHZ:	BINCLUDE	"mappings/128x128/GHZ.bin"
-; lol wood zone
+;-----------------------------------------------------------------------------------
+; Wooded Hills
 ArtKos_WZ:	BINCLUDE	"art/kosinski/WZ.bin"
 BM16_WZ:	BINCLUDE	"mappings/16x16/WZ.bin"
 BM128_WZ:	BINCLUDE	"mappings/128x128/WZ.bin"
-; lol funny test level go brrrrrrrrr
+;-----------------------------------------------------------------------------------
+; Techno Test
 ArtKos_Test:BINCLUDE	"art/kosinski/Test.bin"
 BM16_Test:	BINCLUDE	"mappings/16x16/Test.bin"
 BM128_Test:	BINCLUDE	"mappings/128x128/Test.bin"
 ;-----------------------------------------------------------------------------------
-; EHZ 16x16 block mappings (Kosinski compression) ; was: (Kozinski compression)
-BM16_EHZ:	BINCLUDE	"mappings/16x16/EHZ.bin"
-;-----------------------------------------------------------------------------------
-; 16x16 HTZ
-BM16_HTZ2:	BINCLUDE	"mappings/16x16/HTZ1.bin"
-;-----------------------------------------------------------------------------------
-; HTZ Art
-ArtKos_HTZ2:	BINCLUDE "art/kosinski/HTZ.bin"
-; HTZ 128x128
-BM128_HTZ:	BINCLUDE "mappings/128x128/HTZ.bin"
-;-----------------------------------------------------------------------------------
-; EHZ/HTZ main level patterns (Kosinski compression)
-; ArtKoz_95C24:
+; Lavender Valley
 ArtKos_EHZ:	BINCLUDE	"art/kosinski/EHZ_HTZ.bin"
-;-----------------------------------------------------------------------------------
-; HTZ 16x16 block mappings (Kosinski compression)
-BM16_HTZ:	BINCLUDE	"mappings/16x16/HTZ2.bin"
-;-----------------------------------------------------------------------------------
-; HTZ pattern suppliment to EHZ level patterns (Kosinski compression)
-; ArtKoz_98AB4:
-ArtKos_HTZ:	BINCLUDE	"art/kosinski/HTZ_Supp.bin"
-;-----------------------------------------------------------------------------------
-; EHZ/HTZ 128x128 block mappings (Kosinski compression)
+BM16_EHZ:	BINCLUDE	"mappings/16x16/EHZ.bin"
 BM128_EHZ:	BINCLUDE	"mappings/128x128/EHZ_HTZ.bin"
 ;-----------------------------------------------------------------------------------
-; MTZ 16x16 block mappings (Kosinski compression)
-BM16_MTZ:	BINCLUDE	"mappings/16x16/MTZ.bin"
+; Hill Top
+ArtKos_HTZ:	BINCLUDE "art/kosinski/HTZ.bin"
+ArtKos_HTZ2:	BINCLUDE	"art/kosinski/HTZ_Supp.bin"
+BM16_HTZ:	BINCLUDE	"mappings/16x16/HTZ1.bin"
+BM16_HTZ2:	BINCLUDE	"mappings/16x16/HTZ2.bin"
+BM128_HTZ:	BINCLUDE "mappings/128x128/HTZ.bin"
 ;-----------------------------------------------------------------------------------
-; MTZ main level patterns (Kosinski compression)
-; ArtKoz_9DB64:
+; Metropolis
 ArtKos_MTZ:	BINCLUDE	"art/kosinski/MTZ.bin"
-;-----------------------------------------------------------------------------------
-; MTZ 128x128 block mappings (Kosinski compression)
+BM16_MTZ:	BINCLUDE	"mappings/16x16/MTZ.bin"
 BM128_MTZ:	BINCLUDE	"mappings/128x128/MTZ.bin"
 ;-----------------------------------------------------------------------------------
-; HPZ 16x16 block mappings (Kosinski compression)
-BM16_HPZ:	BINCLUDE	"mappings/16x16/HPZ.bin"
-;-----------------------------------------------------------------------------------
-; HPZ main level patterns (Kosinski compression)
+; Hidden Palace
 ArtKos_HPZ:	BINCLUDE	"art/kosinski/HPZ.bin"
-;-----------------------------------------------------------------------------------
-; HPZ 128x128 block mappings (Kosinski compression)
+BM16_HPZ:	BINCLUDE	"mappings/16x16/HPZ.bin"
 BM128_HPZ:	BINCLUDE	"mappings/128x128/HPZ.bin"
 ;-----------------------------------------------------------------------------------
-; OOZ 16x16 block mappings (Kosinski compression)
-BM16_OOZ:	BINCLUDE	"mappings/16x16/OOZ.bin"
-;-----------------------------------------------------------------------------------
-; OOZ main level patterns (Kosinski compression)
-; ArtKoz_A4204:
+; Oil Ocean
 ArtKos_OOZ:	BINCLUDE	"art/kosinski/OOZ.bin"
-;-----------------------------------------------------------------------------------
-; OOZ 128x128 block mappings (Kosinski compression)
+BM16_OOZ:	BINCLUDE	"mappings/16x16/OOZ.bin"
 BM128_OOZ:	BINCLUDE	"mappings/128x128/OOZ.bin"
 ;-----------------------------------------------------------------------------------
-; MCZ 16x16 block mappings (Kosinski compression)
-BM16_MCZ:	BINCLUDE	"mappings/16x16/MCZ.bin"
-;-----------------------------------------------------------------------------------
-; MCZ main level patterns (Kosinski compression)
-; ArtKoz_A9D74:
+; Mystic Cave
 ArtKos_MCZ:	BINCLUDE	"art/kosinski/MCZ.bin"
-;-----------------------------------------------------------------------------------
-; MCZ 128x128 block mappings (Kosinski compression)
+BM16_MCZ:	BINCLUDE	"mappings/16x16/MCZ.bin"
 BM128_MCZ:	BINCLUDE	"mappings/128x128/MCZ.bin"
 ;-----------------------------------------------------------------------------------
-; CNZ 16x16 block mappings (Kosinski compression)
-BM16_CNZ:	BINCLUDE	"mappings/16x16/CNZ.bin"
-;-----------------------------------------------------------------------------------
-; CNZ main level patterns (Kosinski compression)
-; ArtKoz_B0894:
+; Casino Night
 ArtKos_CNZ:	BINCLUDE	"art/kosinski/CNZ.bin"
-;-----------------------------------------------------------------------------------
-; CNZ 128x128 block mappings (Kosinski compression)
+BM16_CNZ:	BINCLUDE	"mappings/16x16/CNZ.bin"
 BM128_CNZ:	BINCLUDE	"mappings/128x128/CNZ.bin"
 ;-----------------------------------------------------------------------------------
-; CPZ 16x16 block mappings (Kosinski compression)
-BM16_CPZ:	BINCLUDE	"mappings/16x16/CPZ.bin"
-;-----------------------------------------------------------------------------------
-; CPZ main level patterns (Kosinski compression)
-; ArtKoz_B6174:
+; Moonlit Depot
 ArtKos_CPZ:	BINCLUDE	"art/kosinski/CPZ.bin"
-;-----------------------------------------------------------------------------------
-; CPZ 128x128 block mappings (Kosinski compression)
+BM16_CPZ:	BINCLUDE	"mappings/16x16/CPZ.bin"
 BM128_CPZ:	BINCLUDE	"mappings/128x128/CPZ.bin"
 ;-----------------------------------------------------------------------------------
-; CPZ/DEZ 16x16 block mappings (Kosinski compression)
-BM16_DEZ:	BINCLUDE	"mappings/16x16/DEZ.bin"
-;-----------------------------------------------------------------------------------
-; CPZ/DEZ main level patterns (Kosinski compression)
-; ArtKoz_B6174:
+; Death Egg
 ArtKos_DEZ:	BINCLUDE	"art/kosinski/DEZ.bin"
-;-----------------------------------------------------------------------------------
-; CPZ/DEZ 128x128 block mappings (Kosinski compression)
+BM16_DEZ:	BINCLUDE	"mappings/16x16/DEZ.bin"
 BM128_DEZ:	BINCLUDE	"mappings/128x128/DEZ.bin"
 ;-----------------------------------------------------------------------------------
-; ARZ 16x16 block mappings (Kosinski compression)
-BM16_ARZ:	BINCLUDE	"mappings/16x16/ARZ.bin"
-;-----------------------------------------------------------------------------------
-; ARZ main level patterns (Kosinski compression)
-; ArtKoz_BCC24:
+; Icicle Falls
 ArtKos_ARZ:	BINCLUDE	"art/kosinski/ARZ.bin"
-;-----------------------------------------------------------------------------------
-; ARZ 128x128 block mappings (Kosinski compression)
+BM16_ARZ:	BINCLUDE	"mappings/16x16/ARZ.bin"
 BM128_ARZ:	BINCLUDE	"mappings/128x128/ARZ.bin"
 ;-----------------------------------------------------------------------------------
-; WFZ/SCZ 16x16 block mappings (Kosinski compression)
-BM16_WFZ:	BINCLUDE	"mappings/16x16/WFZ_SCZ.bin"
-;-----------------------------------------------------------------------------------
-; WFZ/SCZ main level patterns (Kosinski compression)
-; ArtKoz_C5004:
+; Wing Fortress & Sky Chase
 ArtKos_SCZ:	BINCLUDE	"art/kosinski/WFZ_SCZ.bin"
-;-----------------------------------------------------------------------------------
-; WFZ pattern suppliment to SCZ tiles (Kosinski compression)
-; ArtKoz_C7EC4:
 ArtKos_WFZ:	BINCLUDE	"art/kosinski/WFZ_Supp.bin"
-;-----------------------------------------------------------------------------------
-; WFZ/SCZ 128x128 block mappings (Kosinski compression)
+BM16_WFZ:	BINCLUDE	"mappings/16x16/WFZ_SCZ.bin"
 BM128_WFZ:	BINCLUDE	"mappings/128x128/WFZ_SCZ.bin"
 	even
 

@@ -12,6 +12,7 @@
 		move.w	(VDP_Reg1_val).w,d0
 		andi.b	#$BF,d0
 		move.w	d0,(VDP_control_port).l
+        ResetDMAQueue
 		bsr.w	ClearScreen
 		move	#$2300,sr
 		lea	(VDP_control_port).l,a5

@@ -1,6 +1,3 @@
-    if newtronEnable=0	; checksum code
-		jmp	ObjNull
-	endif
 		moveq	#0,d0
 		move.b	routine(a0),d0
 		move.w	Obj42_Newtron_Index(pc,d0.w),d1

@@ -990,10 +990,11 @@ MCirno_LastLoadedDPLC:	ds.b	1
 Shield_LastLoadedDPLC:	ds.b	1
 WhirlSh_LastLoadedDPLC:	ds.b	1
 InstaShield_LastLoadedDPLC:	ds.b 1
-				ds.b	$1FB	; unused
+				ds.b	$10B	; unused
 
 Primary_Collision:		ds.b	$300
 Secondary_Collision:		ds.b	$300
+                ds.b    $F0     ; Buffer for secondary collision.
 VDP_Command_Buffer:		ds.w	7*$12	; stores 18 ($12) VDP commands to issue the next time ProcessDMAQueue is called
 VDP_Command_Buffer_Slot:	ds.l	1	; stores the address of the next open slot for a queued VDP command
 
