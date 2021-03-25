@@ -1,6 +1,5 @@
 ; >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 ; Equates section - Names for variables.
-
 ; ---------------------------------------------------------------------------
 ; size variables - you'll get an informational error if you need to change these...
 ; they are all in units of bytes
@@ -1527,9 +1526,7 @@ Player_mode:			ds.w	1	; 0 = Sonic and Tails, 1 = Sonic, 2 = Tails
 Player_option:			ds.w	1	; 0 = Sonic and Tails, 1 = Sonic, 2 = Tails
 
 Two_player_items:		ds.w	1
-				ds.b	$8	; $FFFFFF76-$FFFFFF7D ; seems unused
-AirRoll_Flag:			ds.b	1	; $FFFFFF7E
-AirRollT_Flag:			ds.b	1	; $FFFFFF7F
+				ds.b	$A	; $FFFFFF76-$FFFFFF7F ; seems unused
 
 LevSel_HoldTimer:		ds.w	1
 Level_select_zone:		ds.w	1

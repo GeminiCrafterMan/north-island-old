@@ -6,10 +6,8 @@ SonicKnux_AirRoll:
 	beq.s	.nope	; if not, branch
 	move.b	#AniIDSonAni_Roll,anim(a0)	; use "rolling"	animation
 	bset	#2,status(a0)	; force Sonic to roll
-	move.b	#1,(AirRoll_Flag).w
 
 .nope:
-	move.b	  #0,(AirRoll_Flag).w
 	rts
 ; End of function Sonic_AirRoll
 
@@ -21,9 +19,7 @@ Tails_AirRoll:
 	beq.s	.nope	; if not, branch
 	move.b	#AniIDTailsAni_Roll,anim(a0)	; use "rolling"	animation
 	bset	#2,status(a0)	; force Tails to roll
-	move.b	#1,(AirRollT_Flag).w
 
 .nope:
-	move.b	  #0,(AirRollT_Flag).w
 	rts
 ; End of function Sonic_AirRoll

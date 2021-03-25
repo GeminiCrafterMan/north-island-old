@@ -26040,6 +26040,10 @@ loc_1944C:
 ;loc_19452:
 Load_EndOfAct:
 	lea	(MainCharacter).w,a1 ; a1=character
+.loop:
+	tst.b	jumping(a1)
+	bne.s	.loop
+.gotime:
 	clr.b	status_secondary(a1)
 	jsr		Set_PlayerEndingPose
 	clr.b	(Update_HUD_timer).w
