@@ -1208,8 +1208,6 @@ PauseGame:
 Pause_Loop:
 	move.b	#VintID_Pause,(Vint_routine).w
 	bsr.w	WaitForVint
-	tst.b	(Slow_motion_flag).w	; is slow-motion cheat on?
-	beq.s	Pause_ChkStart		; if not, branch
 	btst	#button_A,(Ctrl_1_Press).w	; is button A pressed?
 	beq.s	Pause_ChkBC		; if not, branch
 	move.b	#GameModeID_TitleScreen,(Game_Mode).w ; set game mode to 4 (title screen)
@@ -1218,6 +1216,8 @@ Pause_Loop:
 ; ===========================================================================
 ; loc_13D4:
 Pause_ChkBC:
+	tst.b	(Slow_motion_flag).w	; is slow-motion cheat on?
+	beq.s	Pause_ChkStart		; if not, branch
 	btst	#button_B,(Ctrl_1_Held).w ; is button B pressed?
 	bne.s	Pause_SlowMo		; if yes, branch
 	btst	#button_C,(Ctrl_1_Press).w ; is button C pressed?
@@ -19575,9 +19575,8 @@ JmpTo4_PlayMusic
 	align 4
     endif
 
-Obj10:	include	"objects/WaiStars.asm"
-; TODO: maybe try and fix the wai stars to at least play nice
-; with post-wai stuff...  im so sick of trying to port 0517 stars
+;Obj10:	include	"objects/WaiStars.asm"
+Obj10:	include	"objects/0517Stars.asm"
 
 ; ===========================================================================
 ; ----------------------------------------------------------------------------
