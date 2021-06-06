@@ -6107,13 +6107,13 @@ ObjDB_Sonic_Init:
 	move.b	#4,render_flags(a0)
 	move.b	#2,priority(a0)
 ; options menu character
-;	cmpi.b	#GameModeID_OptionsMenu,(Game_Mode).w	; options menu?
-;	bne.s	+	; play the continue animation (should probably replace that soon...)
-;	move.b	#AniIDSonAni_Wait,anim(a0)
-;	jsr	(Sonic_Animate).l
-;	jmp	(LoadSonicDynPLC).l
-;
-;+
+	cmpi.b	#GameModeID_OptionsMenu,(Game_Mode).w	; options menu?
+	bne.s	+	; play the continue animation (should probably replace that soon...)
+	move.b	#AniIDSonAni_Wait,anim(a0)
+	jsr	(Sonic_Animate).l
+	jmp	(LoadSonicDynPLC).l
+
++
 	move.b	#AniIDSonAni_Continue,anim(a0)
 
 ; loc_7BD2:
@@ -6316,10 +6316,10 @@ MenuScreen_Options:
 	move.w	#make_art_tile(ArtTile_ArtNem_MenuBox,1,0),d0
 	jsr		EniDec
 ;	options menu characters
-;	clr.b	(Level_started_flag).w
-;	move.l	#$6A0000,(Camera_X_pos_copy).w	; 
-;	move.l	#$1690000,(Camera_Y_pos_copy).w ; y pos is now correct! 1:05 PM 9/24/2020
-;	move.b	#ObjID_ContinueChars,(MainCharacter+id).w ; load ObjDB (sonic on continue screen)
+	clr.b	(Level_started_flag).w
+	move.l	#$6A0000,(Camera_X_pos_copy).w	; 
+	move.l	#$1690000,(Camera_Y_pos_copy).w ; y pos is now correct! 1:05 PM 9/24/2020
+	move.b	#ObjID_ContinueChars,(MainCharacter+id).w ; load ObjDB (sonic on continue screen)
 
 	clr.b	(Options_menu_box).w
 	bsr.w	OptionScreen_DrawSelected

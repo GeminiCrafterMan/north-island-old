@@ -9,6 +9,8 @@ SongNames:	offsetTable
 	offsetTableEntry.w	MusNam_CM
 	offsetTableEntry.w	MusNam_MR
 	offsetTableEntry.w	MusNam_Baka
+	offsetTableEntry.w	MusNam_MLS
+	offsetTableEntry.w	MusNam_Mokou
 	offsetTableEntry.w	MusNam_ChoosePlayer
 	offsetTableEntry.w	MusNam_RM
 	offsetTableEntry.w	MusNam_WWGameSel
@@ -54,6 +56,8 @@ MusNam_Jungle:	songtext	"STAGE 2 JUNGLE"
 MusNam_CM:	songtext	"COLD MAN"
 MusNam_MR:	songtext	"MISTY RAIN"
 MusNam_Baka:	songtext	"BELOVED TOMBOY"
+MusNam_MLS:	songtext	"MAVERICKLASTSTD"
+MusNam_Mokou:	songtext	"IMMORTAL SMOKE"
 MusNam_ChoosePlayer:	songtext	"SMB2 PLAYER SEL"
 MusNam_RM:	songtext	"ROBOT MUSEUM"
 MusNam_WWGameSel:	songtext	"GAME SELECT"
