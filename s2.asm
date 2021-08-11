@@ -80223,7 +80223,7 @@ Snd_STKSEGA_End:even
 ; Debugging modules
 ; --------------------------------------------------------------
 
-   include   "ErrorHandler.asm"
+   include   "error/ErrorHandler.asm"
 
 ; end of 'ROM'
 	if padToPowerOfTwo && (*)&(*-1)

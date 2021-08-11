@@ -101,7 +101,7 @@ ErrorHandler___extern__vsync:
 ; ---------------------------------------------------------------
 
 ErrorHandler:
-	binclude "ErrorHandler.bin"
+	binclude "error/ErrorHandler.bin"
 
 ; ---------------------------------------------------------------
 ; WARNING!

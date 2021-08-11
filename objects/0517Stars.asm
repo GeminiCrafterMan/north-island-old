@@ -16,10 +16,10 @@ ObjE6_Index:	offsetTable
 ; ===========================================================================
 ; loc_1E102:
 ObjE6_Init:
-		move.l	#ArtUnc_HyperSonicStars,d1
-		move.w	#tiles_to_bytes(ArtTile_ShieldAndStars),d2
-		move.w	#$100,d3
-		jsr		(QueueDMATransfer).l
+	move.l	#ArtUnc_HyperSonicStars,d1
+	move.w	#tiles_to_bytes(ArtTile_ShieldAndStars),d2
+	move.w	#$230,d3	; updated from #$100, because this finally transfers the whole file
+	jsr		(QueueDMATransfer).l
 	lea	(a0),a1
 	moveq	#0,d0
 	moveq	#0,d2
