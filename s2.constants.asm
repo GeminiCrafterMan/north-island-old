@@ -378,9 +378,6 @@ PalID_CPZ		=	id(PalPtr_CPZ)		; F
 PalID_DEZ		=	id(PalPtr_DEZ)		; 10
 PalID_ARZ		=	id(PalPtr_ARZ)		; 11
 PalID_SCZ		=	id(PalPtr_SCZ)		; 12
-PalID_HPZ_U		=	id(PalPtr_HPZ_U)	; 13
-PalID_CPZ_U		=	id(PalPtr_CPZ_U)	; 14
-PalID_ARZ_U		=	id(PalPtr_ARZ_U)	; 15
 PalID_SS		=	id(PalPtr_SS)		; 16
 PalID_MCZ_B		=	id(PalPtr_MCZ_B)	; 17
 PalID_CNZ_B		=	id(PalPtr_CNZ_B)	; 18
@@ -398,19 +395,10 @@ PalID_OOZ_B		=	id(PalPtr_OOZ_B)	; 23
 PalID_Menu		=	id(PalPtr_Menu)		; 24
 PalID_Result	=	id(PalPtr_Result)	; 25
 PalID_Knux		=	id(PalPtr_Knux)		; 26
-PalID_CPZ_K_U	=	id(PalPtr_CPZ_K_U)	; 27
-PalID_ARZ_K_U	=	id(PalPtr_ARZ_K_U)	; 28
-PalID_HPZ_K_U	=	id(PalPtr_HPZ_K_U)	; 29
 PalID_P1Tails	=	id(PalPtr_P1Tails)	; 2A
-PalID_CPZ_T_U	=	id(PalPtr_CPZ_T_U)	; 2B
-PalID_ARZ_T_U	=	id(PalPtr_ARZ_T_U)	; 2C
-PalID_HPZ_T_U	=	id(PalPtr_HPZ_T_U)	; 2D
 PalID_S1SS		=	id(PalPtr_S1SS)		; 2E
 PalID_Test		=	id(PalPtr_Test)		; 2F
 PalID_Mighty	=	id(PalPtr_Mighty)	; 30
-PalID_CPZ_M_U	=	id(PalPtr_CPZ_M_U)	; 31
-PalID_ARZ_M_U	=	id(PalPtr_ARZ_M_U)	; 32
-PalID_HPZ_M_U	=	id(PalPtr_HPZ_M_U)	; 33
 
 ; PLC IDs
 offset :=	ArtLoadCues
@@ -990,7 +978,10 @@ MCirno_LastLoadedDPLC:	ds.b	1
 Shield_LastLoadedDPLC:	ds.b	1
 WhirlSh_LastLoadedDPLC:	ds.b	1
 InstaShield_LastLoadedDPLC:	ds.b 1
-				ds.b	$10B	; unused
+				ds.b 1	; maybe even it out
+waterAddValue:	ds.w 1
+waterSubValue:	ds.w 1
+				ds.b	$106	; unused
 
 Primary_Collision:		ds.b	$300
 Secondary_Collision:		ds.b	$300

@@ -55,7 +55,7 @@ newtronEnable = 0
 ; AS-specific macros and assembler settings
 	CPU 68000
 	include "s2.macrosetup.asm"
-		include	"Debugger.asm"		; vladikcomper's debugger
+		include	"_inc/error/Debugger.asm"		; vladikcomper's debugger
 
 ; >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 ; Equates section - Names for variables.
@@ -1287,7 +1287,7 @@ PlaneMapToVRAM_H40:
 	rts
 ; End of function PlaneMapToVRAM_H40
 
-    include "DMA-Queue.asm"
+    include "_inc/DMA-Queue.asm"
 
 ; ---------------------------------------------------------------------------
 ; START OF NEMESIS DECOMPRESSOR
@@ -2076,7 +2076,8 @@ PalCycle_Load:
 	move.b	(Current_Zone).w,d0	; use level number as index into palette cycles
 	add.w	d0,d0			; (multiply by element size = 2 bytes)
 	move.w	PalCycle(pc,d0.w),d0	; load animated palettes offset index into d0
-	jmp	PalCycle(pc,d0.w)	; jump to PalCycle + offset index
+	jsr	PalCycle(pc,d0.w)	; jump to PalCycle + offset index
+	jmp		updateWaterShift
 ; ---------------------------------------------------------------------------
 	rts
 ; End of function PalCycle_Load
@@ -2224,10 +2225,6 @@ PalCycle_HPZ:
 	bcc.s	+
 	move.w	#6,(PalCycle_Frame).w
 +	lea	(Normal_palette_line4+$12).w,a1
-	move.l	(a0,d0.w),(a1)+
-	move.l	4(a0,d0.w),(a1)
-	lea	(CyclingPal_HPZUnderwater).l,a0
-	lea	(Underwater_palette_line4+$12).w,a1
 	move.l	(a0,d0.w),(a1)+
 	move.l	4(a0,d0.w),(a1)
 +	rts
@@ -2438,9 +2435,6 @@ CyclingPal_MTZ3:
 ; word_1F56:
 CyclingPal_HPZWater:
 	BINCLUDE "art/palettes/HPZ Water Cycle.bin"; Hidden Palace Water Cycle
-; word_1F66:
-CyclingPal_HPZUnderwater:
-	BINCLUDE "art/palettes/HPZ Underwater Cycle.bin"; Hidden Palace Underwater Cycle
 ; word_1F76:
 CyclingPal_Oil:
 	BINCLUDE "art/palettes/OOZ Oil.bin"; Oil Ocean Oil palette
@@ -2488,6 +2482,16 @@ CyclingPal_WFZ2:
 	BINCLUDE "art/palettes/WFZ Cycle 2.bin"; Wing Fortress Flashing Light Cycle 2
 ; ----------------------------------------------------------------------------
 
+LoadPlayerPalDry:
+		moveq	#0,d0
+		move.b	(Player_mode+1).w,d0
+		move.b	.palLUT(pc,d0.w),d0
+		rts
+
+	.palLUT:
+		dc.b	PalID_BGND, PalID_BGND, PalID_P1Tails, PalID_Knux, PalID_Knux, PalID_Mighty, PalID_Mighty, PalID_BGND
+
+	include	"_inc/DynaWater.asm"
 
 ; ||||||||||||||| S U B R O U T I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -2570,28 +2574,6 @@ PalCycle_SuperSonic_palettes:
 	lea	(Normal_palette+4).w,a1
 	move.l	(a0,d0.w),(a1)+
 	move.l	4(a0,d0.w),(a1)
-	; underwater palettes (*)
-	; increment palette frame and update Sonic's palette
-		cmpi.w	#5,(Player_mode).w
-		blt.w	.notmighty
-		lea	(CyclingPal_MightyUWTransformation).l,a0
-		bra.s	.done
-.notmighty:
-		cmpi.w	#3,(Player_mode).w
-		blt.w	.notknux
-		lea	(CyclingPal_KnuxUWTransformation).l,a0
-		bra.s	.done
-.notknux:
-		cmpi.w	#2,(Player_mode).w		; If not Tails...
-		bne.s	.nottails						; load the other palette
-		lea	(CyclingPal_TailsUWTransformation).l,a0
-		bra.s	.done
-.nottails:
-	lea	(CyclingPal_SonicUWTransformation).l,a0
-.done:
-	lea	(Underwater_palette+4).w,a1
-	move.l	(a0,d0.w),(a1)+
-	move.l	4(a0,d0.w),(a1)
 +	rts
 ; ===========================================================================
 ; loc_21E6:
@@ -2645,20 +2627,6 @@ CyclingPal_SuperKnuckles:
 	BINCLUDE	"art/palettes/Super Knuckles transformation.bin"
 CyclingPal_SuperMighty:
 	BINCLUDE	"art/palettes/Super Mighty transformation.bin"
-;----------------------------------------------------------------------------
-;Palettes for underwater Super forms
-;----------------------------------------------------------------------------
-; Pal_22C6:
-CyclingPal_SonicUWTransformation:
-	BINCLUDE	"art/palettes/Water SS transformation.bin"
-CyclingPal_TailsUWTransformation:
-	BINCLUDE	"art/palettes/Water ST transformation.bin"
-CyclingPal_KnuxUWTransformation:
-	BINCLUDE	"art/palettes/Water SK transformation.bin"
-CyclingPal_MightyUWTransformation:
-	BINCLUDE	"art/palettes/Water SM transformation.bin"
-; ---------------------------------------------------------------------------
-;lol no more shitty knuckles code
 ; ---------------------------------------------------------------------------
 ; Subroutine to fade in from black
 ; ---------------------------------------------------------------------------
@@ -3264,9 +3232,6 @@ PalPtr_CPZ:	palptr Pal_CPZ,   1
 PalPtr_DEZ:	palptr Pal_DEZ,   1
 PalPtr_ARZ:	palptr Pal_ARZ,   1
 PalPtr_SCZ:	palptr Pal_SCZ,   1
-PalPtr_HPZ_U:	palptr Pal_HPZ_U, 0
-PalPtr_CPZ_U:	palptr Pal_CPZ_U, 0
-PalPtr_ARZ_U:	palptr Pal_ARZ_U, 0
 PalPtr_SS:	palptr Pal_SS,    0
 PalPtr_MCZ_B:	palptr Pal_MCZ_B, 1
 PalPtr_CNZ_B:	palptr Pal_CNZ_B, 1
@@ -3284,19 +3249,10 @@ PalPtr_OOZ_B:	palptr Pal_OOZ_B, 1
 PalPtr_Menu:	palptr Pal_Menu,  0
 PalPtr_Result:	palptr Pal_Result,0
 PalPtr_Knux:	palptr Pal_Knux,  0
-PalPtr_CPZ_K_U:	palptr Pal_CPZ_K_U, 0
-PalPtr_ARZ_K_U:	palptr Pal_ARZ_K_U, 0
-PalPtr_HPZ_K_U:	palptr Pal_HPZ_K_U, 0
 PalPtr_P1Tails: palptr Pal_P1Tails, 0
-PalPtr_CPZ_T_U: palptr Pal_CPZ_T_U, 0
-PalPtr_ARZ_T_U: palptr Pal_ARZ_T_U, 0
-PalPtr_HPZ_T_U: palptr Pal_HPZ_T_U, 0
 PalPtr_S1SS:	palptr Pal_S1SS,0
 PalPtr_Test:	palptr Pal_Test,1
 PalPtr_Mighty:	palptr Pal_Mighty,0
-PalPtr_CPZ_M_U:	palptr Pal_CPZ_M_U,0
-PalPtr_ARZ_M_U:	palptr Pal_ARZ_M_U,0
-PalPtr_HPZ_M_U:	palptr Pal_HPZ_M_U,0
 
 ; ----------------------------------------------------------------------------
 ; This macro defines Pal_ABC and Pal_ABC_End, so palptr can compute the size of
@@ -3321,15 +3277,12 @@ Pal_MTZ:   palette MTZ.bin ; Metropolis Zone palette
 Pal_WFZ:   palette WFZ.bin ; Wing Fortress Zone palette
 Pal_HTZ:   palette HTZ.bin ; Hill Top Zone palette
 Pal_HPZ:   palette HPZ.bin ; Hidden Palace Zone palette
-Pal_HPZ_U: palette Sonic underwater.bin,HPZ underwater.bin ; Hidden Palace Zone underwater palette
 Pal_OOZ:   palette OOZ.bin ; Oil Ocean Zone palette
 Pal_MCZ:   palette MCZ.bin ; Mystic Cave Zone palette
 Pal_CNZ:   palette CNZ.bin ; Casino Night Zone palette
 Pal_CPZ:   palette CPZ.bin ; Chemical Plant Zone palette
-Pal_CPZ_U: palette Sonic underwater.bin,CPZ underwater.bin ; Chemical Plant Zone underwater palette
 Pal_DEZ:   palette DEZ.bin ; Death Egg Zone palette
 Pal_ARZ:   palette ARZ.bin ; Aquatic Ruin Zone palette
-Pal_ARZ_U: palette Sonic underwater.bin,ARZ underwater.bin ; Aquatic Ruin Zone underwater palette
 Pal_SCZ:   palette SCZ.bin ; Sky Chase Zone palette
 Pal_MCZ_B: palette MCZ Boss.bin ; Mystic Cave Zone boss palette
 Pal_CNZ_B: palette CNZ Boss.bin ; Casino Night Zone boss palette
@@ -3348,20 +3301,11 @@ Pal_SS2_2p:palette Special Stage 2 2p.bin ; Special Stage 2 2p palette
 Pal_SS3_2p:palette Special Stage 3 2p.bin ; Special Stage 3 2p palette
 Pal_Result:palette Special Stage Results Screen.bin ; Special Stage Results Screen palette
 Pal_Knux:  palette Knuckles.bin,SonicAndTails2.bin ; "Sonic and Miles" background palette (also usually the primary palette line)
-Pal_CPZ_K_U: palette Knux underwater.bin,CPZ underwater.bin ; Chemical Plant Zone underwater palette
-Pal_ARZ_K_U: palette Knux underwater.bin,ARZ underwater.bin ; Aquatic Ruin Zone underwater palette
-Pal_HPZ_K_U: palette Knux underwater.bin,HPZ underwater.bin ; Hidden Palace Zone underwater palette
 Pal_P1Tails:  palette Tails.bin,SonicAndTails2.bin ; "Sonic and Miles" background palette (also usually the primary palette line)
-Pal_CPZ_T_U: palette Tails underwater.bin,CPZ underwater.bin ; Chemical Plant Zone underwater palette
-Pal_ARZ_T_U: palette Tails underwater.bin,ARZ underwater.bin ; Aquatic Ruin Zone underwater palette
-Pal_HPZ_T_U: palette Tails underwater.bin,HPZ underwater.bin ; Hidden Palace Zone underwater palette
 Pal_GHZ:	palette	GHZ.bin
 Pal_S1SS:	palette s1ss/special.bin
 Pal_Test:	palette Test.bin
 Pal_Mighty:  palette Mighty.bin,SonicAndTails2.bin ; "Sonic and Miles" background palette (also usually the primary palette line)
-Pal_CPZ_M_U: palette Mighty underwater.bin,CPZ underwater.bin
-Pal_ARZ_M_U: palette Mighty underwater.bin,ARZ underwater.bin
-Pal_HPZ_M_U: palette Mighty underwater.bin,HPZ underwater.bin
 ; ===========================================================================
 
     if gameRevision<2
@@ -4215,69 +4159,16 @@ Level_InitNormal:
 ; loc_407C:
 Level_LoadPal:
 	moveq	#PalID_BGND,d0
-	cmpi.w	#5,(Player_mode).w	; Mighty?
-	blt.s	.knuxcheck
-	moveq	#PalID_Mighty,d0	; load Knuckles' palette index
-	bra.s	.cont
-.knuxcheck:
-	cmpi.w	#3,(Player_mode).w	; are you playing as Knuckles?
-	blt.s	.tailscheck	; if not, branch
-	moveq	#PalID_Knux,d0	; load Knuckles' palette index
-.tailscheck:
-	cmpi.w	#2,(Player_mode).w	; are you playing as Tails?
-	bne.s	.cont	; if not, branch
-	moveq	#PalID_P1Tails,d0	; load Tails' palette index
-.cont:
+
+	jsr		LoadPlayerPalDry
+
 	bsr.w	PalLoad_Now	; load Sonic's palette line
 	tst.b	(Water_flag).w	; does level have water?
-	beq.w	Level_GetBgm	; if not, branch
-	moveq	#PalID_HPZ_U,d0	; palette number $15
-	cmpi.b	#hidden_palace_zone,(Current_Zone).w
-	beq.s	Level_PalHPZ ; branch if level is not HPZ
-	moveq	#PalID_CPZ_U,d0	; palette number $16
-.tailscheckCPZ:
-	cmpi.b	#chemical_plant_zone,(Current_Zone).w
-	bne.s	Level_PalNotCPZ ; branch if level is not CPZ
-	cmpi.w	#2,(Player_mode).w	; are you playing as Tails?
-	blt.s	Level_WaterPal	; if not, branch
-	moveq	#PalID_CPZ_T_U,d0
-.knuxcheckCPZ:
-	cmpi.w	#3,(Player_mode).w	; are you playing as Knuckles?
-	blt.s	Level_WaterPal	; if not, branch
-	moveq	#PalID_CPZ_K_U,d0
-.mightycheckCPZ:
-	cmpi.w	#5,(Player_mode).w
-	blt.s	Level_WaterPal
-	moveq	#PalID_CPZ_M_U,d0
-	bra.s	Level_WaterPal	; branch
-
-Level_PalHPZ:
-	moveq	#PalID_HPZ_U,d0	; palette number $17
-	cmpi.w	#2,(Player_mode).w	; are you playing as Tails?
-	blt.s	Level_WaterPal	; if not, branch
-	moveq	#PalID_HPZ_T_U,d0
-	cmpi.w	#3,(Player_mode).w	; are you playing as Knuckles?
-	blt.s	Level_WaterPal	; if not, branch
-	moveq	#PalID_HPZ_K_U,d0
-	cmpi.w	#5,(Player_mode).w	; are you playing as Mighty?
-	blt.s	Level_WaterPal	; if not, branch
-	moveq	#PalID_HPZ_M_U,d0
-	bra.s	Level_WaterPal
-
-Level_PalNotCPZ:
-	moveq	#PalID_ARZ_U,d0	; palette number $17
-	cmpi.w	#2,(Player_mode).w	; are you playing as Tails?
-	blt.s	Level_WaterPal	; if not, branch
-	moveq	#PalID_ARZ_T_U,d0
-	cmpi.w	#3,(Player_mode).w	; are you playing as Knuckles?
-	blt.s	Level_WaterPal	; if not, branch
-	moveq	#PalID_ARZ_K_U,d0
-	cmpi.w	#5,(Player_mode).w	; are you playing as Mighty?
-	blt.s	Level_WaterPal	; if not, branch
-	moveq	#PalID_ARZ_M_U,d0
+	beq.s	Level_GetBgm	; if not, branch
+	
 ; loc_409E:
 Level_WaterPal:
-	bsr.w	PalLoad_Water_Now	; load underwater palette (with d0)
+	jsr		loadWaterShift
 	tst.b	(Last_star_pole_hit).w ; is it the start of the level?
 	beq.s	Level_GetBgm	; if yes, branch
 	move.b	(Saved_Water_move).w,(Water_fullscreen_flag).w
@@ -4406,18 +4297,6 @@ Level_FromCheckpoint:
 	cmpi.w	#4,(Ending_demo_number).w
 	bne.s	+
 	move.w	#$1FE,(Demo_Time_left).w
-+
-	tst.b	(Water_flag).w
-	beq.s	++
-	moveq	#PalID_HPZ_U,d0
-	cmpi.b	#hidden_palace_zone,(Current_Zone).w
-	beq.s	+
-	moveq	#PalID_CPZ_U,d0
-	cmpi.b	#chemical_plant_zone,(Current_Zone).w
-	beq.s	+
-	moveq	#PalID_ARZ_U,d0
-+
-	bsr.w	PalLoad_Water_ForFade
 +
 	move.w	#-1,(TitleCard_ZoneName+titlecard_leaveflag).w
 	move.b	#$E,(TitleCard_Left+routine).w	; make the left part move offscreen
@@ -18565,70 +18444,7 @@ invincible_monitor:
 ;loc_12AA6:
 super_monitor:
 	addi.w	#50,(Ring_count).w
-	move.b	#1,(Super_Sonic_palette).w
-	move.b	#$F,(Palette_timer).w
-	move.b	#1,(Super_Sonic_flag).w
-	cmpi.w	#5,(Player_mode).w
-	blt.s	.soniccheck
-	bra.s	.done
-.soniccheck:
-	cmpi.w	#1,(Player_mode).w
-	bgt.s	.tailscheck
-	move.l	#MapUnc_SuperSonic,mappings(a1)
-.tailscheck:
-	cmpi.w	#2,(Player_mode).w
-	bne.s	.knuxcheck
-	move.l	#MapUnc_SuperTails,mappings(a1)
-.knuxcheck:
-	cmpi.w	#3,(Player_mode).w
-	blt.s	.done
-	move.l	#MapUnc_SuperKnuckles,mappings(a1)
-.done:
-	move.b	#$81,obj_control(a1)
-	cmpi.w	#2,(Player_option).w
-	bne.s	+
-	move.b	#AniIDTailsAni_Transform,anim(a1)
-	bra.s	++
-+
-	move.b	#AniIDSupSonAni_Transform,anim(a1)			; use transformation animation
-+
-	move.b	#ObjID_HyperTrail,(SuperSonicStars+id).w ; load Obj7E (super sonic stars object) at $FFFFD040
-    move.w  a1,(SuperSonicStars+parent).w
-	move.b	#ObjID_WaiInvinc,(InvincibilityStars+id).w ; load Obj35 (invincibility stars) at $FFFFD200
-	move.w	a1,(InvincibilityStars+parent).w
-	cmpi.w	#2,(Player_mode).w
-	bne.s	+
-	move.w	#$A00,(Tails_top_speed).w
-	move.w	#$30,(Tails_acceleration).w
-	move.w	#$100,(Tails_deceleration).w
-	btst	#6,status(a1)	; Check if underwater, return if not
-	beq.s	++
-	move.w	#$500,(Tails_top_speed).w
-	move.w	#$18,(Tails_acceleration).w
-	move.w	#$80,(Tails_deceleration).w
-	bra.s	++
-+
-	move.w	#$A00,(Sonic_top_speed).w
-	move.w	#$30,(Sonic_acceleration).w
-	move.w	#$100,(Sonic_deceleration).w
-	btst	#6,status(a1)	; Check if underwater, return if not
-	beq.s	+
-	move.w	#$500,(Sonic_top_speed).w
-	move.w	#$18,(Sonic_acceleration).w
-	move.w	#$80,(Sonic_deceleration).w
-+
-	move.w	#0,invincibility_time(a1)
-	bset	#status_sec_isInvincible,status_secondary(a1)	; make Sonic invincible
-	tst.b	(Current_Boss_ID).w	; Don't change music if in a boss fight
-	bne.s	++
-	jsr	(PlayLevelMusic).l
-+
-	move.w	#MusID_SPASpecStag,d0
-	jsr	(PlayMusic).l	; load the Super Sonic song and return
-+
-	move.w	#SndID_S3KSuperTransform,d0
-	jsr	(PlaySound).l	; Play transformation sound effect.
-	jmp	Unc_SuperIcons_Load
+	jmp	SuperSonic_Cont
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Holds icon in place for a while, then destroys it
@@ -80223,7 +80039,7 @@ Snd_STKSEGA_End:even
 ; Debugging modules
 ; --------------------------------------------------------------
 
-   include   "error/ErrorHandler.asm"
+   include   "_inc/error/ErrorHandler.asm"
 
 ; end of 'ROM'
 	if padToPowerOfTwo && (*)&(*-1)

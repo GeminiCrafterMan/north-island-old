@@ -77,7 +77,7 @@ loc_12726:
         add.w   d0,d0
         add.w   d1,d0
         lea     $00(a3,d0),a3
-        lea     $10(a0),a2
+        lea     x_vel(a0),a2
         moveq	#0,d0
         moveq   #$5,d1
 loc_1273C:        
@@ -100,7 +100,7 @@ loc_1274A:
         move.w  x_pos(a1),d4
         move.w  y_pos(a1),d5
         moveq	#0,d0
-        move.b  $4(a0), d0
+        move.b  mappings(a0), d0
         addq.b  #$6,d0
         cmpi.b  #$a2,d0
         bcs.s   loc_12776
